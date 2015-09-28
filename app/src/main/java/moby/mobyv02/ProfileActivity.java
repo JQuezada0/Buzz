@@ -57,7 +57,7 @@ public class ProfileActivity extends LeanplumFragmentActivity {
         } else {
             setFollowStatus();
         }
-        profileImage.setImageUrl(user.getString("profileImage"), Application.imageLoader);
+        Application.loadImage(profileImage, user.getString("profileImage"));
         username.setText(user.getString("fullName"));
         followButton.setOnClickListener(followClickListener);
         setPosts();

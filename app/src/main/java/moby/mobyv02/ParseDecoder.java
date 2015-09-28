@@ -46,7 +46,7 @@ public class ParseDecoder {
         post.put("createdDate", DateParser.parse(data.getJSONObject("createdAt").getString("iso")));
         post.put("updatedAt", DateParser.parse(data.getJSONObject("updatedAt").getString("iso")));
         post.setLocation(getLocation(data.getJSONObject("location")));
-        post.put("user", decodeUser());
+        post.put("user", decodeUser(data.getJSONObject("user")));
         return post;
     }
 
@@ -57,7 +57,7 @@ public class ParseDecoder {
         return location;
     }
 
-    public ParseUser decodeUser() throws JSONException, ParseException {
+    public ParseUser decodeUser(JSONObject data) throws JSONException, ParseException {
 
         ParseUser user = new ParseUser();
         Iterator<String> keys = data.keys();

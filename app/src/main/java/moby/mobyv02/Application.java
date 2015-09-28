@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.multidex.MultiDex;
+import android.widget.ImageView;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
@@ -115,6 +117,23 @@ public class Application extends LeanplumApplication {
             cacheImageFile = new File(context.getCacheDir(), "image.png");
             return cacheImageFile;
         }
+
+    }
+
+    public static void loadImage(final ImageView image, String url){
+
+        imageLoader.get(url, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                if (response.getBitmap() != null)
+                    image.setImageBitmap(response.getBitmap());
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
 
     }
 

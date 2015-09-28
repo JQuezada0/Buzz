@@ -70,7 +70,7 @@ public class CommentAdapter extends BaseAdapter {
         }else {
             vh = (ViewHolder) convertView.getTag();
         }
-        vh.profileImage.setImageUrl(comment.getUser().getString("profileImage"), Application.imageLoader);
+        Application.loadImage(vh.profileImage, comment.getUser().getString("profileImage"));
         vh.username.setText(comment.getUser().getUsername());
         vh.text.setText(comment.getText());
         System.out.println("getView on Comments called");

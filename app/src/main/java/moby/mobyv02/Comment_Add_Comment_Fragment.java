@@ -45,7 +45,7 @@ public class Comment_Add_Comment_Fragment extends Fragment {
         postButton.setOnClickListener(postButtonClickListener);
         cancelButton.setOnClickListener(cancelClickListener);
         fullName.setText(ParseUser.getCurrentUser().getUsername());
-        image.setImageUrl(ParseUser.getCurrentUser().getString("profileImage"), Application.imageLoader);
+        Application.loadImage(image, ParseUser.getCurrentUser().getString("profileImage"));
         return v;
     }
 
