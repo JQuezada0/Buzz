@@ -1,0 +1,25 @@
+GRADLE
+
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.google.android.gms:play-services:7.8.0'
+    compile 'com.mcxiaoke.volley:library:1.0.17'
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.google.maps.android:android-maps-utils:0.4'
+    compile 'commons-io:commons-io:+'
+    compile 'com.android.support:design:23.0.1'
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.leanplum:Leanplum:1.2.16'
+    compile 'com.theartofdev.edmodo:android-image-cropper:1.0.+'
+    compile 'com.android.support:palette-v7:23.0.0'
+    compile 'com.lsjwzh:materialloadingprogressbar:0.5.6-RELEASE'
+
+LIBRARIES
+
+"Parse-1.10.1"
+"circleimageview" - https://github.com/hdodenhof/CircleImageView
+"simplecropview" - https://github.com/IsseiAoki/SimpleCropView
+"com.crashlytics.sdk.android:crashlytics:2.5.2" - Install parse analytics plugin
+"facebook" - install facebook sdk
+"ParseFacebookUtilsV4-1.10.1" - add jar as module dependency
+
