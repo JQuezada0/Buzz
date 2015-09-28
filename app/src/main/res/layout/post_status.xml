@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:id="@+id/post_status_background">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/create_post_status_toolbar">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:src="@drawable/moby_logo_blue"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Post"
+                android:textColor="@android:color/black"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:padding="0dp"
+                android:text="cancel"
+                android:id="@+id/create_post_status_cancel"
+                android:textColor="@color/moby_blue"
+                android:background="@android:color/transparent"/>
+
+        </android.support.v7.widget.Toolbar>
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#999999"/>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp">
+
+            <ImageView
+                android:layout_height="50dp"
+                android:layout_width="50dp"
+                android:background="@drawable/count_bubble"/>
+
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:text="Ryan Allis"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:id="@+id/create_status_post_fullname"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+        </TableRow>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:paddingLeft="65dp"
+            android:textColorHint="#e5e5e5"
+            android:textSize="25sp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textColor="@android:color/black"
+            android:paddingTop="10dp"
+            android:id="@+id/create_post_status_text"
+            android:hint="What's on your mind?"
+            />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_gravity="bottom"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="200"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:id="@+id/post_status_character_limit"
+                android:textSize="25sp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="post"
+                android:textSize="20sp"
+                android:id="@+id/create_post_status_button"
+                android:textColor="@android:color/white"
+                android:background="@color/moby_blue"/>
+
+        </TableRow>
+
+    </LinearLayout>
+
+        <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/post_progressbar"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:mlpb_enable_circle_background="true"
+            app:mlpb_progress_stoke_width="5dp"/>
+
+</FrameLayout>

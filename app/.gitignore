@@ -1,0 +1,5 @@
+/build
+app.iml
+build.gradle
+fabric.properties
+proguard-rules.pro

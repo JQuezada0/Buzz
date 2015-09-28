@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- The main content view -->
+
+    <LinearLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EEEEEE"
+        android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:id="@+id/moby_main_toolbar"
+                android:background="@color/moby_blue">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="20dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/feed_map_display_toggle_background"
+                    android:layout_gravity="center">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/feed_toggle"
+                        android:textColor="@android:color/white"
+                        android:id="@+id/moby_main_feed_toggle"
+                        android:text="Feed"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/moby_blue"
+                        android:id="@+id/moby_main_map_toggle"
+                        android:background="@drawable/map_toggle"
+                        android:text="Map"/>
+
+                </LinearLayout>
+
+                    <Button
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="right|center_vertical"
+                        android:id="@+id/follower_toggle_button"
+                        android:visibility="gone"
+                        android:background="@drawable/feed_filter_toggle"/>
+
+                </FrameLayout>
+
+            </android.support.v7.widget.Toolbar>
+
+            <TableRow
+                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:background="@android:color/white">
+
+            <TableRow
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:padding="7dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:id="@+id/create_status_post"
+                android:background="@android:color/white">
+
+                <ImageView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/post_status_icon"/>
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/moby_blue"
+                    android:text="Status"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:padding="7dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:clickable="true"
+                    android:id="@+id/create_post_photo_button"
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:padding="2dp"
+                        android:src="@drawable/post_photo_icon"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/moby_blue"
+                        android:text="Photo"/>
+
+                </TableRow>
+
+               <TableRow
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:padding="7dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:id="@+id/create_video_post_button"
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:padding="4dp"
+                        android:src="@drawable/post_video_icon"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/moby_blue"
+                        android:text="Video"/>
+
+                </TableRow>
+
+
+
+            </TableRow>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/moby_gray"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        <moby.mobyv02.MainViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:id="@+id/main_viewpager">
+
+
+        </moby.mobyv02.MainViewPager>
+
+
+        <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/main_progressbar"
+            android:layout_gravity="center"
+            app:mlpb_enable_circle_background="true"
+            app:mlpb_progress_stoke_width="5dp"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+    <!-- The navigation drawer -->
+    <FrameLayout
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:paddingTop="100dp"
+        android:background="@color/moby_blue"
+        android:layout_gravity="start">
+
+        <ListView android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:background="@color/moby_blue"/>
+
+    </FrameLayout>
+
+</android.support.v4.widget.DrawerLayout>

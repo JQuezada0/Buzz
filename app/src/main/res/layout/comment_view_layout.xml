@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="10dp">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_height="60dp"
+            android:layout_width="60dp"
+            android:id="@+id/comment_view_layout_profile_image"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Ryan Allis"
+            android:textSize="20sp"
+            android:id="@+id/comment_view_layout_username"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:textColor="@android:color/black"/>
+
+    </TableRow>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/comment_view_layout_text"
+        android:textColor="@android:color/black"
+        android:paddingBottom="20dp"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#999999"/>
+
+</LinearLayout>

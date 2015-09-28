@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@android:color/white">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:src="@drawable/moby_logo_blue"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Add Comment"
+            android:textColor="@android:color/black"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:padding="0dp"
+            android:text="Cancel"
+            android:id="@+id/create_comment_cancel"
+            android:textColor="@color/moby_blue"
+            android:background="@android:color/transparent"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#999999"/>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:id="@+id/create_comment_image"
+            android:background="@drawable/count_bubble"/>
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:text="Ryan Allis"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:id="@+id/create_comment_fullname"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"/>
+    </TableRow>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:paddingLeft="65dp"
+        android:textColorHint="#e5e5e5"
+        android:textSize="25sp"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:textColor="@android:color/black"
+        android:paddingTop="10dp"
+        android:id="@+id/create_comment_text"
+        android:hint="What's on your mind?"
+        />
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:layout_gravity="bottom"
+        android:padding="10dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="post"
+            android:textSize="20sp"
+            android:id="@+id/create_comment_button"
+            android:textColor="@android:color/white"
+            android:background="@color/moby_blue"/>
+
+    </TableRow>
+
+</LinearLayout>
+
+</FrameLayout>

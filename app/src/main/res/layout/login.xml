@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@color/moby_blue"
+    >
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="Register"
+        android:padding="5dp"
+        android:textSize="12sp"
+        android:layout_gravity="right"
+        android:id="@+id/register_button"
+        android:background="@color/moby_light_blue"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Buzz"
+        android:textSize="60sp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:paddingTop="40dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:padding="20dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:layout_gravity="center|center_horizontal">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_username"
+            android:inputType="text"
+            android:imeOptions="actionNext"
+            android:hint="Username"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_password"
+            android:inputType="textPassword"
+            android:imeOptions="actionNext"
+            android:hint="Password"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="Log In"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="25sp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="bottom"
+            android:id="@+id/login_button"
+            android:background="@color/moby_light_blue"/>
+
+    </LinearLayout>
+
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/login_progressbar"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:mlpb_enable_circle_background="true"
+        app:mlpb_progress_stoke_width="5dp"/>
+
+</FrameLayout>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/moby_blue"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Buzz"
+        android:textSize="60sp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:paddingTop="25dp"/>
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/moby_logo"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:padding="20dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:layout_gravity="bottom|center_horizontal">
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:textColor="@android:color/white"
+            android:text="Sign Up"
+            android:textSize="25sp"
+            android:id="@+id/welcome_signup_button"
+            android:layout_marginBottom="5dp"
+            android:background="@color/moby_light_blue"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:textColor="@android:color/white"
+            android:text="Log In"
+            android:textSize="25sp"
+            android:id="@+id/welcome_login_button"
+            android:background="@color/moby_light_blue"/>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/facebook_button"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:background="@color/com_facebook_blue">
+
+            <ImageView
+                android:layout_height="30dp"
+                android:layout_width="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/facebook_letter"
+                android:layout_marginLeft="30dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Sign in with Facebook"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"/>
+
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/google_button"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:background="@color/google_plus">
+
+            <ImageView
+                android:layout_height="30dp"
+                android:layout_width="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/google_plus_letter"
+                android:layout_marginLeft="30dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Sign in with Google"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"/>
+
+
+        </TableRow>
+
+
+
+
+    </LinearLayout>
+
+</FrameLayout>

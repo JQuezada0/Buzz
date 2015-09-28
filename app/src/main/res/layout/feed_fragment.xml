@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#DDDDDD"
+        android:id="@+id/post_list"></ListView>
+
+<!--    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:layout_weight="1"
+        android:id="@+id/feed_viewpager">
+
+
+    </android.support.v4.view.ViewPager>
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:gravity="center_horizontal"
+        android:id="@+id/feed_navigation"
+        android:background="@color/moby_light_blue">
+
+        <include layout="@layout/moby_favorite_button"
+            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:id="@+id/feed_favorite_button"
+            android:layout_marginRight="10dp"
+            android:gravity="center"/>
+
+        <include layout="@layout/moby_comment_button"
+            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/feed_comment_button"/>
+
+                   <include layout="@layout/moby_message_button"
+                       android:layout_height="80dp"
+                       android:layout_width="80dp"
+                       android:id="@+id/moby_message_button"
+                       android:layout_weight="1"/>
+
+
+    </TableRow> -->
+
+</LinearLayout>

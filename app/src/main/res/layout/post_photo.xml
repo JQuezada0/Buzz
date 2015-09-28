@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:id="@+id/create_post_photo_toolbar">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:src="@drawable/moby_logo_blue"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Post"
+            android:textColor="@android:color/black"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:padding="0dp"
+            android:text="cancel"
+            android:id="@+id/create_post_photo_cancel"
+            android:textColor="@color/moby_blue"
+            android:background="@android:color/transparent"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:src="@drawable/camera_icon"
+        android:padding="30dp"
+        android:id="@+id/post_photo_image"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Image"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/create_post_photo_take_image"
+        android:textColor="@android:color/white"
+        android:background="@color/moby_blue"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:paddingLeft="65dp"
+        android:textColorHint="#e5e5e5"
+        android:textSize="25sp"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:textColor="@android:color/black"
+        android:paddingTop="10dp"
+        android:id="@+id/create_post_photo_text"
+        android:hint="What's on your mind?"
+        />
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:layout_gravity="bottom"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:id="@+id/post_photo_character_limit"
+            android:textSize="25sp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="post"
+            android:textSize="20sp"
+            android:padding="20dp"
+            android:id="@+id/create_post_photo_submit_button"
+            android:textColor="@android:color/white"
+            android:background="@color/moby_blue"/>
+
+    </TableRow>
+
+</LinearLayout>
+
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/post_progressbar"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:mlpb_enable_circle_background="true"
+        app:mlpb_progress_stoke_width="5dp"/>
+
+</FrameLayout>

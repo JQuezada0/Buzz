@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/moby_blue"
+    android:fillViewport="true">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="Back"
+        android:padding="5dp"
+        android:textSize="12sp"
+        android:layout_gravity="left"
+        android:id="@+id/select_profile_picture_back_button"
+        android:background="@color/moby_light_blue"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Moby"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:id="@+id/select_profile_picture_name"
+        android:textColor="@android:color/white"
+        android:paddingTop="25dp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:src="@drawable/person_icon_graybg"
+        android:id="@+id/select_profile_picture_image"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Profile Image"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:id="@+id/select_profile_picture_take_image"
+        android:textColor="@android:color/white"
+        android:background="@color/moby_light_blue"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="Continue"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="25sp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="bottom"
+        android:id="@+id/select_profile_picture_continue"
+        android:background="@color/moby_light_blue"/>
+
+</LinearLayout>
+</ScrollView>

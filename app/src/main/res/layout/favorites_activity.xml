@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:src="@drawable/moby_logo_blue"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Favorites"
+            android:textColor="@android:color/black"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Back"
+            android:id="@+id/favorites_cancel"
+            android:textColor="@color/moby_blue"
+            android:background="@android:color/transparent"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/favorites_viewpager">
+
+
+    </android.support.v4.view.ViewPager>
+
+    <TableRow
+        android:layout_height="90dp"
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:gravity="center_horizontal"
+        android:background="@color/moby_light_blue">
+
+        <include layout="@layout/moby_favorite_button"
+            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:id="@+id/favorites_favorite_button"
+            android:layout_marginRight="10dp"
+            android:gravity="center"/>
+
+        <include layout="@layout/moby_comment_button"
+            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/favorites_comment_button"/>
+
+        <!--           <include layout="@layout/moby_message_button"
+                       android:layout_height="80dp"
+                       android:layout_width="80dp"
+                       android:id="@+id/moby_message_button"
+                       android:layout_weight="1"/> -->
+
+
+    </TableRow>
+
+</LinearLayout>

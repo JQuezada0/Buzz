@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#999999"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/camera_frame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <ImageView
+            android:id="@+id/camera_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:layout_height="100dp"
+            android:layout_width="100dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/capture_photo_button"
+            android:src="@drawable/capture_photo_button"
+            android:layout_gravity="bottom|center_horizontal"/>
+
+        <ImageView
+            android:layout_height="100dp"
+            android:layout_width="100dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/capture_photo_ok_button"
+            android:src="@drawable/capture_photo_check"
+            android:visibility="gone"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="bottom|right"/>
+
+        <ImageView
+            android:layout_height="100dp"
+            android:layout_width="100dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            android:id="@+id/capture_photo_cancel_button"
+            android:src="@drawable/capture_photo_x"
+            android:layout_gravity="bottom|left"/>
+
+        <ImageView
+            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/toggle_camera_button"
+            android:src="@drawable/toggle_front_facing_camera_icon"
+            android:layout_gravity="top|right"/>
+
+    </FrameLayout>
+
+</LinearLayout>

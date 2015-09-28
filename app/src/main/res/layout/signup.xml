@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@color/moby_blue">
+
+    <moby.mobyv02.MainViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/signupViewPager"/>
+
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/signup_progressbar"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:mlpb_enable_circle_background="true"
+        app:mlpb_progress_stoke_width="5dp"/>
+
+</FrameLayout>
