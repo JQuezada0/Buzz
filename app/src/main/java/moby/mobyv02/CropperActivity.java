@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.theartofdev.edmodo.cropper.CropImageView;
-
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;

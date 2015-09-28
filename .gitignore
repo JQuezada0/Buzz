@@ -1,7 +1,6 @@
 .gradle
 .idea
 Mobyv0.2.iml
-build.gradle
 gradle.properties
 gradlew
 gradlew.bat

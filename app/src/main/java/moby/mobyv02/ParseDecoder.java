@@ -64,6 +64,7 @@ public class ParseDecoder {
         while (keys.hasNext()){
             String key = keys.next();
             user.put(key, data.get(key));
+            System.out.println(key + " : " + data.get(key));
         }
         user.put("createdAt", DateParser.parse(data.getJSONObject("updatedAt").getString("iso")));
         user.put("updatedAt", DateParser.parse(data.getJSONObject("createdAt").getString("iso")));

@@ -14,8 +14,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:id="@+id/map_marker_image"
-            app:border_width="5dp"
-            app:border_color="@color/moby_blue"
+
             />
 
         <ImageView

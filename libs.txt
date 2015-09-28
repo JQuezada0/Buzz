@@ -13,12 +13,15 @@ GRADLE
     compile 'com.theartofdev.edmodo:android-image-cropper:1.0.+'
     compile 'com.android.support:palette-v7:23.0.0'
     compile 'com.lsjwzh:materialloadingprogressbar:0.5.6-RELEASE'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0' 
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+        transitive = true;
+    }
 
 LIBRARIES
 
-"Parse-1.10.1"
-"circleimageview" - https://github.com/hdodenhof/CircleImageView
+"Parse-1.10.1" - in
 "com.crashlytics.sdk.android:crashlytics:2.5.2" - Install parse analytics plugin
-"facebook" - install facebook sdk
-"ParseFacebookUtilsV4-1.10.1" - add jar as module dependency
+"ParseFacebookUtilsV4-1.10.1" - add jar as module dependency - in
 
