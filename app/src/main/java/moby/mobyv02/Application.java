@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.multidex.MultiDex;
+import android.util.LruCache;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
@@ -37,18 +39,18 @@ import moby.mobyv02.parse.Upvote;
  */
 public class Application extends LeanplumApplication {
 
-    private LocationManager locationManager;
     public static ImageLoader imageLoader;
     public static AppEventsLogger logger;
     public static File cacheImageFile;
     public static final int FACEBOOK_REQUEST_CODE = 5000;
+    private static Context context;
 
     @Override
     public void onCreate()
     {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
-
+        context = this;
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(Post.class);
         ParseObject.registerSubclass(Heart.class);
@@ -121,21 +123,22 @@ public class Application extends LeanplumApplication {
     }
 
     public static void loadImage(final ImageView image, String url){
+        if (url != null){
+            imageLoader.get(url, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    if (response.getBitmap() != null)
+                        image.setImageBitmap(response.getBitmap());
+                }
 
-        imageLoader.get(url, new ImageLoader.ImageListener() {
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                if (response.getBitmap() != null)
-                    image.setImageBitmap(response.getBitmap());
-            }
+                @Override
+                public void onErrorResponse(VolleyError error) {
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
+                }
+            });
+        } else {
+            image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_icon_graybg));
+        }
     }
-
 
 }

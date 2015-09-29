@@ -42,6 +42,7 @@ public class ParseDecoder {
         while (keys.hasNext()){
             String key = keys.next();
             post.put(key, data.get(key));
+            System.out.println(key + ": " + data.get(key));
         }
         post.put("createdDate", DateParser.parse(data.getJSONObject("createdAt").getString("iso")));
         post.put("updatedAt", DateParser.parse(data.getJSONObject("updatedAt").getString("iso")));
@@ -62,9 +63,11 @@ public class ParseDecoder {
         ParseUser user = new ParseUser();
         Iterator<String> keys = data.keys();
         while (keys.hasNext()){
+
             String key = keys.next();
-            user.put(key, data.get(key));
-            System.out.println(key + " : " + data.get(key));
+            if (!key.equals("sessionToken")){
+                user.put(key, data.get(key));
+            }
         }
         user.put("createdAt", DateParser.parse(data.getJSONObject("updatedAt").getString("iso")));
         user.put("updatedAt", DateParser.parse(data.getJSONObject("createdAt").getString("iso")));

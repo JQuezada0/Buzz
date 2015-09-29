@@ -85,8 +85,7 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
 
     public void loadPosts(ArrayList<Post> posts){
         adapter.addToFeed(posts);
-//        postList.setOnScrollListener(this);
-        System.out.println(adapter.getCount());
+        postList.setOnScrollListener(this);
     }
 
   /*  private final View.OnClickListener favoriteClickListener = new View.OnClickListener() {
@@ -208,6 +207,7 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
 
         if (postList.getLastVisiblePosition() ==  (totalItemCount - 1)){
             main.loadFeed();
+            System.out.println("Load feed");
         }
 
     }

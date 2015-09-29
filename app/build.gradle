@@ -22,7 +22,7 @@ android {
     useLibrary  'org.apache.http.legacy'
     defaultConfig {
         applicationId "moby.mobyv02"
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 36
         versionName "0.36"

@@ -127,7 +127,7 @@ public class PostAdapter extends BaseAdapter {
         }
         vh.heartCount.setText(post.getHearts() + " hearts");
         vh.commentCount.setText(post.getComments() + " comments");
-        Application.imageLoader.get(user.getString("profileImage"), new ImageListener(vh.profileImage, context));
+        Application.loadImage(vh.profileImage, user.getString("profileImage"));
         String type = post.getType();
         if (type.equals("status")){
             vh.postText.setText(post.getText());

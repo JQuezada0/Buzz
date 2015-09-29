@@ -280,7 +280,7 @@ public class ParseOperation {
 
             } else if (type.equals("loadInitialFollowerFeed")){
 
-                loadInitialFollowerFeed(map, loadFeedCallback);
+//                loadInitialFollowerFeed(map, loadFeedCallback);
 
             } else if (type.equals("loadWorldFeed")){
 
@@ -288,7 +288,7 @@ public class ParseOperation {
 
             } else if (type.equals("loadFollowerFeed")){
 
-                loadFollowerFeed(map, pageNumber, loadFeedCallback);
+//                loadFollowerFeed(map, pageNumber, loadFeedCallback);
 
             } else if (type.equals("loadInitialComments")){
 
@@ -518,56 +518,18 @@ public class ParseOperation {
             }
         }
 
-        private void loadInitialFollowerFeed(boolean map, final LoadFeedCallback callback){
-
-            ParseGeoPoint location = LocationManager.getLocation();
-            ParseQuery<Follow> followQuery = Follow.getQuery();
-            followQuery.fromLocalDatastore();
-            followQuery.include("toUser");
-            try {
-                List<Follow> followed = followQuery.find();
-                List<ParseUser> parseUsers = new ArrayList<ParseUser>();
-                for (Follow user : followed){
-                    parseUsers.add(user.getTo());
-                }
-                System.out.println(followed.size() + " Amount of followed users");
-                ParseQuery<Post> postQuery = Post.getQuery();
-                postQuery.include("user");
-                postQuery.whereNear("location", new ParseGeoPoint(location.getLatitude(), location.getLongitude()));
-                postQuery.whereWithinMiles("location", new ParseGeoPoint(location.getLatitude(), location.getLongitude()), 5);
-                postQuery.whereContainedIn("user", parseUsers);
-                postQuery.setLimit(10);
-                final List<Post> posts = postQuery.find();
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.finished(true, posts, null);
-                    }
-                });
-
-            } catch (final ParseException e) {
-                e.printStackTrace();
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.finished(false, null, e);
-                    }
-                });
-            }
-        }
-
         private void loadWorldFeed(boolean map, int pageNumber, final LoadFeedCallback callback){
 
             ParseQuery<Post> query = Post.getQuery();
             ParseGeoPoint location = LocationManager.getLocation();
             query.include("user");
-            query.whereNear("location", new ParseGeoPoint(location.getLatitude(), location.getLongitude()));
+ //           query.whereNear("location", new ParseGeoPoint(location.getLatitude(), location.getLongitude()));
             if (!map) {
                 query.setLimit(300);
             } else {
                 query.setLimit(300);
             }
-            query.whereWithinMiles("location", new ParseGeoPoint(location.getLatitude(), location.getLongitude()), 3900);
+        //    query.whereWithinMiles("location", new ParseGeoPoint(21.0000, 78.0000), 3900);
             query.setSkip(300 * pageNumber);
             try {
                 final List<Post> posts = query.find();
@@ -587,48 +549,6 @@ public class ParseOperation {
                 });
             }
 
-        }
-
-        private void loadFollowerFeed(boolean map, int pageNumber, final LoadFeedCallback callback){
-
-            ParseGeoPoint location = LocationManager.getLocation();
-            ParseQuery<Follow> followQuery = Follow.getQuery();
-            followQuery.fromLocalDatastore();
-            followQuery.include("toUser");
-            try {
-                List<Follow> followed = followQuery.find();
-                List<ParseUser> parseUsers = new ArrayList<ParseUser>();
-                for (Follow user : followed){
-                    parseUsers.add(user.getTo());
-                }
-                ParseQuery<Post> postQuery = Post.getQuery();
-                postQuery.include("user");
-                postQuery.whereNear("location", new ParseGeoPoint(location.getLatitude(), location.getLongitude()));
-                if (!map) {
-                    postQuery.setLimit(300);
-                } else {
-                    postQuery.setLimit(300);
-                }
-                postQuery.whereWithinMiles("location", new ParseGeoPoint(location.getLatitude(), location.getLongitude()), 3900);
-                postQuery.whereContainedIn("user", parseUsers);
-                postQuery.setSkip(100 * pageNumber);
-                final List<Post> posts = postQuery.find();
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.finished(true, posts, null);
-                    }
-                });
-
-            } catch (final ParseException e) {
-                e.printStackTrace();
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.finished(false, null, e);
-                    }
-                });
-            }
         }
 
         private void loadInitialComments(final LoadCommentsCallback callback){

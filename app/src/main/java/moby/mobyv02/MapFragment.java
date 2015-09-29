@@ -26,6 +26,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,32 +54,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     private GoogleMap map;
     private ClusterManager<Post> clusterManager;
-    private Application app;
     SupportMapFragment mapFragment;
     public static MapFragment currentMapFragment;
     private ViewPager viewPager;
     private Main main;
     private PostsAdapter postsAdapter;
-    private List<Post> currentPosts;
+    private List<Post> currentPosts = new ArrayList<Post>();
     private GestureFrameLayout feedFrame;
-    private Marker marker;
-    private int clusterSize;
     private IconGenerator iconGenerator;
     private LayoutInflater inflater;
-    private boolean cluster = false;
-    private int currentClusterIndex = 0;
     ClusterRenderer clusterRenderer;
-    private boolean forwardScroll;
-    private boolean manualScroll;
     private int lastPosition = 0;
     private MapTree mapTree;
     private ImageView fireworkAnimationImage;
     private AnimationDrawable fireworkAnimation;
+    private Projection projection;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         main = (Main) getActivity();
-        app = (Application) main.getApplication();
         currentMapFragment = this;
         if (MapAdapter.googleMap == null) {
             this.inflater = inflater;
@@ -110,7 +104,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     public void onMapReady(GoogleMap googleMap) {
 
         map = googleMap;
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()), 13.0f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()), 10.0f));
         clusterManager = new ClusterManager<Post>(getContext(), googleMap);
         clusterRenderer = new ClusterRenderer(getContext(), googleMap, clusterManager, this);
         clusterManager.setRenderer(clusterRenderer);
@@ -122,21 +116,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         clusterManager.getMarkerCollection().setOnInfoWindowAdapter(new MapWindowAdapter(main));
         googleMap.setOnMarkerClickListener(clusterManager);
 
-
     }
 
-    private void updateMap(){
+    public void updateMap(){
+        System.out.println("updateMap");
         if (map!=null) {
-            ArrayList<Marker> markers = new ArrayList<Marker>(clusterManager.getMarkerCollection().getMarkers());
-            for (Marker marker : markers){
-                marker.remove();
-            }
+            map.clear();
             clusterManager.clearItems();
-            for (Post post : currentPosts) {
-                clusterManager.addItem(post);
-            }
-            clusterManager.cluster();
+            System.out.println(currentPosts.size() + "This is the size of the current post");
 
+            clusterManager.addItems(currentPosts);
+            clusterManager.cluster();
         }
     }
 
@@ -147,19 +137,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
-    public void setFeed(List<Post> posts, boolean first, boolean initial){
-        if (postsAdapter == null){
-            postsAdapter = new PostsAdapter(getFragmentManager());
-        }
-            if (!first) {
-                postsAdapter.setPosts(posts);
-            } else {
-                postsAdapter.setFirstPosts(posts);
-            }
-            if (!initial) {
-                currentPosts = postsAdapter.getPosts();
-                updateMap();
-            }
+    public void setFeed(List<Post> posts){
+        System.out.println("Set map feed");
+        postsAdapter.setPosts(posts);
+        currentPosts.addAll(posts);
+        updateMap();
     }
 
     public void markerClusterClicked(Marker marker, Post post, int clusterSize){

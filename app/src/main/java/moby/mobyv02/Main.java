@@ -128,9 +128,6 @@ public class Main extends LeanplumFragmentActivity{
 
         setClickListeners();
 
-//        loadInitialPosts();
-
-        System.out.println(ParseUser.getCurrentUser().toString());
         loadFeed();
 
     }
@@ -157,7 +154,6 @@ public class Main extends LeanplumFragmentActivity{
             @Override
             public void done(String posts, ParseException e) {
                 if (e == null){
-                    System.out.println("posts loaded");
                     ArrayList<Post> feed = new ArrayList<Post>();
                     try {
                         JSONArray postsArray = new JSONArray(posts);
@@ -173,7 +169,7 @@ public class Main extends LeanplumFragmentActivity{
                     progressBar.setVisibility(View.GONE);
                     pageNumber++;
                     feedFragment.loadPosts(feed);
-
+                    Main.this.posts = feed;
                 } else {
                     e.printStackTrace();
                     System.out.println(e.getMessage());
@@ -241,6 +237,8 @@ public class Main extends LeanplumFragmentActivity{
 
     }
 
+
+
     private void loadInitialPosts(){
 
         progressBar.setVisibility(View.VISIBLE);
@@ -257,7 +255,7 @@ public class Main extends LeanplumFragmentActivity{
                 progressBar.setVisibility(View.GONE);
                 if (success) {
                     if (map && !feedIsLoading) { //Only run if the user is in the map feed, and the feed isn't loading
-                        mapFragment.setFeed(posts, false, true);
+                        mapFragment.setFeed(posts);
                     } else { //Run if the user is in the feed view
                         feedFragment.setInitialPosts(new ArrayList<Post>(posts));
                     }
@@ -281,7 +279,7 @@ public class Main extends LeanplumFragmentActivity{
 
                 if (success) {
                     if (map && !feedIsLoading) {
-                        mapFragment.setFeed(posts, true, false);
+                        mapFragment.setFeed(posts);
                     } else {
                         feedFragment.loadFirstPosts(new ArrayList<Post>(posts));
                         feedIsLoading = false;
@@ -337,8 +335,7 @@ public class Main extends LeanplumFragmentActivity{
         mapToggle.setSelected(true);
         mapToggle.setTextColor(getResources().getColor(android.R.color.white));
         viewPager.setCurrentItem(1, true);
-        loadInitialPosts();
-
+          mapFragment.setFeed(posts);
     }
 
     private void displayPostOnMap(String objectId){

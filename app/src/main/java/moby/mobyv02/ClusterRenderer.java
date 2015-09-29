@@ -11,8 +11,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
@@ -41,6 +43,7 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
     private final LayoutInflater inflater;
     private MapFragment mapFragment;
     private GoogleMap map;
+    private Projection projection;
 
     public ClusterRenderer(Context context, GoogleMap map, ClusterManager<Post> clusterManager, MapFragment m) {
         super(context, map, clusterManager);
@@ -59,8 +62,7 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
             View markerIcon = inflater.inflate(R.layout.map_marker_icon, null);
             loadImageAsync(clusterItem.getUser(), marker, iconGenerator, markerIcon, clusterItem, false, 0);
         } catch (IllegalArgumentException e) {
-            System.out.println("Caugh exception " + e.getMessage());
-            System.out.println("Caugh exception " + e.getMessage());
+            System.out.println("Caught exception " + e.getMessage());
         }
 
 
@@ -76,7 +78,7 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
             View markerIcon = inflater.inflate(R.layout.map_marker_icon, null);
             loadImageAsync(firstPost.getUser(), marker, iconGenerator, markerIcon, firstPost, true, cluster.getSize());
         } catch (IllegalArgumentException e) {
-            System.out.println("Caugh exception " + e.getMessage());
+            System.out.println("Caught exception " + e.getMessage());
         }
 
     }
@@ -108,15 +110,19 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
             countText.setText(String.valueOf(count));
         }
         Application.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
+
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                if (marker.isVisible() && response.getBitmap() != null) {
+                projection = map.getProjection();
+                LatLngBounds bounds = projection.getVisibleRegion().latLngBounds;
+                if (bounds.contains(marker.getPosition()) && response.getBitmap() != null) {
                     try {
                         profileImage.setImageBitmap(response.getBitmap());
                         iconGenerator.setContentView(v);
                         Bitmap bm = iconGenerator.makeIcon();
                         BitmapDescriptor bd = BitmapDescriptorFactory.fromBitmap(bm);
                         marker.setIcon(bd);
+                        System.out.println("Render marker");
                         if (post != null)
                         post.setMarker(marker);
                     } catch (IllegalArgumentException e) {
