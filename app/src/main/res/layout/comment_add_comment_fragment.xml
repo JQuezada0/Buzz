@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:text="cancel"
-            android:id="@+id/create_post_status_cancel"
+            android:id="@+id/cancel_button"
             android:textColor="@color/moby_blue"
             android:background="@android:color/transparent"/>
 

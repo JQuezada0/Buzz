@@ -39,7 +39,7 @@ public class Comment_View_Fragment extends Fragment implements AbsListView.OnScr
         commentActivity = (CommentActivity) getActivity();
         commentsList = (ListView) v.findViewById(R.id.comment_view_fragment_list);
         addCommentButton = (Button) v.findViewById(R.id.comment_view_fragment_addcomment_button);
-        backButton = (Button) v.findViewById(R.id.comment_view_cancel);
+        backButton = (Button) v.findViewById(R.id.cancel_button);
         addCommentButton.setOnClickListener(addCommentClickListener);
         backButton.setOnClickListener(backClickListener);
         adapter = new CommentAdapter(getActivity());

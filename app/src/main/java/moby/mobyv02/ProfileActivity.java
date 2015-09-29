@@ -86,6 +86,7 @@ public class ProfileActivity extends LeanplumFragmentActivity {
     private void setPosts(){
         ParseQuery<Post> query = Post.getQuery();
         query.whereEqualTo("user", user);
+        query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> list, ParseException e) {

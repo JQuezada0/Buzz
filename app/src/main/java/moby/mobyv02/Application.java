@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.multidex.MultiDex;
 import android.util.LruCache;
 import android.widget.ImageView;
@@ -116,7 +117,7 @@ public class Application extends LeanplumApplication {
         if (cacheImageFile != null){
             return cacheImageFile;
         } else {
-            cacheImageFile = new File(context.getCacheDir(), "image.png");
+            cacheImageFile = new File(Environment.getExternalStorageDirectory(), "image.png");
             return cacheImageFile;
         }
 

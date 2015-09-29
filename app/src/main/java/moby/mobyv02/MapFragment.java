@@ -228,7 +228,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void animateNewMarker(final Post post){
         if (ParseUser.getCurrentUser() == null)
         System.out.println(ParseUser.getCurrentUser() + " this is parse user");
-        markerClusterItemClicked(null, post);
+   //     markerClusterItemClicked(null, post);
         Application.imageLoader.get(ParseUser.getCurrentUser().getString("profileImage"), new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {

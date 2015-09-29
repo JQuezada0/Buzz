@@ -186,8 +186,10 @@ public class PostAdapter extends BaseAdapter {
                         vh.heartCount.setVisibility(View.GONE);
                     }
                     if ((post.getHearts() - 1) == 1){
+                        vh.heartCount.setVisibility(View.GONE);
                         vh.heartCount.setText(String.valueOf(post.getHearts() - 1) + " heart");
                     } else {
+                        vh.heartCount.setVisibility(View.GONE);
                         vh.heartCount.setText(String.valueOf(post.getHearts() - 1) + " hearts");
                     }
                     vh.heartButton.setSelected(false);

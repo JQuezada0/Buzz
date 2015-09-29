@@ -203,6 +203,7 @@ public class Main extends LeanplumFragmentActivity{
                     feedFragment.loadPosts(postsList);
                     posts.addAll(postsList);
                     progressBar.setVisibility(View.GONE);
+                    pageNumber++;
 //                    feedFragment.loadPosts(new ArrayList<Post>(ParseObject.fetchAll(postPointerList)));
                 } catch (JSONException e1) {
                     e1.printStackTrace();

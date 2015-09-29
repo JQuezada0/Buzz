@@ -37,7 +37,7 @@ public class Comment_Add_Comment_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.comment_add_comment_fragment, null);
         commentActivity = (CommentActivity) getActivity();
-        cancelButton = (Button) v.findViewById(R.id.create_comment_cancel);
+        cancelButton = (Button) v.findViewById(R.id.cancel_button);
         postButton = (Button) v.findViewById(R.id.create_comment_button);
         commentText = (EditText) v.findViewById(R.id.create_comment_text);
         fullName = (TextView) v.findViewById(R.id.create_comment_fullname);
