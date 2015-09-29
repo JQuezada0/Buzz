@@ -129,6 +129,12 @@ public class Main extends LeanplumFragmentActivity{
 
         setClickListeners();
 
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
         loadFeed();
     }
 
