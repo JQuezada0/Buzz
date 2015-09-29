@@ -155,9 +155,12 @@ public class SelectProfilePictureFragment extends Fragment {
     };
 
     public void setProfilePicture(){
-        profilePicture.setImageURI(Uri.fromFile(Application.getImageCacheFile(signup)));
+        File file = Application.getImageCacheFile(signup);
+        profilePicture.setImageBitmap(null);
+        profilePicture.setImageURI(Uri.fromFile(file));
         continueButton.setVisibility(View.VISIBLE);
         selectImageButton.setText("Retake");
+        hideDialog();
     }
 
     public void hideDialog(){

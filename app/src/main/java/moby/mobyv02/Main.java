@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import moby.mobyv02.parse.Post;
 
@@ -47,7 +48,6 @@ public class Main extends LeanplumFragmentActivity{
     //////////////////////////CONSTANTS////////////////////////////////////////
 
     private static final int WORLD_TOGGLED = 0;
-    private static final int FOLLOWERS_TOGGLED = 1;
     private static final int POST_CREATED = 1000;
     private int pageNumber = 0;
 
@@ -128,8 +128,8 @@ public class Main extends LeanplumFragmentActivity{
 
         setClickListeners();
 
-        loadFeed();
-
+     //   loadFeed();
+        loadTest();
     }
 
     @Override
@@ -141,6 +141,24 @@ public class Main extends LeanplumFragmentActivity{
 
         }
 
+    }
+
+    public void loadTest(){
+        ParseOperation.getFeed(new ParseOperation.LoadFeedCallback() {
+            @Override
+            public void finished(boolean success, final List<Post> posts, ParseException e) {
+                if (success){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            feedFragment.loadPosts(new ArrayList<Post>(posts));
+                            Main.this.posts.addAll(posts);
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            }
+        }, this);
     }
 
     public void loadFeed(){
@@ -176,6 +194,8 @@ public class Main extends LeanplumFragmentActivity{
                 }
             }
         });
+
+
 
     }
 
@@ -335,7 +355,7 @@ public class Main extends LeanplumFragmentActivity{
         mapToggle.setSelected(true);
         mapToggle.setTextColor(getResources().getColor(android.R.color.white));
         viewPager.setCurrentItem(1, true);
-          mapFragment.setFeed(posts);
+        mapFragment.setFeed(posts);
     }
 
     private void displayPostOnMap(String objectId){

@@ -2,6 +2,7 @@ package moby.mobyv02;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -174,7 +175,9 @@ public class PostAdapter extends BaseAdapter {
         vh.commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                CommentActivity.currentPost = posts.get(position);
+                Intent i = new Intent(context, CommentActivity.class);
+                context.startActivity(i);
             }
         });
         return convertView;

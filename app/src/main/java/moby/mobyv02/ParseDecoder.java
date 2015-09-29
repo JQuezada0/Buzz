@@ -41,7 +41,11 @@ public class ParseDecoder {
         Iterator<String> keys = data.keys();
         while (keys.hasNext()){
             String key = keys.next();
-            post.put(key, data.get(key));
+            if (key.equals("objectId")){
+                post.setObjectId(data.getString(key));
+            } else {
+                post.put(key, data.get(key));
+            }
             System.out.println(key + ": " + data.get(key));
         }
         post.put("createdDate", DateParser.parse(data.getJSONObject("createdAt").getString("iso")));

@@ -51,6 +51,7 @@ public class CropperActivity extends FragmentActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+            setResult(RESULT_OK);
             finish();
         }
 

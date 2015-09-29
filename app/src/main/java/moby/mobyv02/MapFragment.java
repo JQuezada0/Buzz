@@ -50,7 +50,7 @@ import moby.mobyv02.parse.Post;
 /**
  * Created by quezadjo on 9/10/2015.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback{
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap map;
     private ClusterManager<Post> clusterManager;
@@ -116,30 +116,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         clusterManager.getMarkerCollection().setOnInfoWindowAdapter(new MapWindowAdapter(main));
         googleMap.setOnMarkerClickListener(clusterManager);
 
+
     }
 
     public void updateMap(){
-        System.out.println("updateMap");
-        if (map!=null) {
-            map.clear();
-            clusterManager.clearItems();
-            System.out.println(currentPosts.size() + "This is the size of the current post");
-
-            clusterManager.addItems(currentPosts);
-            clusterManager.cluster();
-        }
+        map.clear();
+        clusterManager.clearItems();
+        clusterManager.addItems(currentPosts);
+        clusterManager.cluster();
+        System.out.println("Map should be updated");
+        System.out.println(currentPosts.size());
     }
 
     public void clearMap(){
-        if (map!=null) {
-            map.clear();
-            clusterManager.clearItems();
-        }
+
     }
 
     public void setFeed(List<Post> posts){
-        System.out.println("Set map feed");
-        postsAdapter.setPosts(posts);
+        currentPosts.clear();
         currentPosts.addAll(posts);
         updateMap();
     }
@@ -205,21 +199,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     }
 
-    public class MapWindowAdapter implements GoogleMap.InfoWindowAdapter {
+    public class MapWindowAdapter extends InfoWindowAdapter {
         private Context context = null;
 
-        public MapWindowAdapter(Context context) {
-            this.context = context;
+        public MapWindowAdapter(Context c) {
+            super(c);
+            context = c;
         }
 
+
         @Override
-        public View getInfoWindow(Marker marker) {
+        public View getInfoContents(Marker marker) {
             View v = ((Activity) context).getLayoutInflater().inflate(R.layout.empty_info_window, null);
             return v;
         }
 
         @Override
-        public View getInfoContents(Marker marker) {
+        public View getInfoWindow(Marker marker) {
             return null;
         }
     }

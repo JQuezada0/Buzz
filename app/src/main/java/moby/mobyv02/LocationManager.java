@@ -55,6 +55,7 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
 
     public static void loadLocation(final Context context, LocationReceivedListener locationReceivedListener){
 
+        System.out.println("loadLocation");
         LocationManager locationManager = new LocationManager(context, locationReceivedListener);
         if (locationManager.checkLocation()){
             locationManager.connect();
@@ -118,7 +119,7 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
     }
 
     private void connect(){
-
+        System.out.println("connect");
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -166,12 +167,12 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        System.out.println("Connection suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        System.out.print(connectionResult.toString());
     }
 
     @Override

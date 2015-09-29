@@ -83,14 +83,7 @@ public class Signup extends LeanplumFragmentActivity {
                     try {
                         profileImageInputStream = getContentResolver().openInputStream(data.getData());
                         FileOutputStream fos = new FileOutputStream(file);
-                        int read = 0;
-                        byte[] bytes = new byte[1024];
-
-                        while ((read = profileImageInputStream.read(bytes)) != -1) {
-                            fos.write(bytes, 0, read);
-                            profileImageInputStream.close();
-                            fos.close();
-                        }
+                        IOUtils.write(IOUtils.toByteArray(profileImageInputStream), fos);
                         Intent intent = new Intent(this, CropperActivity.class);
                         startActivityForResult(intent, 300);
                     } catch (FileNotFoundException e) {
@@ -100,6 +93,7 @@ public class Signup extends LeanplumFragmentActivity {
                     }
                     break;
                 case 300:
+                    System.out.println("Result obtained from taking pic");
                     profilePictureFragment.hideDialog();
                     profilePictureFragment.setProfilePicture();
                     break;

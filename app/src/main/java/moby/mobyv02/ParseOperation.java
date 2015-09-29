@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.leanplum.Leanplum;
+import com.parse.ParseCloud;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -14,6 +15,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import com.parse.ParseException;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -223,6 +227,12 @@ public class ParseOperation {
         startService("deleteFollow");
     }
 
+    public static void getFeed(LoadFeedCallback callback, Activity activity){
+        context = activity;
+        loadFeedCallback = callback;
+        startService("getFeed");
+    }
+
 
     private static void startService(String type){
         Intent i = new Intent(context, Network.class);
@@ -326,6 +336,8 @@ public class ParseOperation {
 
                 deleteFollow(parseUser, parseOperationCallback);
 
+            } else if (type.equals("getFeed")){
+                getFeed(loadFeedCallback);
             }
 
         }
@@ -812,6 +824,33 @@ public class ParseOperation {
                         callback.finished(false, e);
                     }
                 });
+            }
+
+        }
+
+        private void getFeed(final LoadFeedCallback callback){
+            try {
+                String postsJsonString = ParseCloud.callFunction("getPost", new HashMap<String, Object>());
+                JSONArray postsJsonArray = new JSONArray(postsJsonString);
+                ArrayList<Post> postPointerList = new ArrayList<Post>();
+                ArrayList<ParseUser> userPointerList = new ArrayList<ParseUser>();
+                for (int x = 0; x < postsJsonArray.length(); x++){
+                    Post object = ParseObject.createWithoutData(Post.class, postsJsonArray.getJSONObject(x).getString("objectId"));
+                    ParseUser user = ParseUser.createWithoutData(ParseUser.class, postsJsonArray.getJSONObject(x).getJSONObject("user").getString("objectId"));
+                    postPointerList.add(object);
+                    userPointerList.add(user);
+                }
+                ArrayList<Post> postsList = new ArrayList<>(ParseObject.fetchAll(postPointerList));
+                ArrayList<ParseUser> userList = new ArrayList<>(ParseUser.fetchAll(userPointerList));
+                for (int x = 0; x < postsList.size(); x++){
+                    postsList.get(x).setUser(userList.get(x));
+                }
+                callback.finished(true, postsList, null);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                callback.finished(false, null, e);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
         }
