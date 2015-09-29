@@ -4,32 +4,32 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <android.support.v7.widget.Toolbar
+    <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@android:color/white">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+        android:id="@+id/post_profile_button"
+        android:background="@android:color/white"
+        android:padding="10dp"
+        android:clickable="true">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:id="@+id/post_status_layout_profileimage"/>
+            android:clickable="true"
+            android:src="@drawable/person_icon_graybg"
+            android:id="@+id/post_profile_image"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/post_status_layout_profile_button"
-            android:clickable="true"
             android:layout_weight="1"
+            android:layout_marginLeft="5dp"
             android:orientation="vertical">
 
             <TableRow
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="wrap_content"
+                android:layout_weight="1"
                 android:maxWidth="200dp">
 
                 <TextView
@@ -39,30 +39,31 @@
                     android:layout_marginLeft="5dp"
                     android:singleLine="true"
                     android:textColor="@android:color/black"
-                    android:id="@+id/post_status_layout_username"/>
+                    android:id="@+id/post_name"/>
 
-<!--                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Stephen Curry"
-                    android:singleLine="true"
-                    android:layout_marginLeft="5dp"
-                    android:textSize="12sp"
-                    android:layout_weight="1"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/moby_gray"
-                    android:id="@+id/post_status_layout_username_small"/> -->
+                <!--              <TextView
+                                  android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  android:text="Stephen Curry"
+                                  android:singleLine="true"
+                                  android:layout_marginLeft="5dp"
+                                  android:textSize="12sp"
+                                  android:layout_weight="1"
+                                  android:layout_gravity="center_vertical"
+                                  android:gravity="center_vertical"
+                                  android:textColor="@color/moby_gray"
+                                  android:id="@+id/post_photo_layout_username_small"/> -->
 
             </TableRow>
 
             <TableRow
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:layout_width="match_parent">
 
                 <ImageView
-                    android:layout_height="20dp"
-                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:layout_width="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/location_icon"/>
 
@@ -70,22 +71,26 @@
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:text="Oracle Arena"
-                    android:id="@+id/post_status_layout_locale"
+                    android:ellipsize="end"
+                    android:id="@+id/post_locale"
                     android:textColor="@color/moby_blue"/>
 
             </TableRow>
 
             <TableRow
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:layout_marginLeft="10dp">
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:layout_gravity="bottom">
 
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
+                    android:gravity="bottom"
                     android:text="4184 km away"
-                    android:id="@+id/post_status_layout_distance"
+                    android:id="@+id/post_distance"
                     android:textColor="@color/moby_gray"/>
 
                 <TextView
@@ -94,7 +99,8 @@
                     android:text="7 min"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:id="@+id/post_status_layout_timestamp"
+                    android:gravity="right|bottom"
+                    android:id="@+id/post_time"
                     android:textColor="@color/moby_gray"/>
 
             </TableRow>
@@ -102,46 +108,8 @@
 
         </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:id="@+id/post_status_layout_upvote_button"
-            android:layout_gravity="right">
+    </TableRow>
 
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="right"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_height="40dp"
-                    android:layout_width="40dp"
-                    android:layout_gravity="right"
-                    android:id="@+id/post_status_layout_upvote_icon"
-                    android:src="@drawable/upvote_icon">
-
-                </ImageView>
-
-                <TextView
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:text="147"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:id="@+id/post_status_layout_upvote_count"
-                    android:textColor="@color/moby_blue"/>
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-        </TableRow>
-
-    </android.support.v7.widget.Toolbar>
 
     <TextView
         android:layout_width="match_parent"

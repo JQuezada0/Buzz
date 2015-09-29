@@ -86,22 +86,28 @@ public class Node {
             System.out.println("Update marker");
             Post post = getCurrentPost();
             iconGenerator.setBackground(new ColorDrawable(0x00000000));
-            Application.imageLoader.get(post.getUser().getString("profileImage"), new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    Bitmap bm = response.getBitmap();
-                    if (bm != null) {
-                        updateMarkerImage(bm);
+            String image = post.getUser().getString("profileImage");
+            if (image!=null){
+                Application.imageLoader.get(post.getUser().getString("profileImage"), new ImageLoader.ImageListener() {
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                        Bitmap bm = response.getBitmap();
+                        if (bm != null) {
+                            updateMarkerImage(bm);
+                        }
                     }
-                }
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    if (error.networkResponse.statusCode == 404){
-                        updateMarkerImage(tree.missingProfileImage);
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error.networkResponse.statusCode == 404){
+                            updateMarkerImage(tree.missingProfileImage);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                updateMarkerImage(BitmapFactory.decodeResource(tree.getContext().getResources(), R.drawable.person_icon_graybg));
+            }
+
         }
 
     }

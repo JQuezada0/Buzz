@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,7 @@ public class ProfileActivity extends LeanplumFragmentActivity {
     CircleImageView profileImage;
     TextView username;
     Button followButton;
-    ViewPager profilePosts;
+    ListView profilePosts;
     boolean self = false;
 
     @Override
@@ -50,16 +52,19 @@ public class ProfileActivity extends LeanplumFragmentActivity {
         profileImage = (CircleImageView) findViewById(R.id.profile_activity_image);
         username = (TextView) findViewById(R.id.profile_activity_name);
         followButton = (Button) findViewById(R.id.profile_activity_follow_button);
-        self = getIntent().getExtras().getBoolean("self");
-        if (self){
-            followButton.setVisibility(View.GONE);
-            user = ParseUser.getCurrentUser();
-        } else {
-            setFollowStatus();
+        if (getIntent().getExtras() !=null) {
+            self = getIntent().getExtras().getBoolean("self");
+            if (self) {
+                followButton.setVisibility(View.GONE);
+                user = ParseUser.getCurrentUser();
+            } else {
+                setFollowStatus();
+            }
         }
         Application.loadImage(profileImage, user.getString("profileImage"));
         username.setText(user.getString("fullName"));
         followButton.setOnClickListener(followClickListener);
+        profilePosts = (ListView) findViewById(R.id.post_list);
         setPosts();
     }
 
@@ -84,8 +89,7 @@ public class ProfileActivity extends LeanplumFragmentActivity {
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> list, ParseException e) {
-                PostsAdapter adapter = new PostsAdapter(getSupportFragmentManager());
-                adapter.setPosts(list);
+                PostAdapter adapter = new PostAdapter(new ArrayList<Post>(list), ProfileActivity.this, ProfileActivity.this);
                 profilePosts.setAdapter(adapter);
             }
         });

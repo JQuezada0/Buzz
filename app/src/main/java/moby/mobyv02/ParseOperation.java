@@ -464,10 +464,13 @@ public class ParseOperation {
         private void logIn(String username, String password, final ParseOperationCallback callback){
 
             try {
-                ParseUser.logIn(username, password);
+                final ParseUser user = ParseUser.logIn(username, password);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Map<String, Object> params = new HashMap<String, Object>();
+                        params.put("user", user.getObjectId());
+                        Leanplum.track("Login", params);
                         callback.finished(true, null);
                     }
                 });
@@ -483,13 +486,16 @@ public class ParseOperation {
 
         }
 
-        private void signUp(ParseUser parseUser, final ParseOperationCallback callback){
+        private void signUp(final ParseUser parseUser, final ParseOperationCallback callback){
             try {
 
                 parseUser.signUp();
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Map<String, Object> params = new HashMap<String, Object>();
+                        params.put("user", parseUser.getObjectId());
+                        Leanplum.track("Registration", params);
                         callback.finished(true, null);
                     }
                 });

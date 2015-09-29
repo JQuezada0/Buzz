@@ -390,6 +390,7 @@ public class Main extends LeanplumFragmentActivity{
             @Override
             public void done(Post post, ParseException e) {
                 mapFragment.animateNewMarker(post);
+                progressBar.setVisibility(View.GONE);
             }
         });
 

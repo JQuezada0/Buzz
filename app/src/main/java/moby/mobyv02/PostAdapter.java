@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +101,7 @@ public class PostAdapter extends BaseAdapter {
         }
         final Post post = posts.get(position);
         final ViewHolder vh;
-        ParseUser user = post.getUser();
+        final ParseUser user = post.getUser();
         if (convertView == null || convertView.getTag() == null){
             convertView = inflater.inflate(R.layout.feed_post_layout, null);
             vh = new ViewHolder();
@@ -116,6 +117,7 @@ public class PostAdapter extends BaseAdapter {
             vh.chatButton = (TableRow) convertView.findViewById(R.id.chat_button);
             vh.postText = (TextView) convertView.findViewById(R.id.post_text);
             vh.postImage = (NetworkImageView) convertView.findViewById(R.id.post_image);
+            vh.profileButton = (TableRow) convertView.findViewById(R.id.post_profile_button);
             convertView.setTag(vh);
         } else {
             vh = (ViewHolder) convertView.getTag();
@@ -130,8 +132,19 @@ public class PostAdapter extends BaseAdapter {
         } else {
             vh.time.setText(post.getFormattedTime(post.getCreatedAt().getTime()));
         }
-        vh.heartCount.setText(post.getHearts() + " hearts");
-        vh.commentCount.setText(post.getComments() + " comments");
+        if (post.getHearts() > 0) {
+            vh.commentCount.setVisibility(View.VISIBLE);
+            vh.heartCount.setText(post.getHearts() + " hearts");
+        } else {
+            vh.heartCount.setVisibility(View.GONE);
+        }
+        if (post.getComments() > 0){
+            vh.commentCount.setVisibility(View.VISIBLE);
+            vh.commentCount.setText(post.getComments() + " comments");
+        } else {
+            vh.commentCount.setVisibility(View.GONE);
+        }
+
         Application.loadImage(vh.profileImage, user.getString("profileImage"));
         String type = post.getType();
         if (type.equals("status")){
@@ -149,13 +162,18 @@ public class PostAdapter extends BaseAdapter {
             query.getFirst();
             vh.heartButton.setSelected(true);
         } catch (ParseException e) {
-
+            vh.heartButton.setSelected(false);
         }
         vh.heartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!vh.heartButton.isSelected()){
-                    vh.heartCount.setText(String.valueOf(post.getHearts() + 1) + " hearts");
+                    vh.heartCount.setVisibility(View.VISIBLE);
+                    if ((post.getHearts() + 1) == 1){
+                        vh.heartCount.setText(String.valueOf(post.getHearts() + 1) + " heart");
+                    } else {
+                        vh.heartCount.setText(String.valueOf(post.getHearts() + 1) + " hearts");
+                    }
                     vh.heartButton.setSelected(true);
                     ParseOperation.createHeart(post, new ParseOperation.ParseOperationCallback() {
                         @Override
@@ -164,7 +182,14 @@ public class PostAdapter extends BaseAdapter {
                         }
                     }, activity);
                 } else {
-                    vh.heartCount.setText(String.valueOf(post.getHearts() - 1) + " hearts");
+                    if ((post.getHearts() - 1) < 1){
+                        vh.heartCount.setVisibility(View.GONE);
+                    }
+                    if ((post.getHearts() - 1) == 1){
+                        vh.heartCount.setText(String.valueOf(post.getHearts() - 1) + " heart");
+                    } else {
+                        vh.heartCount.setText(String.valueOf(post.getHearts() - 1) + " hearts");
+                    }
                     vh.heartButton.setSelected(false);
                     ParseOperation.deleteHeart(post, new ParseOperation.ParseOperationCallback() {
                         @Override
@@ -181,6 +206,15 @@ public class PostAdapter extends BaseAdapter {
             public void onClick(View view) {
                 CommentActivity.currentPost = posts.get(position);
                 Intent i = new Intent(context, CommentActivity.class);
+                context.startActivity(i);
+            }
+        });
+        vh.profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Is clicekd");
+                Intent i = new Intent(context, ProfileActivity.class);
+                ProfileActivity.user = user;
                 context.startActivity(i);
             }
         });
@@ -201,6 +235,7 @@ public class PostAdapter extends BaseAdapter {
         TableRow heartButton;
         TableRow commentButton;
         TableRow chatButton;
+        TableRow profileButton;
     }
 
     private class ImageListener implements ImageLoader.ImageListener {
