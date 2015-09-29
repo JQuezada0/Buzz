@@ -34,6 +34,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class CreatePhotoPost extends LeanplumFragmentActivity {
         file = Application.getImageCacheFile(this);
         uri = Uri.fromFile(file);
         Application.initLeanPlum(this);
-        cancelButton = (Button) findViewById(R.id.create_post_photo_cancel);
+        cancelButton = (Button) findViewById(R.id.create_photo_post_cancel);
         image = (ImageView) findViewById(R.id.post_photo_image);
         postButton = (Button) findViewById(R.id.create_post_photo_submit_button);
         postText = (EditText) findViewById(R.id.create_post_photo_text);
@@ -102,6 +103,15 @@ public class CreatePhotoPost extends LeanplumFragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         
         if (requestCode == 100 && resultCode == RESULT_OK) {
+            try {
+                InputStream is = getContentResolver().openInputStream(data.getData());
+                FileOutputStream fos = new FileOutputStream(file);
+                IOUtils.write(IOUtils.toByteArray(is), fos);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Intent i = new Intent(this, CropperActivity.class);
             startActivityForResult(i, 200);
         } else if (requestCode == 200 && resultCode == RESULT_OK){
