@@ -29,6 +29,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by quezadjo on 9/9/2015.
@@ -55,6 +57,8 @@ public class Signup extends LeanplumFragmentActivity {
             Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
         }
         Leanplum.start(this);
+        Map<String, Object> params = new HashMap<String, Object>();
+        Leanplum.track("startRegistration", params);
         signUpFragment = new SignUpFragment();
         profilePictureFragment = new SelectProfilePictureFragment();
         file = Application.getImageCacheFile(this);

@@ -470,7 +470,8 @@ public class ParseOperation {
                     public void run() {
                         Map<String, Object> params = new HashMap<String, Object>();
                         params.put("user", user.getObjectId());
-                        Leanplum.track("Login", params);
+                        params.put("method", "Buzz");
+                        Leanplum.track("login", params);
                         callback.finished(true, null);
                     }
                 });
@@ -495,7 +496,8 @@ public class ParseOperation {
                     public void run() {
                         Map<String, Object> params = new HashMap<String, Object>();
                         params.put("user", parseUser.getObjectId());
-                        Leanplum.track("Registration", params);
+                        params.put("method", "Buzz");
+                        Leanplum.track("registration", params);
                         callback.finished(true, null);
                     }
                 });

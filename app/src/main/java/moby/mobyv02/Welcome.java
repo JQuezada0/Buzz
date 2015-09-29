@@ -43,6 +43,8 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by quezadjo on 9/8/2015.
@@ -95,7 +97,6 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
     }
 
     private void facebookLogin(){
-
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, Arrays.asList(permissions), new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
@@ -122,6 +123,10 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                         LocationManager.updateFromSharedPreferences(Welcome.this);
                         parseUser.put("gender", object.getString("gender"));
                         parseUser.saveEventually();
+                        Map<String, Object> params = new HashMap<String, Object>();
+                        params.put("user", parseUser.getObjectId());
+                        params.put("method", "facebook");
+                        Leanplum.track("login", params);
                         startActivity(new Intent(Welcome.this, Main.class));
                         finish();
                     } catch (JSONException e) {
@@ -187,6 +192,10 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (e == null){
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("user", user.getObjectId());
+                    params.put("method", "google");
+                    Leanplum.track("login", params);
                     startActivity(new Intent(Welcome.this, Main.class));
                     finish();
                 } else {
@@ -209,6 +218,10 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                         @Override
                         public void done(ParseException e) {
                             if (e == null){
+                                Map<String, Object> params = new HashMap<String, Object>();
+                                params.put("user", user.getObjectId());
+                                params.put("method", "google");
+                                Leanplum.track("registration", params);
                                 LocationManager.updateFromSharedPreferences(Welcome.this);
                                 startActivity(new Intent(Welcome.this, Main.class));
                                 finish();
