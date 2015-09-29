@@ -65,14 +65,67 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Main.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="351" column="7" selection-start-line="351" selection-start-column="7" selection-end-line="351" selection-end-column="7" />
+              <caret line="205" column="105" selection-start-line="205" selection-start-column="105" selection-end-line="205" selection-end-column="105" />
               <folding>
-                <element signature="e#3718#3738#0" expanded="true" />
-                <element signature="e#3740#3761#0" expanded="true" />
-                <element signature="e#4967#5578#0" expanded="true" />
-                <element signature="e#5187#5534#0" expanded="true" />
-                <element signature="e#5533#5534#0" expanded="true" />
-                <element signature="e#5577#5578#0" expanded="true" />
+                <element signature="e#3748#3768#0" expanded="true" />
+                <element signature="e#3770#3791#0" expanded="true" />
+                <element signature="e#6057#8494#0" expanded="true" />
+                <element signature="e#6364#6370#0" expanded="true" />
+                <element signature="e#6446#6457#0" expanded="true" />
+                <element signature="e#6524#6532#0" expanded="true" />
+                <element signature="e#7330#7336#0" expanded="true" />
+                <element signature="e#8493#8494#0" expanded="true" />
+                <element signature="e#10969#11762#0" expanded="true" />
+                <element signature="e#11761#11762#0" expanded="true" />
+                <element signature="e#11866#12540#0" expanded="true" />
+                <element signature="e#12539#12540#0" expanded="true" />
+                <element signature="e#12645#13144#0" expanded="true" />
+                <element signature="e#13143#13144#0" expanded="true" />
+                <element signature="e#14430#14613#0" expanded="true" />
+                <element signature="e#14612#14613#0" expanded="true" />
+                <element signature="e#14653#14654#0" expanded="true" />
+                <element signature="e#14696#14697#0" expanded="true" />
+                <element signature="e#14852#14981#0" expanded="true" />
+                <element signature="e#14980#14981#0" expanded="true" />
+                <element signature="e#15055#15258#0" expanded="true" />
+                <element signature="e#15257#15258#0" expanded="true" />
+                <element signature="e#15331#15532#0" expanded="true" />
+                <element signature="e#15531#15532#0" expanded="true" />
+                <element signature="e#15605#15806#0" expanded="true" />
+                <element signature="e#15805#15806#0" expanded="true" />
+                <element signature="e#15874#16004#0" expanded="true" />
+                <element signature="e#16003#16004#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DrawerAdapter.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/DrawerAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.9066148">
+              <caret line="87" column="79" selection-start-line="87" selection-start-column="79" selection-end-line="87" selection-end-column="79" />
+              <folding>
+                <element signature="e#2452#3279#0" expanded="true" />
+                <element signature="e#3278#3279#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ParseOperation.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ParseOperation.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="846" column="46" selection-start-line="846" selection-start-column="20" selection-end-line="846" selection-end-column="46" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#23099#23115#0" expanded="true" />
+                <element signature="e#28497#28513#0" expanded="true" />
+                <element signature="e#28865#28871#0" expanded="true" />
+                <element signature="e#28943#28954#0" expanded="true" />
+                <element signature="e#29019#29030#0" expanded="true" />
+                <element signature="e#29690#29696#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -102,7 +155,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/MapFragment.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="127" column="48" selection-start-line="127" selection-start-column="48" selection-end-line="127" selection-end-column="48" />
+              <caret line="122" column="0" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2220#2226#0" expanded="true" />
@@ -133,24 +186,38 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/PostAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="178" column="68" selection-start-line="178" selection-start-column="68" selection-end-line="178" selection-end-column="68" />
+              <caret line="80" column="5" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
               <folding>
-                <element signature="e#6837#7136#0" expanded="true" />
-                <element signature="e#7135#7136#0" expanded="true" />
+                <element signature="e#2340#2341#0" expanded="true" />
+                <element signature="e#2382#2383#0" expanded="true" />
+                <element signature="e#2439#2440#0" expanded="true" />
+                <element signature="e#2470#2471#0" expanded="true" />
+                <element signature="e#6922#7221#0" expanded="true" />
+                <element signature="e#7220#7221#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SelectProfilePictureFragment.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SelectProfilePictureFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/SelectProfilePictureFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6361868">
+            <state vertical-scroll-proportion="0.0">
               <caret line="161" column="44" selection-start-line="161" selection-start-column="44" selection-end-line="161" selection-end-column="44" />
               <folding>
                 <element signature="e#2840#5653#0" expanded="true" />
                 <element signature="e#5652#5653#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FeedFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/FeedFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="85" column="49" selection-start-line="85" selection-start-column="49" selection-end-line="85" selection-end-column="49" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -5578,7 +5645,6 @@
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/DrawerAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Interpolator.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/VideoActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/video_activity.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/firework_animation.xml" />
@@ -5594,20 +5660,21 @@
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/BitmapLruCache.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/BitmapDownSampler.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Application.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/FeedFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ClusterRenderer.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ParseDecoder.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/parse/Post.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ParseOperation.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/map/MapTree.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/MapFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Main.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/PostAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/LocationManager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/CropperActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Signup.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/SelectProfilePictureFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/PostAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ParseOperation.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/FeedFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Main.java" />
       </list>
     </option>
   </component>
@@ -5801,6 +5868,38 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Moby v0.2" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Moby v0.2" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -6231,11 +6330,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1050" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7229946" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20053476" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Fabric" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -6247,7 +6346,7 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23101604" sideWeight="0.5040092" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3207331" sideWeight="0.49251336" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37342498" sideWeight="0.49358287" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37342498" sideWeight="0.49358287" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973261" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -6360,17 +6459,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/main.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1773913">
-          <caret line="120" column="24" selection-start-line="120" selection-start-column="24" selection-end-line="120" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/CreateStatusPost.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -6386,13 +6474,6 @@
         <state vertical-scroll-proportion="0.44347826">
           <caret line="15" column="42" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/DrawerAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="87" column="79" selection-start-line="87" selection-start-column="79" selection-end-line="87" selection-end-column="79" />
         </state>
       </provider>
     </entry>
@@ -6584,14 +6665,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/FeedFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="209" column="44" selection-start-line="209" selection-start-column="44" selection-end-line="209" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/BitmapDownSampler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.55836576">
@@ -6635,27 +6708,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ParseOperation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="230" column="27" selection-start-line="230" selection-start-column="27" selection-end-line="230" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#8262#8263#0" expanded="true" />
-            <element signature="e#8297#8298#0" expanded="true" />
-            <element signature="e#11075#11256#0" expanded="true" />
-            <element signature="e#11255#11256#0" expanded="true" />
-            <element signature="e#11393#11572#0" expanded="true" />
-            <element signature="e#11571#11572#0" expanded="true" />
-            <element signature="e#22992#23008#0" expanded="true" />
-            <element signature="e#25411#25592#0" expanded="true" />
-            <element signature="e#25591#25592#0" expanded="true" />
-            <element signature="e#28560#28566#0" expanded="true" />
-            <element signature="e#28638#28649#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.70233464">
@@ -6680,35 +6732,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/MapFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="127" column="48" selection-start-line="127" selection-start-column="48" selection-end-line="127" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2220#2226#0" expanded="true" />
-            <element signature="e#3832#3833#0" expanded="true" />
-            <element signature="e#3903#3904#0" expanded="true" />
-            <element signature="e#7063#7064#0" expanded="true" />
-            <element signature="e#7098#7099#0" expanded="true" />
-            <element signature="e#7853#7854#0" expanded="true" />
-            <element signature="e#7888#7889#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/PostsAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.03307393">
           <caret line="44" column="3" selection-start-line="44" selection-start-column="3" selection-end-line="53" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/CommentActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
           <folding />
         </state>
       </provider>
@@ -6740,17 +6767,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/PostAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="178" column="68" selection-start-line="178" selection-start-column="68" selection-end-line="178" selection-end-column="68" />
-          <folding>
-            <element signature="e#6837#7136#0" expanded="true" />
-            <element signature="e#7135#7136#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/CropperActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -6761,18 +6777,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Main.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/SelectProfilePictureFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="351" column="7" selection-start-line="351" selection-start-column="7" selection-end-line="351" selection-end-column="7" />
+          <caret line="161" column="44" selection-start-line="161" selection-start-column="44" selection-end-line="161" selection-end-column="44" />
           <folding>
-            <element signature="e#3718#3738#0" expanded="true" />
-            <element signature="e#3740#3761#0" expanded="true" />
-            <element signature="e#4967#5578#0" expanded="true" />
-            <element signature="e#5187#5534#0" expanded="true" />
-            <element signature="e#5533#5534#0" expanded="true" />
-            <element signature="e#5577#5578#0" expanded="true" />
+            <element signature="e#2840#5653#0" expanded="true" />
+            <element signature="e#5652#5653#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/PostAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="80" column="5" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
+          <folding>
+            <element signature="e#2340#2341#0" expanded="true" />
+            <element signature="e#2382#2383#0" expanded="true" />
+            <element signature="e#2439#2440#0" expanded="true" />
+            <element signature="e#2470#2471#0" expanded="true" />
+            <element signature="e#6922#7221#0" expanded="true" />
+            <element signature="e#7220#7221#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/main.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31875">
+          <caret line="126" column="43" selection-start-line="126" selection-start-column="43" selection-end-line="126" selection-end-column="43" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -6784,13 +6822,99 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/SelectProfilePictureFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/CommentActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6361868">
-          <caret line="161" column="44" selection-start-line="161" selection-start-column="44" selection-end-line="161" selection-end-column="44" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/FeedFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="85" column="49" selection-start-line="85" selection-start-column="49" selection-end-line="85" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ParseOperation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="846" column="46" selection-start-line="846" selection-start-column="20" selection-end-line="846" selection-end-column="46" />
           <folding>
-            <element signature="e#2840#5653#0" expanded="true" />
-            <element signature="e#5652#5653#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#23099#23115#0" expanded="true" />
+            <element signature="e#28497#28513#0" expanded="true" />
+            <element signature="e#28865#28871#0" expanded="true" />
+            <element signature="e#28943#28954#0" expanded="true" />
+            <element signature="e#29019#29030#0" expanded="true" />
+            <element signature="e#29690#29696#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/MapFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="122" column="0" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2220#2226#0" expanded="true" />
+            <element signature="e#3832#3833#0" expanded="true" />
+            <element signature="e#3903#3904#0" expanded="true" />
+            <element signature="e#7063#7064#0" expanded="true" />
+            <element signature="e#7098#7099#0" expanded="true" />
+            <element signature="e#7853#7854#0" expanded="true" />
+            <element signature="e#7888#7889#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="205" column="105" selection-start-line="205" selection-start-column="105" selection-end-line="205" selection-end-column="105" />
+          <folding>
+            <element signature="e#3748#3768#0" expanded="true" />
+            <element signature="e#3770#3791#0" expanded="true" />
+            <element signature="e#6057#8494#0" expanded="true" />
+            <element signature="e#6364#6370#0" expanded="true" />
+            <element signature="e#6446#6457#0" expanded="true" />
+            <element signature="e#6524#6532#0" expanded="true" />
+            <element signature="e#7330#7336#0" expanded="true" />
+            <element signature="e#8493#8494#0" expanded="true" />
+            <element signature="e#10969#11762#0" expanded="true" />
+            <element signature="e#11761#11762#0" expanded="true" />
+            <element signature="e#11866#12540#0" expanded="true" />
+            <element signature="e#12539#12540#0" expanded="true" />
+            <element signature="e#12645#13144#0" expanded="true" />
+            <element signature="e#13143#13144#0" expanded="true" />
+            <element signature="e#14430#14613#0" expanded="true" />
+            <element signature="e#14612#14613#0" expanded="true" />
+            <element signature="e#14653#14654#0" expanded="true" />
+            <element signature="e#14696#14697#0" expanded="true" />
+            <element signature="e#14852#14981#0" expanded="true" />
+            <element signature="e#14980#14981#0" expanded="true" />
+            <element signature="e#15055#15258#0" expanded="true" />
+            <element signature="e#15257#15258#0" expanded="true" />
+            <element signature="e#15331#15532#0" expanded="true" />
+            <element signature="e#15531#15532#0" expanded="true" />
+            <element signature="e#15605#15806#0" expanded="true" />
+            <element signature="e#15805#15806#0" expanded="true" />
+            <element signature="e#15874#16004#0" expanded="true" />
+            <element signature="e#16003#16004#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/DrawerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9066148">
+          <caret line="87" column="79" selection-start-line="87" selection-start-column="79" selection-end-line="87" selection-end-column="79" />
+          <folding>
+            <element signature="e#2452#3279#0" expanded="true" />
+            <element signature="e#3278#3279#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -124,6 +124,7 @@
                     android:padding="7dp"
                     android:layout_weight="1"
                     android:clickable="true"
+                   android:visibility="gone"
                     android:id="@+id/create_video_post_button"
                     android:background="@android:color/white">
 

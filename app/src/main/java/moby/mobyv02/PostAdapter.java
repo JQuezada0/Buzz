@@ -73,7 +73,11 @@ public class PostAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return posts.size() + 1;
+        if (posts.size() > 0) {
+            return posts.size() + 1;
+        } else {
+            return 0;
+        }
     }
 
     @Override

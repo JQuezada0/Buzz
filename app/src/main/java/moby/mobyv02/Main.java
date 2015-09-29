@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -128,8 +129,7 @@ public class Main extends LeanplumFragmentActivity{
 
         setClickListeners();
 
-     //   loadFeed();
-        loadTest();
+        loadFeed();
     }
 
     @Override
@@ -143,58 +143,76 @@ public class Main extends LeanplumFragmentActivity{
 
     }
 
-    public void loadTest(){
-        ParseOperation.getFeed(new ParseOperation.LoadFeedCallback() {
-            @Override
-            public void finished(boolean success, final List<Post> posts, ParseException e) {
-                if (success){
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            feedFragment.loadPosts(new ArrayList<Post>(posts));
-                            Main.this.posts.addAll(posts);
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                }
-            }
-        }, this);
-    }
-
     public void loadFeed(){
         progressBar.setVisibility(View.VISIBLE);
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("location", LocationManager.getLocation());
         params.put("pageNumber", pageNumber);
         System.out.println("load feed");
-        ParseCloud.callFunctionInBackground("getFeed", params, new FunctionCallback<String>(){
 
+/*        ParseOperation.getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
-            public void done(String posts, ParseException e) {
-                if (e == null){
-                    ArrayList<Post> feed = new ArrayList<Post>();
-                    try {
-                        JSONArray postsArray = new JSONArray(posts);
-                        for (int x = 0; x < postsArray.length(); x++){
-                            ParseDecoder decoder = new ParseDecoder(postsArray.getJSONObject(x));
-                            feed.add(decoder.decodePost());
+            public void finished(boolean success, final List<Post> posts, ParseException e) {
+                if (success) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("Obtained posts");
+                            feedFragment.loadPosts(new ArrayList<Post>(posts));
+                            Main.this.posts.addAll(posts);
+                            progressBar.setVisibility(View.GONE);
+                            pageNumber++;
                         }
-                    } catch (JSONException e1) {
-                        e1.printStackTrace();
-                    } catch (java.text.ParseException e1) {
-                        e1.printStackTrace();
-                    }
-                    progressBar.setVisibility(View.GONE);
-                    pageNumber++;
-                    feedFragment.loadPosts(feed);
-                    Main.this.posts = feed;
-                } else {
-                    e.printStackTrace();
-                    System.out.println(e.getMessage());
+                    });
                 }
             }
-        });
+        }, this); */
 
+        ParseCloud.callFunctionInBackground("getFeed", params, new FunctionCallback<String>() {
+            @Override
+            public void done(String s, ParseException e) {
+                JSONArray postsJsonArray = null;
+                try {
+                    postsJsonArray = new JSONArray(s);
+                    ArrayList<Post> postPointerList = new ArrayList<Post>();
+                    ArrayList<ParseUser> userPointerList = new ArrayList<ParseUser>();
+                    ArrayList<String> objectIds = new ArrayList<String>();
+                    for (int x = 0; x < postsJsonArray.length(); x++){
+                        objectIds.add(postsJsonArray.getJSONObject(x).getString("objectId"));
+                        Post object = ParseObject.createWithoutData(Post.class, postsJsonArray.getJSONObject(x).getString("objectId"));
+                        postPointerList.add(object);
+//                        userPointerList.add(user);
+//                        object.setUser(user);
+                    }
+                    System.out.println("Objectid's length is " + objectIds.size());
+                    ParseQuery<Post> query = Post.getQuery();
+                    query.whereContainedIn("objectId", objectIds);
+                    query.include("user");
+                    ArrayList<Post> postsList = new ArrayList<Post>(query.find());
+//                    System.out.println(ParseObject.fetchAll(userPointerList).size());
+//                    for (Post p : postsList){
+//                        p.setUser(p.getUser().fetch());
+//                    }
+                    System.out.println(postsList.size());
+//                    System.out.println(userList.size());
+//                    ArrayList<ParseUser> userList = new ArrayList<ParseUser>(ParseUser.fetchAll(userPointerList));
+//                    for (int x = 0; x < postsList.size(); x++){
+//                        postsList.get(x).setUser(userList.get(x));
+//                    }
+                    Collections.sort(postsList);
+                    feedFragment.loadPosts(postsList);
+                    posts.addAll(postsList);
+                    progressBar.setVisibility(View.GONE);
+//                    feedFragment.loadPosts(new ArrayList<Post>(ParseObject.fetchAll(postPointerList)));
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+
+
+            }
+        });
 
 
     }
