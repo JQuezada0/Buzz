@@ -249,7 +249,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //        ObjectAnimator animator = ObjectAnimator.ofFloat(successDialog, "Y", 0 - successDialog.getHeight(), (height/2) - (successDialog.getHeight() / 2));
 //        animator.setDuration(1000);
 //        animator.start();
-        Application.imageLoader.get(ParseUser.getCurrentUser().getString("profileImage"), new ImageLoader.ImageListener() {
+        setFeed(Arrays.asList(new Post[]{post}));
+ /*       Application.imageLoader.get(ParseUser.getCurrentUser().getString("profileImage"), new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                 Bitmap bm = response.getBitmap();
@@ -293,7 +294,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onErrorResponse(VolleyError error) {
 
             }
-        });
+        }); */
     }
 
     private void animateMarker(final Marker marker, final Bitmap bm, Float[] scale){
