@@ -24,8 +24,8 @@ android {
         applicationId "moby.mobyv02"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 38
-        versionName "0.38"
+        versionCode 39
+        versionName "0.39"
         multiDexEnabled true
     }
     buildTypes {
