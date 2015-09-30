@@ -818,33 +818,34 @@ public class ParseOperation {
                 public void done(String s, ParseException e) {
                     if (e !=null){
                         callback.finished(false, null, e);
-                        return;
-                    }
-                    JSONArray postsJsonArray = null;
-                    try {
-                        postsJsonArray = new JSONArray(s);
-                        ArrayList<Post> postPointerList = new ArrayList<Post>();
-                        ArrayList<ParseUser> userPointerList = new ArrayList<ParseUser>();
-                        ArrayList<String> objectIds = new ArrayList<String>();
-                        for (int x = 0; x < postsJsonArray.length(); x++){
-                            objectIds.add(postsJsonArray.getJSONObject(x).getString("objectId"));
-                            Post object = ParseObject.createWithoutData(Post.class, postsJsonArray.getJSONObject(x).getString("objectId"));
-                            postPointerList.add(object);
+                    } else {
+                        JSONArray postsJsonArray = null;
+                        try {
+                            postsJsonArray = new JSONArray(s);
+                            ArrayList<Post> postPointerList = new ArrayList<Post>();
+                            ArrayList<ParseUser> userPointerList = new ArrayList<ParseUser>();
+                            ArrayList<String> objectIds = new ArrayList<String>();
+                            for (int x = 0; x < postsJsonArray.length(); x++){
+                                objectIds.add(postsJsonArray.getJSONObject(x).getString("objectId"));
+                                Post object = ParseObject.createWithoutData(Post.class, postsJsonArray.getJSONObject(x).getString("objectId"));
+                                postPointerList.add(object);
+                            }
+                            System.out.println("Objectid's length is " + objectIds.size());
+                            ParseQuery<Post> query = Post.getQuery();
+                            query.whereContainedIn("objectId", objectIds);
+                            query.include("user");
+                            ArrayList<Post> postsList = new ArrayList<Post>(query.find());
+                            System.out.println(postsList.size());
+                            Collections.sort(postsList);
+                            callback.finished(true, postsList, null);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                            callback.finished(false, null, e1);
                         }
-                        System.out.println("Objectid's length is " + objectIds.size());
-                        ParseQuery<Post> query = Post.getQuery();
-                        query.whereContainedIn("objectId", objectIds);
-                        query.include("user");
-                        ArrayList<Post> postsList = new ArrayList<Post>(query.find());
-                        System.out.println(postsList.size());
-                        Collections.sort(postsList);
-                        callback.finished(true, postsList, null);
-                    } catch (JSONException e1) {
-                        e1.printStackTrace();
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                        callback.finished(false, null, e1);
                     }
+
 
 
                 }

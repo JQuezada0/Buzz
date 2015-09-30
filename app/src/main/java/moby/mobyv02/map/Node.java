@@ -170,8 +170,12 @@ public class Node {
 
     public void exitNode(){
 
-            Post post = posts.get(0);
-            iconGenerator.setBackground(new ColorDrawable(0x00000000));
+        Post post = posts.get(0);
+        iconGenerator.setBackground(new ColorDrawable(0x00000000));
+        String profileImage = post.getUser().getString("profileImage");
+        if (profileImage == null){
+            updateMarkerImageOnExit(tree.missingProfileImage);
+        } else {
             Application.imageLoader.get(post.getUser().getString("profileImage"), new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -187,10 +191,13 @@ public class Node {
                         updateMarkerImageOnExit(tree.missingProfileImage);
                     }
                 }
-            });
+            }, 80, 80);
+
+        }
 
 
     }
+
 
     private void updateMarkerImage(Bitmap bm){
 

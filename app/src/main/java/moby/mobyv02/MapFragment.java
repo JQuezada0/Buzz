@@ -131,17 +131,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         clusterManager.getClusterMarkerCollection().setOnInfoWindowAdapter(new MapWindowAdapter(main));
         clusterManager.getMarkerCollection().setOnInfoWindowAdapter(new MapWindowAdapter(main));
         googleMap.setOnMarkerClickListener(clusterManager);
-
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                hideFeed();
+            }
+        });
 
     }
 
     public void updateMap(){
-        map.clear();
-        clusterManager.clearItems();
-        clusterManager.addItems(currentPosts);
-        clusterManager.cluster();
-        System.out.println("Map should be updated");
-        System.out.println(currentPosts.size());
+        if (map!= null){
+            map.clear();
+            clusterManager.clearItems();
+            clusterManager.addItems(currentPosts);
+            clusterManager.cluster();
+        }
     }
 
     public void clearMap(){

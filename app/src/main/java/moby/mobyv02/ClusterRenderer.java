@@ -127,7 +127,7 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
                             Bitmap bm = iconGenerator.makeIcon();
                             BitmapDescriptor bd = BitmapDescriptorFactory.fromBitmap(bm);
                             marker.setIcon(bd);
-                            System.out.println("Render marker");
+
                             if (post != null)
                                 post.setMarker(marker);
                         } catch (IllegalArgumentException e) {
@@ -140,7 +140,7 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
                 public void onErrorResponse(VolleyError error) {
 
                 }
-            });
+            }, 80, 80);
         }
 
     }

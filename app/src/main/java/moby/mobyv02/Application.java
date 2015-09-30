@@ -122,7 +122,7 @@ public class Application extends LeanplumApplication {
                 public void onErrorResponse(VolleyError error) {
 
                 }
-            });
+            }, image.getWidth(), image.getHeight());
         } else {
             image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_icon_graybg));
         }
