@@ -16,7 +16,7 @@ import moby.mobyv02.parse.Post;
 /**
  * Created by quezadjo on 9/10/2015.
  */
-public class CommentActivity extends LeanplumFragmentActivity {
+public class CommentActivity extends FragmentActivity {
 
     public static Post currentPost;
     private CircleProgressBar progressBar;
@@ -25,15 +25,10 @@ public class CommentActivity extends LeanplumFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_activity);
-        if (BuildConfig.DEBUG) {
-            Leanplum.setAppIdForDevelopmentMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "dev_DZYELDJSN3ASeJHFHQUuuCuSf2t4uxOJvw5wUAimw6c");
-        } else {
-            Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
-        }
-        Leanplum.start(this);
         progressBar = (CircleProgressBar) findViewById(R.id.comments_progressbar);
         progressBar.setColorSchemeResources(R.color.moby_blue);
         setInitialFragment();
+        BuzzAnalytics.logScreen(this, BuzzAnalytics.COMMENT_CATEGORY, "viewComments");
 
     }
 

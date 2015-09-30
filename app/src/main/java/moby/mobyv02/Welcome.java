@@ -29,7 +29,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
-import com.leanplum.Leanplum;
 import com.leanplum.activities.LeanplumFragmentActivity;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -65,12 +64,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
-        if (BuildConfig.DEBUG) {
-            Leanplum.setAppIdForDevelopmentMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "dev_DZYELDJSN3ASeJHFHQUuuCuSf2t4uxOJvw5wUAimw6c");
-        } else {
-            Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
-        }
-        Leanplum.start(this);
+        BuzzAnalytics.logScreen(this, BuzzAnalytics.ONBOARDING_CATEGORY, "welcome");
         signupButton = (Button) findViewById(R.id.welcome_signup_button);
         loginButton = (Button) findViewById(R.id.welcome_login_button);
         facebookSignin = (TableRow) findViewById(R.id.facebook_button);
@@ -79,21 +73,6 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
         loginButton.setOnClickListener(loginClickListener);
         facebookSignin.setOnClickListener(facebookClickListener);
         googlePlusSignin.setOnClickListener(googleClickListener);
-
-        try{
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "moby.mobyv02", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
     }
 
     private void facebookLogin(){
@@ -101,6 +80,11 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (e == null) {
+                    if (parseUser.isNew()){
+                        BuzzAnalytics.logLogin(Welcome.this, "Facebook", true);
+                    } else {
+                        BuzzAnalytics.logLogin(Welcome.this, "Facebook", false);
+                    }
                     createUser(parseUser);
                 } else {
                     e.printStackTrace();
@@ -123,10 +107,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                         LocationManager.updateFromSharedPreferences(Welcome.this);
                         parseUser.put("gender", object.getString("gender"));
                         parseUser.saveEventually();
-                        Map<String, Object> params = new HashMap<String, Object>();
-                        params.put("user", parseUser.getObjectId());
-                        params.put("method", "facebook");
-                        Leanplum.track("login", params);
+
                         startActivity(new Intent(Welcome.this, Main.class));
                         finish();
                     } catch (JSONException e) {
@@ -192,10 +173,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (e == null){
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("user", user.getObjectId());
-                    params.put("method", "google");
-                    Leanplum.track("login", params);
+                    BuzzAnalytics.logLogin(Welcome.this, "Google", false);
                     startActivity(new Intent(Welcome.this, Main.class));
                     finish();
                 } else {
@@ -218,10 +196,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                         @Override
                         public void done(ParseException e) {
                             if (e == null){
-                                Map<String, Object> params = new HashMap<String, Object>();
-                                params.put("user", user.getObjectId());
-                                params.put("method", "google");
-                                Leanplum.track("registration", params);
+                                BuzzAnalytics.logLogin(Welcome.this, "Google", true);
                                 LocationManager.updateFromSharedPreferences(Welcome.this);
                                 startActivity(new Intent(Welcome.this, Main.class));
                                 finish();

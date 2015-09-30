@@ -30,7 +30,7 @@ import moby.mobyv02.parse.Post;
 /**
  * Created by quezadjo on 9/10/2015.
  */
-public class ProfileActivity extends LeanplumFragmentActivity {
+public class ProfileActivity extends FragmentActivity {
 
     public static ParseUser user;
     CircleImageView profileImage;
@@ -43,12 +43,6 @@ public class ProfileActivity extends LeanplumFragmentActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
-        if (BuildConfig.DEBUG) {
-            Leanplum.setAppIdForDevelopmentMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "dev_DZYELDJSN3ASeJHFHQUuuCuSf2t4uxOJvw5wUAimw6c");
-        } else {
-            Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
-        }
-        Leanplum.start(this);
         profileImage = (CircleImageView) findViewById(R.id.profile_activity_image);
         username = (TextView) findViewById(R.id.profile_activity_name);
         followButton = (Button) findViewById(R.id.profile_activity_follow_button);
@@ -66,6 +60,16 @@ public class ProfileActivity extends LeanplumFragmentActivity {
         followButton.setOnClickListener(followClickListener);
         profilePosts = (ListView) findViewById(R.id.post_list);
         setPosts();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        String page = "userProfile";
+        if (self){
+            page = "selfProfile";
+        }
+        BuzzAnalytics.logScreen(this, BuzzAnalytics.PROFILE_CATEGORY, page);
     }
 
     private void setFollowStatus(){
@@ -109,6 +113,7 @@ public class ProfileActivity extends LeanplumFragmentActivity {
                             followButton.setText("Unfollow");
                             followButton.setTextColor(ContextCompat.getColor(ProfileActivity.this, android.R.color.white));
                             followButton.setSelected(true);
+                            BuzzAnalytics.logFollow(ProfileActivity.this);
                         } else {
 
                         }

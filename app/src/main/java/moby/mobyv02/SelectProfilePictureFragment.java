@@ -94,7 +94,7 @@ public class SelectProfilePictureFragment extends Fragment {
 
                                 if (e == null) {
                                     Intent i = new Intent(SelectProfilePictureFragment.this.signup, Main.class);
-                                    Application.logger.logEvent("Signup succeeded");
+                                    BuzzAnalytics.logLogin(SelectProfilePictureFragment.this.signup, "Buzz", true);
                                     LocationManager.updateFromSharedPreferences(SelectProfilePictureFragment.this.signup);
                                     SelectProfilePictureFragment.this.signup.startActivity(i);
                                 } else {
@@ -105,7 +105,6 @@ public class SelectProfilePictureFragment extends Fragment {
                                             Toast.makeText(SelectProfilePictureFragment.this.signup, e.getMessage(), Toast.LENGTH_SHORT).show();
                                             SelectProfilePictureFragment.this.signup.getSignUpViewPager().setCurrentItem(0, true);
                                             continueButton.setEnabled(true);
-                                            Application.logger.logEvent("Signup failed");
                                         }
                                     });
 

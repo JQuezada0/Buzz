@@ -28,18 +28,10 @@ import moby.mobyv02.parse.Post;
  */
 public class FeedFragment extends Fragment implements AbsListView.OnScrollListener {
 
-//    private ImageView favoriteButton;
-//    private ImageView commentButton;
-//    private TableRow feedNavigation;
-//    private ViewPager viewPager;
     private ListView postList;
     private PostAdapter adapter;
-//    private PostsAdapter postsAdapter;
-    private Post currentPost;
     private Main main;
-//    private TextView commentCount;
     private static int lastPosition = 0;
-    private boolean maxReached;
 
 
     @Override
@@ -49,17 +41,6 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
         postList = (ListView) v.findViewById(R.id.post_list);
         adapter = new PostAdapter(new ArrayList<Post>(), main, main);
         postList.setAdapter(adapter);
-//        favoriteButton = (ImageView) v.findViewById(R.id.feed_favorite_button).findViewById(R.id.favorite_button);
-//        commentButton = (ImageView) v.findViewById(R.id.feed_comment_button).findViewById(R.id.comment_button);
-//        commentCount = (TextView) v.findViewById(R.id.feed_comment_button).findViewById(R.id.comment_count);
-//        feedNavigation = (TableRow) v.findViewById(R.id.feed_navigation);
-//        viewPager = (ViewPager) v.findViewById(R.id.feed_viewpager);
-//        favoriteButton.setOnClickListener(favoriteClickListener);
-//        commentButton.setOnClickListener(commentClickListener);
-//        postsAdapter = new PostsAdapter(getFragmentManager());
-//        viewPager.setOnPageChangeListener(pageChangeListener);
-//        viewPager.setAdapter(postsAdapter);
-//        feedNavigation.setVisibility(View.GONE);
         return v;
     }
 
@@ -88,108 +69,6 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
         postList.setOnScrollListener(this);
     }
 
-  /*  private final View.OnClickListener favoriteClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-            if (postsAdapter.getCount() > 0) {
-
-
-                if (!favoriteButton.isSelected()) {
-
-                    ParseOperation.createFavorite(postsAdapter.getPost(viewPager.getCurrentItem()), new ParseOperation.ParseOperationCallback() {
-                        @Override
-                        public void finished(boolean success, ParseException e) {
-                        }
-                    }, main);
-                    favoriteButton.setSelected(true);
-
-                } else {
-
-                    ParseOperation.deleteFavorite(postsAdapter.getPost(viewPager.getCurrentItem()), new ParseOperation.ParseOperationCallback() {
-                        @Override
-                        public void finished(boolean success, ParseException e) {
-                        }
-                    }, main);
-                    favoriteButton.setSelected(false);
-                }
-
-            }
-        }
-
-    };
-*/
-/*    private final View.OnClickListener commentClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (postsAdapter.getCount() > 0) {
-                CommentActivity.currentPost = postsAdapter.getPost(viewPager.getCurrentItem());
-                startActivity(new Intent(main, CommentActivity.class));
-
-            }
-        }
-    };*/
-
-/*    private void updateDisplay(int position){
-        lastPosition = position;
-        currentPost = postsAdapter.getPost(position);
-        setCommentCount(currentPost.getComments());
-        ParseQuery<Heart> query = Heart.getQuery();
-        query.fromLocalDatastore();
-        query.whereEqualTo("post", currentPost);
-        query.getFirstInBackground(new GetCallback<Heart>() {
-            @Override
-            public void done(Heart heart, ParseException e) {
-                if (e != null) {
-                    favoriteButton.setSelected(false);
-                } else {
-                    favoriteButton.setSelected(true);
-                }
-            }
-        });
-    }*/
-
- /*   private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-        @Override
-        public void onPageSelected(int position) {
-
-            updateDisplay(position);
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {}
-    };*/
-
-    /* public void setFeed(List<Post> posts, boolean resume, boolean first){
-        feedNavigation.setVisibility(View.VISIBLE);
-        if (!first){
-            postsAdapter.setPosts(posts);
-        }else {
-            postsAdapter.setFirstPosts(posts);
-            lastPosition = 0;
-        }
-        viewPager.setAdapter(postsAdapter);
-        if (postsAdapter.getCount() <= 0){
-            resume = false;
-        }
-        if (resume){
-            viewPager.setCurrentItem(lastPosition);
-            updateDisplay(lastPosition);
-        } else {
-            if (postsAdapter.getCount() > 0)
-            updateDisplay(0);
-        }
-    } */
-
-
- /**   private void setCommentCount(int i){
-        commentCount.setText(String.valueOf(i));
-    }
-*/
     @Override
     public void onSaveInstanceState(Bundle outState){
         outState.putInt("lastPosition", lastPosition);

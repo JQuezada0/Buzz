@@ -16,7 +16,7 @@ import com.parse.ParseUser;
 /**
  * Created by quezadjo on 9/8/2015.
  */
-public class Dispatch_Activity extends LeanplumFragmentActivity implements LocationReceivedListener{
+public class Dispatch_Activity extends FragmentActivity implements LocationReceivedListener{
 
     Application app;
 
@@ -24,13 +24,7 @@ public class Dispatch_Activity extends LeanplumFragmentActivity implements Locat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dispatch_activity);
-        app = (Application) getApplication();
-        if (BuildConfig.DEBUG) {
-            Leanplum.setAppIdForDevelopmentMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "dev_DZYELDJSN3ASeJHFHQUuuCuSf2t4uxOJvw5wUAimw6c");
-        } else {
-            Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
-        }
-        Leanplum.start(this);
+        BuzzAnalytics.logAppOpened(this);
 
     }
 
@@ -44,6 +38,7 @@ public class Dispatch_Activity extends LeanplumFragmentActivity implements Locat
         } else {
             LocationManager.updateLocation(this);
             Intent intent = new Intent(this, Main.class);
+            System.out.println(intent.toUri(0));
             startActivity(intent);
         }
     }

@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.leanplum.Leanplum;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -23,6 +23,7 @@ import org.json.JSONException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,7 @@ public class ParseOperation {
     }
 
     public static interface LoadFeedCallback {
-        void finished(boolean success, List<Post> posts, ParseException e);
+        void finished(boolean success, ArrayList<Post> posts, ParseException e);
     }
 
     public static interface LoadCommentsCallback {
@@ -468,10 +469,6 @@ public class ParseOperation {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Map<String, Object> params = new HashMap<String, Object>();
-                        params.put("user", user.getObjectId());
-                        params.put("method", "Buzz");
-                        Leanplum.track("login", params);
                         callback.finished(true, null);
                     }
                 });
@@ -494,10 +491,6 @@ public class ParseOperation {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Map<String, Object> params = new HashMap<String, Object>();
-                        params.put("user", parseUser.getObjectId());
-                        params.put("method", "Buzz");
-                        Leanplum.track("registration", params);
                         callback.finished(true, null);
                     }
                 });
@@ -526,7 +519,7 @@ public class ParseOperation {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callback.finished(true, results, null);
+       //                 callback.finished(true, results, null);
                     }
                 });
             } catch (final ParseException e) {
@@ -558,7 +551,7 @@ public class ParseOperation {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callback.finished(true, posts, null);
+           //             callback.finished(true, posts, null);
                     }
                 });
             } catch (final ParseException e) {
@@ -566,7 +559,7 @@ public class ParseOperation {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callback.finished(false, null, e);
+           //             callback.finished(false, null, e);
                     }
                 });
             }
@@ -634,9 +627,6 @@ public class ParseOperation {
             try {
                 heart.save();
                 heart.pin();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", post.getObjectId());
-                Leanplum.track("Hearts", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -693,9 +683,6 @@ public class ParseOperation {
             post.saveEventually();
             try {
                 comment.save();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", post.getObjectId());
-                Leanplum.track("Comments", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -729,10 +716,6 @@ public class ParseOperation {
                         callback.finished(true, null);
                     }
                 });
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", post.getObjectId());
-                params.put("type", "upvote");
-                Leanplum.track("Upvotes", params);
             } catch (final ParseException e) {
                 e.printStackTrace();
                 context.runOnUiThread(new Runnable() {
@@ -754,10 +737,6 @@ public class ParseOperation {
                 Upvote upvote = query.getFirst();
                 upvote.delete();
                 upvote.unpin();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", post.getObjectId());
-                params.put("type", "downvote");
-                Leanplum.track("Upvotes", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -784,10 +763,6 @@ public class ParseOperation {
             try {
                 follow.save();
                 follow.pin();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", user.getObjectId());
-                params.put("type", "follow");
-                Leanplum.track("Follows", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -816,10 +791,6 @@ public class ParseOperation {
                 Follow follow = query.getFirst();
                 follow.delete();
                 follow.unpin();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", user.getObjectId());
-                params.put("type", "unfollow");
-                Leanplum.track("Follows", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -839,37 +810,45 @@ public class ParseOperation {
         }
 
         private void getFeed(int pageNumber, final LoadFeedCallback callback){
-            try {
-                HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("pageNumber", pageNumber);
-                params.put("location", LocationManager.getLocation());
-                String postsJsonString = ParseCloud.callFunction("getPost", params);
-                JSONArray postsJsonArray = new JSONArray(postsJsonString);
-                ArrayList<Post> postPointerList = new ArrayList<Post>();
-                ArrayList<ParseUser> userPointerList = new ArrayList<ParseUser>();
-                ArrayList<ParseUser> userList = new ArrayList<ParseUser>();
-                for (int x = 0; x < postsJsonArray.length(); x++){
-                    Post object = ParseObject.createWithoutData(Post.class, postsJsonArray.getJSONObject(x).getString("objectId"));
-                    ParseUser user = ParseUser.createWithoutData(ParseUser.class, postsJsonArray.getJSONObject(x).getJSONObject("user").getString("objectId"));
-                    postPointerList.add(object);
-                    userPointerList.add(user);
-                }
-                ParseQuery<Post> query = Post.getQuery();
-                query.whereContainedIn("objectId", postPointerList);
-                ArrayList<Post> postList = new ArrayList<Post>(query.find());
-                System.out.println(postList.size());
-                callback.finished(true, postList, null);
-                //ParseUser.fetchAll(userPointerList);
-                for (int x = 0; x < postList.size(); x++){
-                    postList.get(x).setUser(userList.get(x));
-                }
+            HashMap<String, Object> params = new HashMap<String, Object>();
+            params.put("location", LocationManager.getLocation());
+            params.put("pageNumber", pageNumber);
+            ParseCloud.callFunctionInBackground("getFeed", params, new FunctionCallback<String>() {
+                @Override
+                public void done(String s, ParseException e) {
+                    if (e !=null){
+                        callback.finished(false, null, e);
+                        return;
+                    }
+                    JSONArray postsJsonArray = null;
+                    try {
+                        postsJsonArray = new JSONArray(s);
+                        ArrayList<Post> postPointerList = new ArrayList<Post>();
+                        ArrayList<ParseUser> userPointerList = new ArrayList<ParseUser>();
+                        ArrayList<String> objectIds = new ArrayList<String>();
+                        for (int x = 0; x < postsJsonArray.length(); x++){
+                            objectIds.add(postsJsonArray.getJSONObject(x).getString("objectId"));
+                            Post object = ParseObject.createWithoutData(Post.class, postsJsonArray.getJSONObject(x).getString("objectId"));
+                            postPointerList.add(object);
+                        }
+                        System.out.println("Objectid's length is " + objectIds.size());
+                        ParseQuery<Post> query = Post.getQuery();
+                        query.whereContainedIn("objectId", objectIds);
+                        query.include("user");
+                        ArrayList<Post> postsList = new ArrayList<Post>(query.find());
+                        System.out.println(postsList.size());
+                        Collections.sort(postsList);
+                        callback.finished(true, postsList, null);
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                        callback.finished(false, null, e1);
+                    }
 
-            } catch (ParseException e) {
-                e.printStackTrace();
-                callback.finished(false, null, e);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+                }
+            });
 
         }
 

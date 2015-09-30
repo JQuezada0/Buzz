@@ -24,8 +24,8 @@ android {
         applicationId "moby.mobyv02"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 37
-        versionName "0.37"
+        versionCode 38
+        versionName "0.38"
         multiDexEnabled true
     }
     buildTypes {
@@ -57,7 +57,6 @@ dependencies {
     compile 'commons-io:commons-io:+'
     compile 'com.android.support:design:23.0.1'
     compile 'com.parse.bolts:bolts-android:1.+'
-    compile 'com.leanplum:Leanplum:1.2.16'
     compile 'com.theartofdev.edmodo:android-image-cropper:1.0.+'
     compile 'com.android.support:palette-v7:23.0.0'
     compile 'com.lsjwzh:materialloadingprogressbar:0.5.6-RELEASE'
@@ -66,6 +65,15 @@ dependencies {
     compile 'com.androidmapsextensions:android-maps-extensions:2.2.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
+    }
+    compile('com.segment.analytics.android:analytics-core:+') {
+        transitive = true
+    }
+    compile('com.segment.analytics.android:analytics-integration-mixpanel:+') {
+        transitive = true
+    }
+    compile('com.segment.analytics.android:analytics-integration-leanplum:+') {
+        transitive = true
     }
     compile files('libs/Parse-1.10.1.jar')
     compile files('libs/bolts-android-1.2.1.jar')

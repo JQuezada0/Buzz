@@ -2,7 +2,9 @@ package moby.mobyv02;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -109,33 +111,38 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
         } else {
             countText.setText(String.valueOf(count));
         }
-        Application.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
+        if (imageUrl == null){
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_icon_graybg)));
+        } else {
+            Application.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
 
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                projection = map.getProjection();
-                LatLngBounds bounds = projection.getVisibleRegion().latLngBounds;
-                if (bounds.contains(marker.getPosition()) && response.getBitmap() != null) {
-                    try {
-                        profileImage.setImageBitmap(response.getBitmap());
-                        iconGenerator.setContentView(v);
-                        Bitmap bm = iconGenerator.makeIcon();
-                        BitmapDescriptor bd = BitmapDescriptorFactory.fromBitmap(bm);
-                        marker.setIcon(bd);
-                        System.out.println("Render marker");
-                        if (post != null)
-                        post.setMarker(marker);
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Caught exception " + e.getMessage());
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    projection = map.getProjection();
+                    LatLngBounds bounds = projection.getVisibleRegion().latLngBounds;
+                    if (bounds.contains(marker.getPosition()) && response.getBitmap() != null) {
+                        try {
+                            profileImage.setImageBitmap(response.getBitmap());
+                            iconGenerator.setContentView(v);
+                            Bitmap bm = iconGenerator.makeIcon();
+                            BitmapDescriptor bd = BitmapDescriptorFactory.fromBitmap(bm);
+                            marker.setIcon(bd);
+                            System.out.println("Render marker");
+                            if (post != null)
+                                post.setMarker(marker);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Caught exception " + e.getMessage());
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
+                @Override
+                public void onErrorResponse(VolleyError error) {
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
     @Override

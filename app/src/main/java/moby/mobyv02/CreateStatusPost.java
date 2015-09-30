@@ -11,6 +11,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -48,7 +49,7 @@ import moby.mobyv02.parse.Post;
 /**
  * Created by quezadjo on 9/8/2015.
  */
-public class CreateStatusPost extends LeanplumFragmentActivity {
+public class CreateStatusPost extends FragmentActivity {
 
     Toolbar toolbar;
     Button cancelButton;
@@ -66,12 +67,6 @@ public class CreateStatusPost extends LeanplumFragmentActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_status);
-        if (BuildConfig.DEBUG) {
-            Leanplum.setAppIdForDevelopmentMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "dev_DZYELDJSN3ASeJHFHQUuuCuSf2t4uxOJvw5wUAimw6c");
-        } else {
-            Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
-        }
-        Leanplum.start(this);
         file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "image.jpg");
         roboto = Typeface.createFromAsset(getAssets(), "font/Roboto-Bold.ttf");
         characterLimitText = (TextView) findViewById(R.id.post_status_character_limit);
@@ -87,10 +82,18 @@ public class CreateStatusPost extends LeanplumFragmentActivity {
         cancelButton.setOnClickListener(cancelPostClickListener);
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        BuzzAnalytics.logScreen(this, BuzzAnalytics.POST_CATEGORY, "createStatusPost");
+    }
+
     /**
      * @desc Sets a text watcher for the status EditText field. When the character limit is hit,
      * the listener subtracts one character from the field.
      */
+
+
 
     private void setStatusTextWatcher(){
 
@@ -170,11 +173,9 @@ public class CreateStatusPost extends LeanplumFragmentActivity {
                             @Override
                             public void finished(boolean success, ParseException e) {
                                 if (e == null) {
-                                    Map<String, Object> params = new HashMap<String, Object>();
-                                    params.put("type", "status");
-                                    Leanplum.track("Post", params);
                                     Intent result = new Intent();
                                     result.putExtra("post", post.getObjectId());
+                                    BuzzAnalytics.logPost(CreateStatusPost.this, "status");
                                     CreateStatusPost.this.setResult(RESULT_OK, result);
                                     CreateStatusPost.this.finish();
                                 } else {

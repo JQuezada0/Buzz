@@ -52,6 +52,7 @@ public class Login extends LeanplumFragmentActivity {
  //       username.addTextChangedListener(Factory.getLowerCaseTextFormatter(username));
         loginButton.setOnClickListener(loginClickListener);
         registerButton.setOnClickListener(registerClickListener);
+        BuzzAnalytics.logScreen(this, BuzzAnalytics.ONBOARDING_CATEGORY, "login");
     }
 
     final View.OnClickListener loginClickListener = new View.OnClickListener() {
@@ -71,7 +72,7 @@ public class Login extends LeanplumFragmentActivity {
                     @Override
                     public void finished(boolean success, final ParseException e) {
                         if (success) {
-                            Application.logger.logEvent("Successful Login");
+                            BuzzAnalytics.logLogin(Login.this, "Buzz", false);
                             getFollowed();
                         } else {
                             Login.this.runOnUiThread(new Runnable() {

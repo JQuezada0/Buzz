@@ -1,8 +1,10 @@
 package moby.mobyv02;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -11,6 +13,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -69,6 +73,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private ImageView fireworkAnimationImage;
     private AnimationDrawable fireworkAnimation;
     private Projection projection;
+    private FrameLayout mapFrameLayout;
+    private View successDialog;
+    private int width;
+    private int height;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -81,14 +89,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             fireworkAnimation = (AnimationDrawable) fireworkAnimationImage.getBackground();
             mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             feedFrame = (GestureFrameLayout) v.findViewById(R.id.map_feed_frame);
+            mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
             viewPager = (ViewPager) v.findViewById(R.id.map_viewpager);
+            mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
             feedFrame.setVisibility(View.GONE);
             postsAdapter = new PostsAdapter(getFragmentManager());
             viewPager.addOnPageChangeListener(pageChangeListener);
             mapFragment.getMapAsync(this);
             MapAdapter.googleMap = v;
+            successDialog = v.findViewById(R.id.success_dialog);
             setGestureDetector();
             iconGenerator = new IconGenerator(main);
+            Display display = main.getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            width = size.x;
+            height = size.y;
             return v;
         } else {
             return MapAdapter.googleMap;
@@ -229,6 +245,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (ParseUser.getCurrentUser() == null)
         System.out.println(ParseUser.getCurrentUser() + " this is parse user");
    //     markerClusterItemClicked(null, post);
+//        successDialog.setVisibility(View.VISIBLE);
+//        ObjectAnimator animator = ObjectAnimator.ofFloat(successDialog, "Y", 0 - successDialog.getHeight(), (height/2) - (successDialog.getHeight() / 2));
+//        animator.setDuration(1000);
+//        animator.start();
         Application.imageLoader.get(ParseUser.getCurrentUser().getString("profileImage"), new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {

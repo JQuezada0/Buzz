@@ -62,8 +62,7 @@ public class Application extends LeanplumApplication {
         Parse.initialize(this, getString(R.string.parse_application_id), getString(R.string.parse_client_key));
         ParseInstallation.getCurrentInstallation().saveInBackground();
         ParseFacebookUtils.initialize(this, FACEBOOK_REQUEST_CODE);
-        logger = AppEventsLogger.newLogger(this);
-        logger.logEvent("Moby opened");
+        BuzzAnalytics.initialize(this, this.getResources());
         imageLoader = new ImageLoader(Volley.newRequestQueue(this), new ImageLoader.ImageCache() {
 
             private final android.support.v4.util.LruCache<String, Bitmap> cache = new android.support.v4.util.LruCache<String, Bitmap>(20);
@@ -92,24 +91,11 @@ public class Application extends LeanplumApplication {
         MultiDex.install(this);
     }
 
-    public static void initLeanPlum(Activity activity){
-        if (BuildConfig.DEBUG) {
-            Leanplum.setAppIdForDevelopmentMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "dev_DZYELDJSN3ASeJHFHQUuuCuSf2t4uxOJvw5wUAimw6c");
-        } else {
-            Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
-        }
-        Leanplum.start(activity);
-    }
-
     public static void initParseInstallation(Intent intent){
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("user", ParseUser.getCurrentUser());
         installation.saveInBackground();
         ParseAnalytics.trackAppOpenedInBackground(intent);
-    }
-
-    public static void initFacebookLogging(Context context){
-        AppEventsLogger.activateApp(context);
     }
 
     public static File getImageCacheFile(Context context){

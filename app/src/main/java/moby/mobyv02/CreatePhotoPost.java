@@ -1,14 +1,10 @@
 package moby.mobyv02;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -17,24 +13,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
-import com.theartofdev.edmodo.cropper.CropImageView;
 import com.leanplum.Leanplum;
 import com.leanplum.activities.LeanplumFragmentActivity;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +50,6 @@ public class CreatePhotoPost extends LeanplumFragmentActivity {
         setContentView(R.layout.post_photo);
         file = Application.getImageCacheFile(this);
         uri = Uri.fromFile(file);
-        Application.initLeanPlum(this);
         cancelButton = (Button) findViewById(R.id.cancel_button);
         image = (ImageView) findViewById(R.id.post_photo_image);
         postButton = (Button) findViewById(R.id.create_post_photo_submit_button);
@@ -72,6 +60,13 @@ public class CreatePhotoPost extends LeanplumFragmentActivity {
         postButton.setOnClickListener(submitClickListener);
         takeImage.setOnClickListener(photoClickListener);
         cancelButton.setOnClickListener(cancelClickListener);
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        BuzzAnalytics.logScreen(this, BuzzAnalytics.POST_CATEGORY, "createPhotoPost");
     }
 
     @Override
@@ -154,9 +149,7 @@ public class CreatePhotoPost extends LeanplumFragmentActivity {
                             public void finished(boolean success, ParseException e) {
 
                                 if (success) {
-                                    Map<String, Object> params = new HashMap<String, Object>();
-                                    params.put("type", "photo");
-                                    Leanplum.track("Post", params);
+                                    BuzzAnalytics.logPost(CreatePhotoPost.this, "photo");
                                     Intent result = new Intent();
                                     result.putExtra("post", post.getObjectId());
                                     CreatePhotoPost.this.setResult(RESULT_OK, result);

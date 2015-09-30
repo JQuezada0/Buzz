@@ -169,6 +169,7 @@ public class PostAdapter extends BaseAdapter {
             public void onClick(View view) {
                 if (!vh.heartButton.isSelected()){
                     vh.heartCount.setVisibility(View.VISIBLE);
+                    BuzzAnalytics.logHeart(context);
                     if ((post.getHearts() + 1) == 1){
                         vh.heartCount.setText(String.valueOf(post.getHearts() + 1) + " heart");
                     } else {

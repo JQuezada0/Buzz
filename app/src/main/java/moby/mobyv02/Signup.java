@@ -51,14 +51,6 @@ public class Signup extends LeanplumFragmentActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
-        if (BuildConfig.DEBUG) {
-            Leanplum.setAppIdForDevelopmentMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "dev_DZYELDJSN3ASeJHFHQUuuCuSf2t4uxOJvw5wUAimw6c");
-        } else {
-            Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
-        }
-        Leanplum.start(this);
-        Map<String, Object> params = new HashMap<String, Object>();
-        Leanplum.track("startRegistration", params);
         signUpFragment = new SignUpFragment();
         profilePictureFragment = new SelectProfilePictureFragment();
         file = Application.getImageCacheFile(this);
@@ -66,8 +58,11 @@ public class Signup extends LeanplumFragmentActivity {
         adapter = new SignupViewPagerAdapter(getSupportFragmentManager(), new Fragment[]{signUpFragment, profilePictureFragment});
         signUpViewPager = (MainViewPager) findViewById(R.id.signupViewPager);
         signUpViewPager.setAdapter(adapter);
+        signUpViewPager.addOnPageChangeListener(pageChangeListener);
         progressBar = (CircleProgressBar) findViewById(R.id.signup_progressbar);
         progressBar.setColorSchemeResources(R.color.moby_blue);
+        signUpViewPager.setCurrentItem(0);
+        BuzzAnalytics.logScreen(Signup.this, BuzzAnalytics.ONBOARDING_CATEGORY, "signupForm");
     }
 
     @Override
@@ -151,5 +146,31 @@ public class Signup extends LeanplumFragmentActivity {
             return 2;
         }
     }
+
+    private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            switch (position){
+
+                case 0:
+                    BuzzAnalytics.logScreen(Signup.this, BuzzAnalytics.ONBOARDING_CATEGORY, "signupForm");
+                    break;
+                case 1:
+                    BuzzAnalytics.logScreen(Signup.this, BuzzAnalytics.ONBOARDING_CATEGORY, "signupProfilePicture");
+                    break;
+
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
 }

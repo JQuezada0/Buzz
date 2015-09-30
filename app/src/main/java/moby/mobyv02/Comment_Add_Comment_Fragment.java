@@ -59,6 +59,8 @@ public class Comment_Add_Comment_Fragment extends Fragment {
                 public void finished(boolean success, ParseException e) {
                     commentActivity.hideProgressBar();
                     if (success) {
+                        BuzzAnalytics.logScreen(commentActivity, BuzzAnalytics.COMMENT_CATEGORY, "viewComments");
+                        BuzzAnalytics.logComment(commentActivity);
                         Comment_Add_Comment_Fragment.this.getFragmentManager().popBackStack();
                     } else {
                         Toast.makeText(Comment_Add_Comment_Fragment.this.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -73,6 +75,7 @@ public class Comment_Add_Comment_Fragment extends Fragment {
         @Override
         public void onClick(View view) {
 
+            BuzzAnalytics.logScreen(commentActivity, BuzzAnalytics.COMMENT_CATEGORY, "viewComments");
             Comment_Add_Comment_Fragment.this.getFragmentManager().popBackStack();
 
         }

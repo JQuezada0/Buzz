@@ -28,7 +28,6 @@ public class Comment_View_Fragment extends Fragment implements AbsListView.OnScr
     Button addCommentButton;
     Button backButton;
     CommentActivity commentActivity;
-    boolean maxReached;
     private int pageNumber = 1;
     private int maxComments = CommentActivity.currentPost.getComments();
     private CommentAdapter adapter;
@@ -113,6 +112,7 @@ public class Comment_View_Fragment extends Fragment implements AbsListView.OnScr
             transaction.replace(R.id.comment_activity_frame, addCommentFragment);
             transaction.addToBackStack("add-comment");
             transaction.commit();
+            BuzzAnalytics.logScreen(commentActivity, BuzzAnalytics.COMMENT_CATEGORY, "addComment");
         }
     };
 
