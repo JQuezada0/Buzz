@@ -15,6 +15,7 @@ import com.leanplum.activities.LeanplumFragmentActivity;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -50,11 +51,6 @@ public class ProfileActivity extends FragmentActivity {
         username = (TextView) findViewById(R.id.profile_activity_name);
         followButton = (Button) findViewById(R.id.profile_activity_follow_button);
         readBehaviour(getIntent().getExtras());
-        Application.loadImage(profileImage, user.getString("profileImage"));
-        username.setText(user.getString("fullName"));
-        followButton.setOnClickListener(followClickListener);
-        profilePosts = (ListView) findViewById(R.id.post_list);
-        setPosts();
     }
 
     @Override
@@ -67,12 +63,29 @@ public class ProfileActivity extends FragmentActivity {
         BuzzAnalytics.logScreen(this, BuzzAnalytics.PROFILE_CATEGORY, page);
     }
 
+    private void initialize(){
+        Application.loadImage(profileImage, user.getString("profileImage"));
+        username.setText(user.getString("fullName"));
+        followButton.setOnClickListener(followClickListener);
+        profilePosts = (ListView) findViewById(R.id.post_list);
+        setPosts();
+    }
+
     private void readBehaviour(Bundle bundle){
         if (bundle !=null) {
 
             if (bundle.getString("com.parse.Data") != null){
                 try {
                     JSONObject data = new JSONObject(bundle.getString("com.parse.Data"));
+                    String objectId = data.getString("user");
+                    ParseUser user = ParseUser.createWithoutData(ParseUser.class, objectId);
+                    user.fetchInBackground(new GetCallback<ParseUser>() {
+                        @Override
+                        public void done(ParseUser user, ParseException e) {
+                            ProfileActivity.user = user;
+                            initialize();
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -84,6 +97,7 @@ public class ProfileActivity extends FragmentActivity {
                 } else {
                     setFollowStatus();
                 }
+                initialize();
             }
         }
     }

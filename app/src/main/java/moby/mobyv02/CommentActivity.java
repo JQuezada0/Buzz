@@ -9,6 +9,12 @@ import android.view.View;
 import com.leanplum.Leanplum;
 import com.leanplum.activities.LeanplumFragmentActivity;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import moby.mobyv02.parse.Comment;
 import moby.mobyv02.parse.Post;
@@ -25,11 +31,38 @@ public class CommentActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_activity);
+        readBehavior(getIntent().getExtras());
+        BuzzAnalytics.logScreen(this, BuzzAnalytics.COMMENT_CATEGORY, "viewComments");
+
+    }
+
+    private void initialize(){
         progressBar = (CircleProgressBar) findViewById(R.id.comments_progressbar);
         progressBar.setColorSchemeResources(R.color.moby_blue);
         setInitialFragment();
-        BuzzAnalytics.logScreen(this, BuzzAnalytics.COMMENT_CATEGORY, "viewComments");
+    }
 
+    private void readBehavior(Bundle bundle){
+    if (bundle!=null){
+        if (bundle.getString("com.parse.Data") != null){
+            try {
+                JSONObject data = new JSONObject(bundle.getString("com.parse.Data"));
+                String objectId = data.getString("post");
+                Post post = Post.createWithoutData(Post.class, objectId);
+                post.fetchInBackground(new GetCallback<Post>() {
+                    @Override
+                    public void done(Post post, ParseException e) {
+                        CommentActivity.currentPost = post;
+                        initialize();
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    } else {
+        initialize();
+    }
     }
 
     private void setInitialFragment(){
