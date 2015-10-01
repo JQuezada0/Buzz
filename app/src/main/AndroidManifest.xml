@@ -59,15 +59,33 @@
         </activity>
         <activity android:name=".Welcome"
             android:screenOrientation="portrait"/>
+
         <activity android:name=".Signup"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait">
 
-
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="Buzz"
+                    android:host="signup"/>
+            </intent-filter>
 
         </activity>
         <activity android:name=".Login"
             android:screenOrientation="portrait">
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="Buzz"
+                    android:host="login"/>
+            </intent-filter>
 
         </activity>
 
@@ -76,11 +94,29 @@
             android:screenOrientation="portrait">
 
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="Buzz"
+                    android:host="comment"/>
+            </intent-filter>
+
         </activity>
 
         <activity android:name=".ProfileActivity"
             android:screenOrientation="portrait">
 
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="Buzz"
+                    android:host="profile"/>
+            </intent-filter>
 
             </activity>
 

@@ -18,6 +18,9 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,15 +49,7 @@ public class ProfileActivity extends FragmentActivity {
         profileImage = (CircleImageView) findViewById(R.id.profile_activity_image);
         username = (TextView) findViewById(R.id.profile_activity_name);
         followButton = (Button) findViewById(R.id.profile_activity_follow_button);
-        if (getIntent().getExtras() !=null) {
-            self = getIntent().getExtras().getBoolean("self");
-            if (self) {
-                followButton.setVisibility(View.GONE);
-                user = ParseUser.getCurrentUser();
-            } else {
-                setFollowStatus();
-            }
-        }
+        readBehaviour(getIntent().getExtras());
         Application.loadImage(profileImage, user.getString("profileImage"));
         username.setText(user.getString("fullName"));
         followButton.setOnClickListener(followClickListener);
@@ -70,6 +65,27 @@ public class ProfileActivity extends FragmentActivity {
             page = "selfProfile";
         }
         BuzzAnalytics.logScreen(this, BuzzAnalytics.PROFILE_CATEGORY, page);
+    }
+
+    private void readBehaviour(Bundle bundle){
+        if (bundle !=null) {
+
+            if (bundle.getString("com.parse.Data") != null){
+                try {
+                    JSONObject data = new JSONObject(bundle.getString("com.parse.Data"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                self = getIntent().getExtras().getBoolean("self");
+                if (self) {
+                    followButton.setVisibility(View.GONE);
+                    user = ParseUser.getCurrentUser();
+                } else {
+                    setFollowStatus();
+                }
+            }
+        }
     }
 
     private void setFollowStatus(){
