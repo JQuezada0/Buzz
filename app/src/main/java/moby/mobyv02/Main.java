@@ -2,20 +2,28 @@ package moby.mobyv02;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leanplum.activities.LeanplumFragmentActivity;
+import com.nineoldandroids.animation.Animator;
 import com.parse.FunctionCallback;
 import com.parse.GetCallback;
 import com.parse.ParseCloud;
@@ -68,13 +76,13 @@ public class Main extends LeanplumFragmentActivity{
         private ListView drawerList;
         private Button feedToggle;
         private Button mapToggle;
-        private TableRow createStatusPost;
-        private TableRow createPhotoPost;
-        private TableRow createVideoPost;
+        private TableRow createPostBar;
+        private ListView createPostList;
         private Toolbar toolbar;
         private ActionBarDrawerToggle actionBarDrawerToggle;
         private MainViewPager viewPager;
         private MainPagerAdapter mainAdapter;
+        private boolean postListOpen = false;
 
         ////////////////////////////////////////////////////
 
@@ -133,6 +141,8 @@ public class Main extends LeanplumFragmentActivity{
         } else{
             BuzzAnalytics.logScreen(Main.this, BuzzAnalytics.MAIN_CATEGORY, "map");
         }
+        postListOpen = false;
+        createPostList.setVisibility(View.GONE);
         loadFeed();
     }
 
@@ -174,10 +184,10 @@ public class Main extends LeanplumFragmentActivity{
         //////////////////VIEW GROUPS////////////////////////////////////////
 
         progressBar = (CircleProgressBar) findViewById(R.id.main_progressbar);
-        createStatusPost = (TableRow) findViewById(R.id.create_status_post);
-        createPhotoPost = (TableRow) findViewById(R.id.create_post_photo_button);
-        createVideoPost = (TableRow) findViewById(R.id.create_video_post_button);
-
+        createPostBar = (TableRow) findViewById(R.id.create_post_bar);
+        createPostList = (ListView) findViewById(R.id.post_bar_list);
+        createPostList.setAdapter(new PostBarListAdapter());
+        createPostList.setOnItemClickListener(postListItemClickListener);
         toolbar = (Toolbar) findViewById(R.id.moby_main_toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         viewPager = (MainViewPager) findViewById(R.id.main_viewpager);
@@ -205,9 +215,7 @@ public class Main extends LeanplumFragmentActivity{
 
         feedToggle.setOnClickListener(feedToggleClickListener);
         mapToggle.setOnClickListener(mapToggleClickListener);
-        createStatusPost.setOnClickListener(createStatusPostClickListener);
-        createPhotoPost.setOnClickListener(createPhotoPostClickListener);
-        createVideoPost.setOnClickListener(createVideoPostClickListener);
+        createPostBar.setOnClickListener(postBarClickListener);
 
     }
 
@@ -310,6 +318,46 @@ public class Main extends LeanplumFragmentActivity{
 
     };
 
+    private final View.OnClickListener postBarClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (!postListOpen){
+
+                createPostList.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.FadeInDown)
+                        .duration(250)
+                        .playOn(createPostList);
+                postListOpen = true;
+
+            } else {
+                YoYo.with(Techniques.FadeOutUp)
+                        .duration(250).withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        createPostList.setVisibility(View.GONE);
+                        postListOpen = false;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }).playOn(createPostList);
+            }
+
+        }
+    };
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -342,6 +390,57 @@ public class Main extends LeanplumFragmentActivity{
 
 
 
+        }
+    };
+
+    private class PostBarListAdapter extends BaseAdapter {
+
+        String[] list = new String[]{"Status", "Photo"};
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return list[i];
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup viewGroup) {
+            view = Main.this.getLayoutInflater().inflate(R.layout.drawer_item, null);
+            TextView text = (TextView) view.findViewById(R.id.drawer_item_text);
+            text.setText(list[position]);
+            ImageView image = (ImageView) view.findViewById(R.id.drawer_item_image);
+            switch(position){
+                case 0:
+                    image.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.post_status_icon));
+                    break;
+                case 1:
+                    image.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.post_photo_icon));
+                    break;
+            }
+            return view;
+        }
+    }
+
+    private AdapterView.OnItemClickListener postListItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            switch (position){
+                case 0:
+                    startActivityForResult(new Intent(Main.this, CreateStatusPost.class), POST_CREATED);
+                    break;
+                case 1:
+                    startActivityForResult(new Intent(Main.this, CreatePhotoPost.class), POST_CREATED);
+                    break;
+            }
         }
     };
 

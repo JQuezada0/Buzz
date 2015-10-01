@@ -63,6 +63,9 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.facebook.android:facebook-android-sdk:4.0.0'
     compile 'com.androidmapsextensions:android-maps-extensions:2.2.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.easing:library:1.0.1@aar'
+    compile 'com.daimajia.androidanimations:library:1.1.3@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
@@ -75,6 +78,7 @@ dependencies {
     compile('com.segment.analytics.android:analytics-integration-leanplum:+') {
         transitive = true
     }
+
     compile files('libs/Parse-1.10.1.jar')
     compile files('libs/bolts-android-1.2.1.jar')
     compile files('libs/ParseFacebookUtilsV4-1.10.1.jar')
