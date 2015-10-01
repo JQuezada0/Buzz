@@ -71,7 +71,7 @@
                 android:padding="10dp"
                 android:clickable="true"
                 android:id="@+id/create_post_bar"
-                android:background="@drawable/view_shadow">
+                android:background="@drawable/post_bar_view_shadow">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="45dp"

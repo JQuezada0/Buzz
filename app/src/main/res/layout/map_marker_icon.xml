@@ -6,24 +6,19 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent">
+        android:layout_width="78dp"
+        android:layout_height="90dp"
+        android:background="@drawable/marker_border">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:border_width="10dp"
+            android:layout_width="67dp"
+            android:layout_height="67dp"
+            android:layout_marginLeft="4.5dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/person_icon_graybg"
             app:border_color="@color/moby_blue"
             android:id="@+id/map_marker_image"
             />
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:scaleType="fitXY"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/map_bottom_piece"/>
 
     </LinearLayout>
 
