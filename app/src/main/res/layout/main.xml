@@ -85,6 +85,7 @@
                     android:layout_width="match_parent"
                     android:text="What's going on, Ryan?"
                     android:textColor="@color/moby_blue"
+                    android:id="@+id/main_name"
                     android:textStyle="bold"/>
 
             </TableRow>
@@ -127,7 +128,6 @@
     <FrameLayout
         android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:paddingTop="100dp"
         android:background="@color/moby_blue"
         android:layout_gravity="start">
 

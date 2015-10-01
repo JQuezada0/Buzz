@@ -21,12 +21,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,6 +42,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
+import com.nineoldandroids.animation.Animator;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -75,8 +79,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private Projection projection;
     private FrameLayout mapFrameLayout;
     private View successDialog;
-    private int width;
-    private int height;
+    private Button successDialogContinueButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -92,6 +95,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
             viewPager = (ViewPager) v.findViewById(R.id.map_viewpager);
             mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
+            successDialogContinueButton = (Button) v.findViewById(R.id.success_dialog_continue_button);
+            successDialogContinueButton.setOnClickListener(continueOnClickListener);
             feedFrame.setVisibility(View.GONE);
             postsAdapter = new PostsAdapter(getFragmentManager());
             viewPager.addOnPageChangeListener(pageChangeListener);
@@ -103,8 +108,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Display display = main.getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            width = size.x;
-            height = size.y;
             return v;
         } else {
             return MapAdapter.googleMap;
@@ -135,6 +138,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onMapClick(LatLng latLng) {
                 hideFeed();
+                hideSuccessDialog();
             }
         });
 
@@ -249,11 +253,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void animateNewMarker(final Post post){
         if (ParseUser.getCurrentUser() == null)
         System.out.println(ParseUser.getCurrentUser() + " this is parse user");
-   //     markerClusterItemClicked(null, post);
-//        successDialog.setVisibility(View.VISIBLE);
-//        ObjectAnimator animator = ObjectAnimator.ofFloat(successDialog, "Y", 0 - successDialog.getHeight(), (height/2) - (successDialog.getHeight() / 2));
-//        animator.setDuration(1000);
-//        animator.start();
+        successDialog.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.SlideInDown)
+                .duration(250)
+                .playOn(successDialog);
         setFeed(Arrays.asList(new Post[]{post}));
  /*       Application.imageLoader.get(ParseUser.getCurrentUser().getString("profileImage"), new ImageLoader.ImageListener() {
             @Override
@@ -370,7 +373,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
+    private View.OnClickListener continueOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            hideSuccessDialog();
+        }
+    };
 
+    private void hideSuccessDialog(){
+        YoYo.with(Techniques.SlideOutUp)
+                .duration(250)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        successDialog.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .playOn(successDialog);
+    }
 
 
 }

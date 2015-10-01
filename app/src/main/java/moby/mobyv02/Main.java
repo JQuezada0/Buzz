@@ -1,6 +1,7 @@
 package moby.mobyv02;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
@@ -40,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.parse.Post;
 
 /**
@@ -83,6 +87,8 @@ public class Main extends LeanplumFragmentActivity{
         private MainViewPager viewPager;
         private MainPagerAdapter mainAdapter;
         private boolean postListOpen = false;
+        private CircleImageView profileImage;
+        private TextView profileName;
 
         ////////////////////////////////////////////////////
 
@@ -131,6 +137,7 @@ public class Main extends LeanplumFragmentActivity{
 
         setClickListeners();
 
+        setPostBarInfo();
     }
 
     @Override
@@ -155,6 +162,29 @@ public class Main extends LeanplumFragmentActivity{
 
         }
 
+    }
+
+    private void setPostBarInfo(){
+        profileName.setText("What's going on, " + ParseUser.getCurrentUser().getString("fullName") + "?");
+        final String profileImage = ParseUser.getCurrentUser().getString("profileImage");
+        if (profileImage != null){
+            Application.imageLoader.get(profileImage, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    Bitmap bm = response.getBitmap();
+                    if (bm != null){
+                        Main.this.profileImage.setImageBitmap(bm);
+                    }
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Main.this.profileImage.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.person_icon_graybg));
+                }
+            }, 100, 100);
+        } else {
+            Main.this.profileImage.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.person_icon_graybg));
+        }
     }
 
     public void loadFeed(){
@@ -192,6 +222,8 @@ public class Main extends LeanplumFragmentActivity{
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         viewPager = (MainViewPager) findViewById(R.id.main_viewpager);
         drawerList = (ListView) findViewById(R.id.left_drawer);
+        profileImage = (CircleImageView) findViewById(R.id.main_profile_image);
+        profileName = (TextView) findViewById(R.id.main_name);
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -322,7 +354,6 @@ public class Main extends LeanplumFragmentActivity{
         @Override
         public void onClick(View view) {
             if (!postListOpen){
-
                 createPostList.setVisibility(View.VISIBLE);
                 YoYo.with(Techniques.FadeInDown)
                         .duration(250)
@@ -339,6 +370,7 @@ public class Main extends LeanplumFragmentActivity{
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
+
                         createPostList.setVisibility(View.GONE);
                         postListOpen = false;
                     }
