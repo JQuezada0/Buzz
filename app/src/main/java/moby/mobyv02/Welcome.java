@@ -169,6 +169,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
     public void onConnected(Bundle bundle) {
         final Person currentPerson = Plus.PeopleApi.getCurrentPerson(googleApiClient);
         final ParseUser user = new ParseUser();
+
         ParseUser.logInInBackground(currentPerson.getId(), currentPerson.getId(), new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {

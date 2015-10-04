@@ -31,6 +31,7 @@ import com.parse.FunctionCallback;
 import com.parse.GetCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -359,7 +360,14 @@ public class Main extends LeanplumFragmentActivity{
                         .duration(250)
                         .playOn(createPostList);
                 postListOpen = true;
-
+                viewPager.setCurrentItem(1);
+                Post post = new Post();
+                ParseGeoPoint point = new ParseGeoPoint();
+                point.setLongitude(LocationManager.getLocation().getLongitude());
+                point.setLatitude(LocationManager.getLocation().getLatitude());
+                post.setLocation(point);
+                post.setUser(ParseUser.getCurrentUser());
+                mapFragment.animateNewMarker(post);
             } else {
                 YoYo.with(Techniques.FadeOutUp)
                         .duration(250).withListener(new Animator.AnimatorListener() {
