@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="analytics-integration-mixpanel-3.3.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.segment.analytics.android/analytics-integration-mixpanel/3.3.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.segment.analytics.android/analytics-integration-mixpanel/3.3.0/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.segment.analytics.android/analytics-integration-mixpanel/3.3.0/5f3583dc01fea60b48e4a6a330b2cfa496f7b1e9/analytics-integration-mixpanel-3.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

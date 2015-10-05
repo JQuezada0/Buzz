@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="analytics-integration-leanplum-3.3.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.segment.analytics.android/analytics-integration-leanplum/3.3.0/jars/libs/Leanplum-1.2.14.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.segment.analytics.android/analytics-integration-leanplum/3.3.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.segment.analytics.android/analytics-integration-leanplum/3.3.0/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.segment.analytics.android/analytics-integration-leanplum/3.3.0/1004b66ed7c8abe60c9e7a7bcc21aebaf70a2d45/analytics-integration-leanplum-3.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

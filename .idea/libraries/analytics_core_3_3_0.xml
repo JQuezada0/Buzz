@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="analytics-core-3.3.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.segment.analytics.android/analytics-core/3.3.0/26b7a21ebad8db2475f7230d0f8619cedb3cf0a4/analytics-core-3.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.segment.analytics.android/analytics-core/3.3.0/be54b2db265c968afb0417d40697354b418486de/analytics-core-3.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
