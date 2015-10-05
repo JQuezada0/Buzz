@@ -28,26 +28,31 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginRight="20dp"
                     android:background="@drawable/feed_map_display_toggle_background"
                     android:layout_gravity="center">
 
                     <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="75dp"
+                        android:layout_height="28dp"
+                        android:padding="0dp"
                         android:background="@drawable/feed_toggle"
                         android:textColor="@android:color/white"
+                        android:gravity="center"
                         android:id="@+id/moby_main_feed_toggle"
+                        android:textSize="15sp"
                         android:text="Feed"/>
 
                     <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="75dp"
+                        android:layout_height="28dp"
                         android:textColor="@color/moby_blue"
+                        android:gravity="center"
+                        android:padding="0dp"
                         android:id="@+id/moby_main_map_toggle"
                         android:background="@drawable/map_toggle"
+                        android:textSize="15sp"
                         android:text="Map"/>
 
                 </LinearLayout>
@@ -65,91 +70,30 @@
             </android.support.v7.widget.Toolbar>
 
             <TableRow
-                android:layout_height="40dp"
+                android:layout_height="70dp"
                 android:layout_width="match_parent"
-                android:background="@android:color/white">
-
-            <TableRow
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:padding="7dp"
-                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:padding="10dp"
                 android:clickable="true"
-                android:gravity="center_horizontal"
-                android:id="@+id/create_status_post"
-                android:background="@android:color/white">
+                android:id="@+id/create_post_bar"
+                android:background="@drawable/post_bar_view_shadow">
 
-                <ImageView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/post_status_icon"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/person_icon_graybg"
+                    android:id="@+id/main_profile_image"/>
 
                 <TextView
-                    android:layout_height="match_parent"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="What's going on, Ryan?"
                     android:textColor="@color/moby_blue"
-                    android:text="Status"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:padding="7dp"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:clickable="true"
-                    android:id="@+id/create_post_photo_button"
-                    android:background="@android:color/white">
-
-                    <ImageView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:padding="2dp"
-                        android:src="@drawable/post_photo_icon"/>
-
-                    <TextView
-                        android:layout_height="match_parent"
-                        android:layout_width="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/moby_blue"
-                        android:text="Photo"/>
-
-                </TableRow>
-
-               <TableRow
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:padding="7dp"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:id="@+id/create_video_post_button"
-                    android:background="@android:color/white">
-
-                    <ImageView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:padding="4dp"
-                        android:src="@drawable/post_video_icon"/>
-
-                    <TextView
-                        android:layout_height="match_parent"
-                        android:layout_width="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/moby_blue"
-                        android:text="Video"/>
-
-                </TableRow>
-
-
+                    android:id="@+id/main_name"
+                    android:textStyle="bold"/>
 
             </TableRow>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/moby_gray"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -160,10 +104,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
-            android:id="@+id/main_viewpager">
+            android:id="@+id/main_viewpager"/>
 
-
-        </moby.mobyv02.MainViewPager>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/post_bar_list"
+                android:visibility="gone"
+                android:background="@color/moby_blue"
+                android:layout_gravity="top"/>
 
 
         <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
@@ -184,7 +133,6 @@
     <FrameLayout
         android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:paddingTop="100dp"
         android:background="@color/moby_blue"
         android:layout_gravity="start">
 

@@ -8,9 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
 
 import moby.mobyv02.parse.Post;
 
@@ -41,7 +39,11 @@ public class ParseDecoder {
         Iterator<String> keys = data.keys();
         while (keys.hasNext()){
             String key = keys.next();
-            post.put(key, data.get(key));
+            if (key.equals("objectId")){
+                post.setObjectId(data.getString(key));
+            } else {
+                post.put(key, data.get(key));
+            }
             System.out.println(key + ": " + data.get(key));
         }
         post.put("createdDate", DateParser.parse((String) data.get("createdAt")));

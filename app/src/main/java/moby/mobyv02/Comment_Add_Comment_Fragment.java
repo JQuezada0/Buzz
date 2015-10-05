@@ -10,16 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leanplum.Leanplum;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import moby.mobyv02.parse.Comment;
 
 /**
  * Created by quezadjo on 9/10/2015.
@@ -37,7 +31,7 @@ public class Comment_Add_Comment_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.comment_add_comment_fragment, null);
         commentActivity = (CommentActivity) getActivity();
-        cancelButton = (Button) v.findViewById(R.id.create_comment_cancel);
+        cancelButton = (Button) v.findViewById(R.id.cancel_button);
         postButton = (Button) v.findViewById(R.id.create_comment_button);
         commentText = (EditText) v.findViewById(R.id.create_comment_text);
         fullName = (TextView) v.findViewById(R.id.create_comment_fullname);
@@ -59,6 +53,8 @@ public class Comment_Add_Comment_Fragment extends Fragment {
                 public void finished(boolean success, ParseException e) {
                     commentActivity.hideProgressBar();
                     if (success) {
+                        BuzzAnalytics.logScreen(commentActivity, BuzzAnalytics.COMMENT_CATEGORY, "viewComments");
+                        BuzzAnalytics.logComment(commentActivity);
                         Comment_Add_Comment_Fragment.this.getFragmentManager().popBackStack();
                     } else {
                         Toast.makeText(Comment_Add_Comment_Fragment.this.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -73,6 +69,7 @@ public class Comment_Add_Comment_Fragment extends Fragment {
         @Override
         public void onClick(View view) {
 
+            BuzzAnalytics.logScreen(commentActivity, BuzzAnalytics.COMMENT_CATEGORY, "viewComments");
             Comment_Add_Comment_Fragment.this.getFragmentManager().popBackStack();
 
         }

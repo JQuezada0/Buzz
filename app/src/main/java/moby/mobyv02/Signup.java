@@ -2,29 +2,18 @@ package moby.mobyv02;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.leanplum.Leanplum;
 import com.leanplum.activities.LeanplumFragmentActivity;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,12 +38,6 @@ public class Signup extends LeanplumFragmentActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
-        if (BuildConfig.DEBUG) {
-            Leanplum.setAppIdForDevelopmentMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "dev_DZYELDJSN3ASeJHFHQUuuCuSf2t4uxOJvw5wUAimw6c");
-        } else {
-            Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
-        }
-        Leanplum.start(this);
         signUpFragment = new SignUpFragment();
         profilePictureFragment = new SelectProfilePictureFragment();
         file = Application.getImageCacheFile(this);
@@ -62,8 +45,11 @@ public class Signup extends LeanplumFragmentActivity {
         adapter = new SignupViewPagerAdapter(getSupportFragmentManager(), new Fragment[]{signUpFragment, profilePictureFragment});
         signUpViewPager = (MainViewPager) findViewById(R.id.signupViewPager);
         signUpViewPager.setAdapter(adapter);
+        signUpViewPager.addOnPageChangeListener(pageChangeListener);
         progressBar = (CircleProgressBar) findViewById(R.id.signup_progressbar);
         progressBar.setColorSchemeResources(R.color.moby_blue);
+        signUpViewPager.setCurrentItem(0);
+        BuzzAnalytics.logScreen(Signup.this, BuzzAnalytics.ONBOARDING_CATEGORY, "signupForm");
     }
 
     @Override
@@ -83,14 +69,7 @@ public class Signup extends LeanplumFragmentActivity {
                     try {
                         profileImageInputStream = getContentResolver().openInputStream(data.getData());
                         FileOutputStream fos = new FileOutputStream(file);
-                        int read = 0;
-                        byte[] bytes = new byte[1024];
-
-                        while ((read = profileImageInputStream.read(bytes)) != -1) {
-                            fos.write(bytes, 0, read);
-                            profileImageInputStream.close();
-                            fos.close();
-                        }
+                        IOUtils.write(IOUtils.toByteArray(profileImageInputStream), fos);
                         Intent intent = new Intent(this, CropperActivity.class);
                         startActivityForResult(intent, 300);
                     } catch (FileNotFoundException e) {
@@ -100,6 +79,7 @@ public class Signup extends LeanplumFragmentActivity {
                     }
                     break;
                 case 300:
+                    System.out.println("Result obtained from taking pic");
                     profilePictureFragment.hideDialog();
                     profilePictureFragment.setProfilePicture();
                     break;
@@ -153,5 +133,31 @@ public class Signup extends LeanplumFragmentActivity {
             return 2;
         }
     }
+
+    private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            switch (position){
+
+                case 0:
+                    BuzzAnalytics.logScreen(Signup.this, BuzzAnalytics.ONBOARDING_CATEGORY, "signupForm");
+                    break;
+                case 1:
+                    BuzzAnalytics.logScreen(Signup.this, BuzzAnalytics.ONBOARDING_CATEGORY, "signupProfilePicture");
+                    break;
+
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
 }

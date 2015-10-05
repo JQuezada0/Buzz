@@ -3,54 +3,48 @@ package moby.mobyv02;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Interpolator;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
-import com.parse.ParseUser;
+import com.nineoldandroids.animation.Animator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.layout.GestureFrameLayout;
-import moby.mobyv02.map.LatLngInterpolator;
 import moby.mobyv02.map.MapTree;
 import moby.mobyv02.parse.Post;
 
 /**
  * Created by quezadjo on 9/10/2015.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback{
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap map;
     private ClusterManager<Post> clusterManager;
@@ -59,7 +53,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     private ViewPager viewPager;
     private Main main;
     private PostsAdapter postsAdapter;
-    private List<Post> currentPosts = new ArrayList<Post>();
+    public List<Post> currentPosts = new ArrayList<Post>();
     private GestureFrameLayout feedFrame;
     private IconGenerator iconGenerator;
     private LayoutInflater inflater;
@@ -69,6 +63,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     private ImageView fireworkAnimationImage;
     private AnimationDrawable fireworkAnimation;
     private Projection projection;
+    private FrameLayout mapFrameLayout;
+    private View successDialog;
+    private Button successDialogContinueButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -81,14 +78,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             fireworkAnimation = (AnimationDrawable) fireworkAnimationImage.getBackground();
             mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             feedFrame = (GestureFrameLayout) v.findViewById(R.id.map_feed_frame);
+            mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
             viewPager = (ViewPager) v.findViewById(R.id.map_viewpager);
+            mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
+            successDialogContinueButton = (Button) v.findViewById(R.id.success_dialog_continue_button);
+            successDialogContinueButton.setOnClickListener(continueOnClickListener);
             feedFrame.setVisibility(View.GONE);
             postsAdapter = new PostsAdapter(getFragmentManager());
             viewPager.addOnPageChangeListener(pageChangeListener);
             mapFragment.getMapAsync(this);
             MapAdapter.googleMap = v;
+            successDialog = v.findViewById(R.id.success_dialog);
             setGestureDetector();
             iconGenerator = new IconGenerator(main);
+            Display display = main.getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
             return v;
         } else {
             return MapAdapter.googleMap;
@@ -115,31 +120,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         clusterManager.getClusterMarkerCollection().setOnInfoWindowAdapter(new MapWindowAdapter(main));
         clusterManager.getMarkerCollection().setOnInfoWindowAdapter(new MapWindowAdapter(main));
         googleMap.setOnMarkerClickListener(clusterManager);
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                hideFeed();
+                hideSuccessDialog();
+            }
+        });
 
     }
 
     public void updateMap(){
-        System.out.println("updateMap");
-        if (map!=null) {
+        if (map!= null){
             map.clear();
             clusterManager.clearItems();
-            System.out.println(currentPosts.size() + "This is the size of the current post");
-
             clusterManager.addItems(currentPosts);
             clusterManager.cluster();
         }
     }
 
     public void clearMap(){
-        if (map!=null) {
-            map.clear();
-            clusterManager.clearItems();
-        }
+
     }
 
     public void setFeed(List<Post> posts){
-        System.out.println("Set map feed");
-        postsAdapter.setPosts(posts);
+        currentPosts.clear();
         currentPosts.addAll(posts);
         updateMap();
     }
@@ -205,21 +210,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     }
 
-    public class MapWindowAdapter implements GoogleMap.InfoWindowAdapter {
+    public class MapWindowAdapter extends InfoWindowAdapter {
         private Context context = null;
 
-        public MapWindowAdapter(Context context) {
-            this.context = context;
+        public MapWindowAdapter(Context c) {
+            super(c);
+            context = c;
         }
 
+
         @Override
-        public View getInfoWindow(Marker marker) {
+        public View getInfoContents(Marker marker) {
             View v = ((Activity) context).getLayoutInflater().inflate(R.layout.empty_info_window, null);
             return v;
         }
 
         @Override
-        public View getInfoContents(Marker marker) {
+        public View getInfoWindow(Marker marker) {
             return null;
         }
     }
@@ -230,124 +237,77 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     }
 
     public void animateNewMarker(final Post post){
-        if (ParseUser.getCurrentUser() == null)
-        System.out.println(ParseUser.getCurrentUser() + " this is parse user");
-        Application.imageLoader.get(ParseUser.getCurrentUser().getString("profileImage"), new ImageLoader.ImageListener() {
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                Bitmap bm = response.getBitmap();
-                if (bm != null) {
-                    IconGenerator iconGenerator = new IconGenerator(main);
-                    iconGenerator.setBackground(new ColorDrawable(0x00000000));
-                    View v = LayoutInflater.from(main).inflate(R.layout.map_marker_icon, null);
-                    v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
-                    final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
-                    profileImage.setImageBitmap(bm);
-                    iconGenerator.setContentView(v);
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(new LatLng(post.getLatitude(), post.getLongitude()));
-                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon()));
-                    Marker marker = map.addMarker(markerOptions);
-//                    animateMarker(marker, iconGenerator.makeIcon());
-                    int valuesAmount = new Double(3000 / 16).intValue();
-                    Float[] interpolateValues = new Float[valuesAmount];
-                    int halfwayPoint = new Double(interpolateValues.length / 2).intValue();
-                    for (int x = 0; x < interpolateValues.length; x++){
-                        if (x == 0){
-                            interpolateValues[0] = 5f;
-                        } else if (x == halfwayPoint){
-                            interpolateValues[halfwayPoint] = 2.5f;
-                        } else if (x == (interpolateValues.length - 1)){
-                            interpolateValues[interpolateValues.length - 1] = 1f;
-                        } else {
-                            interpolateValues[x] = null;
-                        }
+        View v = inflater.inflate(R.layout.map_marker_icon, null);
+        final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
+        v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
+        String imageUrl = post.getUser().getString("profileImage");
+        mapFrameLayout.addView(v);
+        Projection p = map.getProjection();
+        Point point = p.toScreenLocation(new LatLng(post.getLatitude(), post.getLongitude()));
+        v.setX(point.x);
+        v.setY(point.y);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(post.getLatitude(), post.getLongitude()), 10.0f));
+//        YoYo.with(Techniques.BounceInDown)
+//                .duration(250)
+//                .playOn(v);
+        if (imageUrl == null){
+            profileImage.setImageResource(R.drawable.person_icon_graybg);
+        } else {
+            Application.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    Bitmap bm = response.getBitmap();
+                    if (bm != null){
+                        profileImage.setImageBitmap(bm);
                     }
-                    interpolateValues = moby.mobyv02.Interpolator.Interpolate(interpolateValues, "linear");
-                    for (int x = 0; x < interpolateValues.length; x++){
-                        System.out.println(interpolateValues[x]);
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    profileImage.setImageResource(R.drawable.person_icon_graybg);
+                }
+            }, 100, 100);
+        }
+//        successDialog.setVisibility(View.VISIBLE);
+//        YoYo.with(Techniques.SlideInDown)
+//                .duration(250)
+//                .playOn(successDialog);
+//        setFeed(Arrays.asList(new Post[]{post}));
+    }
+
+    private View.OnClickListener continueOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            hideSuccessDialog();
+        }
+    };
+
+    private void hideSuccessDialog(){
+        YoYo.with(Techniques.SlideOutUp)
+                .duration(250)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
                     }
-                    fireworkAnimationImage.setVisibility(View.VISIBLE);
-                    fireworkAnimation.start();
-                }
 
-            }
-            @Override
-            public void onErrorResponse(VolleyError error) {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        successDialog.setVisibility(View.GONE);
+                    }
 
-            }
-        });
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .playOn(successDialog);
     }
-
-    private void animateMarker(final Marker marker, final Bitmap bm, Float[] scale){
-
-        final Handler handler = new Handler();
-        final long start = SystemClock.uptimeMillis();
-        final Interpolator interpolator = new AccelerateDecelerateInterpolator();
-        final float durationInMs = 3000;
-
-        handler.post(new Runnable() {
-            long elapsed;
-            float t;
-            float v;
-            double markerMultiplier;
-
-            @Override
-            public void run() {
-                // Calculate progress using interpolator
-                elapsed = SystemClock.uptimeMillis() - start;
-                t = elapsed / durationInMs;
-                v = interpolator.getInterpolation(t);
-                Double newWidth = bm.getWidth() * markerMultiplier;
-                Double newHeight = bm.getHeight() * markerMultiplier;
-
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(bm, newWidth.intValue(), newHeight.intValue(), false)));
-
-                // Repeat till progress is complete.
-                if (t < 1) {
-                    // Post again 16ms later.
-                    handler.postDelayed(this, 16);
-                }
-            }
-        });
-
-    }
-
-    static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator, final Bitmap bm) {
-        final LatLng startPosition = marker.getPosition();
-        final Handler handler = new Handler();
-        final long start = SystemClock.uptimeMillis();
-        final Interpolator interpolator = new AccelerateDecelerateInterpolator();
-        final float durationInMs = 3000;
-        final double initialMultiplier = 2;
-
-        handler.post(new Runnable() {
-            long elapsed;
-            float t;
-            float v;
-            double markerMultiplier;
-
-            @Override
-            public void run() {
-                // Calculate progress using interpolator
-                elapsed = SystemClock.uptimeMillis() - start;
-                t = elapsed / durationInMs;
-                v = interpolator.getInterpolation(t);
-                Double newWidth = bm.getWidth() * markerMultiplier;
-                Double newHeight = bm.getWidth() * markerMultiplier;
-
-//                marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(bm, bm.getWidth()*markerMultiplier, bm.getHeight()*markerMultiplier, false)));
-
-                // Repeat till progress is complete.
-                if (t < 1) {
-                    // Post again 16ms later.
-                    handler.postDelayed(this, 16);
-                }
-            }
-        });
-    }
-
-
 
 
 }

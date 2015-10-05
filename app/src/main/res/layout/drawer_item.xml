@@ -12,6 +12,13 @@
         android:id="@+id/drawer_item_image"
         android:src="@drawable/moby_feed_icon"/>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_height="30dp"
+        android:layout_width="30dp"
+        android:id="@+id/drawer_item_profile"
+        android:visibility="gone"
+        android:src="@drawable/person_icon_graybg"/>
+
     <TextView
         android:layout_height="match_parent"
         android:layout_width="wrap_content"

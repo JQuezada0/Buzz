@@ -1,0 +1,14 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    </style>
+
+    <style name="DialogStyle">
+
+        <item name="android:windowBackground">@color/moby_blue</item>
+        <item name="android:textColor">@android:color/white</item>
+
+    </style>
+
+</resources>

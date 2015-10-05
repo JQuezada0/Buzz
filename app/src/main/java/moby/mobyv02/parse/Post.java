@@ -29,9 +29,7 @@ public class Post extends ParseObject implements ClusterItem, Comparable {
     }
 
     public ParseUser getUser(){
-        ParseUser user = null;
-        user = getParseUser("user");
-        return user;
+        return getParseUser("user");
     }
 
     public void setText(String text){
@@ -167,15 +165,21 @@ public class Post extends ParseObject implements ClusterItem, Comparable {
         String timeElapsed;
         if (time > 60){
             if ( ((time / 60) / 24) >= 1){
-                timeElapsed = String.valueOf((time / 60) / 24) + " days";
+                timeElapsed = String.valueOf((time / 60) / 24) + "d";
             }
             else {
-                timeElapsed = String.valueOf(time / 60) + " hr";
+                timeElapsed = String.valueOf(time / 60) + "h";
             }
         } else {
-            timeElapsed = String.valueOf(time) + " mi";
+            timeElapsed = String.valueOf(time) + "m";
         }
         return timeElapsed;
+    }
+
+    public void fetchUser() throws ParseException {
+
+        setUser(getUser().fetch());
+
     }
 
 }

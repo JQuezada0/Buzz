@@ -1,6 +1,5 @@
 package moby.mobyv02;
 
-import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;

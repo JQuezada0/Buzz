@@ -1,40 +1,41 @@
 package moby.mobyv02;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import android.widget.TableRow;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.leanplum.activities.LeanplumFragmentActivity;
-import com.parse.FunctionCallback;
+import com.nineoldandroids.animation.Animator;
 import com.parse.GetCallback;
-import com.parse.Parse;
-import com.parse.ParseCloud;
 import com.parse.ParseException;
-import com.parse.ParseObject;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.parse.Post;
 
 /**
@@ -47,9 +48,9 @@ public class Main extends LeanplumFragmentActivity{
     //////////////////////////CONSTANTS////////////////////////////////////////
 
     private static final int WORLD_TOGGLED = 0;
-    private static final int FOLLOWERS_TOGGLED = 1;
     private static final int POST_CREATED = 1000;
     private int pageNumber = 0;
+    private int currentView = 0;
 
     //////////////////////////INITIALIZATIONS//////////////////////////////////
     private int currentToggle = WORLD_TOGGLED;
@@ -59,7 +60,6 @@ public class Main extends LeanplumFragmentActivity{
 
     //////////////////////////DECLARATIONS/////////////////////////////////////
 
-    private Application app;
     private boolean map;
     private boolean feedIsLoading;
 
@@ -72,13 +72,15 @@ public class Main extends LeanplumFragmentActivity{
         private ListView drawerList;
         private Button feedToggle;
         private Button mapToggle;
-        private TableRow createStatusPost;
-        private TableRow createPhotoPost;
-        private TableRow createVideoPost;
+        private TableRow createPostBar;
+        private ListView createPostList;
         private Toolbar toolbar;
         private ActionBarDrawerToggle actionBarDrawerToggle;
         private MainViewPager viewPager;
         private MainPagerAdapter mainAdapter;
+        private boolean postListOpen = false;
+        private CircleImageView profileImage;
+        private TextView profileName;
 
         ////////////////////////////////////////////////////
 
@@ -102,10 +104,7 @@ public class Main extends LeanplumFragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        Application.initLeanPlum(this);
         Application.initParseInstallation(getIntent());
-        Application.initFacebookLogging(this);
         initialize();
         DrawerAdapter drawerAdapter = new DrawerAdapter(this, this);
         drawerList.setAdapter(drawerAdapter); //Set the adapter for the left drawer
@@ -113,6 +112,8 @@ public class Main extends LeanplumFragmentActivity{
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer); //Connect the toolbar drawer toggle button to the drawer
 
         viewPager.setAdapter(mainAdapter); //Set the viewpager adapter. Sets the feed and map into the viewpager
+
+        viewPager.addOnPageChangeListener(pageChangeListener);
 
         progressBar.setColorSchemeResources(R.color.moby_blue); //Set the color of the progress circle. Graphic doesn't show without setting color.
 
@@ -128,8 +129,20 @@ public class Main extends LeanplumFragmentActivity{
 
         setClickListeners();
 
-        loadFeed();
+        setPostBarInfo();
+    }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if (currentView == 0){
+            BuzzAnalytics.logScreen(Main.this, BuzzAnalytics.MAIN_CATEGORY, "feed");
+        } else{
+            BuzzAnalytics.logScreen(Main.this, BuzzAnalytics.MAIN_CATEGORY, "map");
+        }
+        postListOpen = false;
+        createPostList.setVisibility(View.GONE);
+        loadFeed();
     }
 
     @Override
@@ -143,50 +156,43 @@ public class Main extends LeanplumFragmentActivity{
 
     }
 
+    private void setPostBarInfo(){
+        profileName.setText("What's going on, " + ParseUser.getCurrentUser().getString("fullName") + "?");
+        final String profileImage = ParseUser.getCurrentUser().getString("profileImage");
+        if (profileImage != null){
+            Application.imageLoader.get(profileImage, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    Bitmap bm = response.getBitmap();
+                    if (bm != null){
+                        Main.this.profileImage.setImageBitmap(bm);
+                    }
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Main.this.profileImage.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.person_icon_graybg));
+                }
+            }, 100, 100);
+        } else {
+            Main.this.profileImage.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.person_icon_graybg));
+        }
+    }
+
     public void loadFeed(){
         progressBar.setVisibility(View.VISIBLE);
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("location", LocationManager.getLocation());
-        params.put("pageNumber", pageNumber);
-        System.out.println("load feed");
-        ParseCloud.callFunctionInBackground("getFeed", params, new FunctionCallback<String>(){
-
+        ParseOperation.getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
-            public void done(String posts, ParseException e) {
-                if (e == null){
-                    ArrayList<Post> feed = new ArrayList<Post>();
-                    try {
-                        JSONArray postsArray = new JSONArray(posts);
-                        for (int x = 0; x < postsArray.length(); x++){
-                            ParseDecoder decoder = new ParseDecoder(postsArray.getJSONObject(x));
-                            feed.add(decoder.decodePost());
-                        }
-                    } catch (JSONException e1) {
-                        e1.printStackTrace();
-                    } catch (java.text.ParseException e1) {
-                        e1.printStackTrace();
-                    }
-                    progressBar.setVisibility(View.GONE);
-                    pageNumber++;
-                    feedFragment.loadPosts(feed);
-                    Main.this.posts = feed;
-                } else {
-                    e.printStackTrace();
-                    System.out.println(e.getMessage());
-                }
+            public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
+                feedFragment.loadPosts(posts);
+                Main.this.posts.addAll(posts);
+                progressBar.setVisibility(View.GONE);
+                pageNumber++;
             }
-        });
-
+        }, this);
     }
-
-    private void jsonParseObjectToParseObject(){
-
-    }
-
 
     private void initialize(){
-
-        app = (Application) getApplication(); //Get reference to Application class
 
         ///////////////////BUTTONS/////////////////////////////////////////
 
@@ -200,14 +206,16 @@ public class Main extends LeanplumFragmentActivity{
         //////////////////VIEW GROUPS////////////////////////////////////////
 
         progressBar = (CircleProgressBar) findViewById(R.id.main_progressbar);
-        createStatusPost = (TableRow) findViewById(R.id.create_status_post);
-        createPhotoPost = (TableRow) findViewById(R.id.create_post_photo_button);
-        createVideoPost = (TableRow) findViewById(R.id.create_video_post_button);
-
+        createPostBar = (TableRow) findViewById(R.id.create_post_bar);
+        createPostList = (ListView) findViewById(R.id.post_bar_list);
+        createPostList.setAdapter(new PostBarListAdapter());
+        createPostList.setOnItemClickListener(postListItemClickListener);
         toolbar = (Toolbar) findViewById(R.id.moby_main_toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         viewPager = (MainViewPager) findViewById(R.id.main_viewpager);
         drawerList = (ListView) findViewById(R.id.left_drawer);
+        profileImage = (CircleImageView) findViewById(R.id.main_profile_image);
+        profileName = (TextView) findViewById(R.id.main_name);
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -227,92 +235,13 @@ public class Main extends LeanplumFragmentActivity{
 
     }
 
-    private void setClickListeners(){
+    private void setClickListeners() {
 
         feedToggle.setOnClickListener(feedToggleClickListener);
         mapToggle.setOnClickListener(mapToggleClickListener);
-        createStatusPost.setOnClickListener(createStatusPostClickListener);
-        createPhotoPost.setOnClickListener(createPhotoPostClickListener);
-        createVideoPost.setOnClickListener(createVideoPostClickListener);
+        createPostBar.setOnClickListener(postBarClickListener);
 
     }
-
-
-
-    private void loadInitialPosts(){
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        loadInitialWorldPosts();
-
-    }
-
-    private void loadInitialWorldPosts(){
-
-        ParseOperation.loadInitialWorldFeed(map, new ParseOperation.LoadFeedCallback() {
-            @Override
-            public void finished(final boolean success, final List<Post> posts, final ParseException e) {
-                progressBar.setVisibility(View.GONE);
-                if (success) {
-                    if (map && !feedIsLoading) { //Only run if the user is in the map feed, and the feed isn't loading
-                        mapFragment.setFeed(posts);
-                    } else { //Run if the user is in the feed view
-                        feedFragment.setInitialPosts(new ArrayList<Post>(posts));
-                    }
-                    loadFirstWorldFeed();
-                } else {
-                    Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, this);
-
-
-    }
-
-    private void loadFirstWorldFeed() {
-
-        ParseOperation.loadWorldFeed(map, 0, new ParseOperation.LoadFeedCallback() {
-            @Override
-            public void finished(boolean success, List<Post> posts, ParseException e) {
-
-                progressBar.setVisibility(View.GONE);
-
-                if (success) {
-                    if (map && !feedIsLoading) {
-                        mapFragment.setFeed(posts);
-                    } else {
-                        feedFragment.loadFirstPosts(new ArrayList<Post>(posts));
-                        feedIsLoading = false;
-                    }
-                } else {
-                    Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }, this);
-
-    }
-
-    public void loadWorldFeed(){
-
-        ParseOperation.loadWorldFeed(map, pageNumber, new ParseOperation.LoadFeedCallback() {
-            @Override
-            public void finished(boolean success, List<Post> posts, ParseException e) {
-
-                progressBar.setVisibility(View.GONE);
-                if (success) {
-                    feedFragment.loadPosts(new ArrayList<Post>(posts));
-                    pageNumber++;
-                } else {
-                    Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }, this);
-
-    }
-
-
 
     public void toggleFeed(){
 
@@ -335,7 +264,7 @@ public class Main extends LeanplumFragmentActivity{
         mapToggle.setSelected(true);
         mapToggle.setTextColor(getResources().getColor(android.R.color.white));
         viewPager.setCurrentItem(1, true);
-          mapFragment.setFeed(posts);
+        mapFragment.setFeed(posts);
     }
 
     private void displayPostOnMap(String objectId){
@@ -352,6 +281,7 @@ public class Main extends LeanplumFragmentActivity{
             @Override
             public void done(Post post, ParseException e) {
                 mapFragment.animateNewMarker(post);
+                progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -412,8 +342,137 @@ public class Main extends LeanplumFragmentActivity{
 
     };
 
+    private final View.OnClickListener postBarClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (!postListOpen){
+                createPostList.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.FadeInDown)
+                        .duration(250)
+                        .playOn(createPostList);
+                postListOpen = true;
+    //            viewPager.setCurrentItem(1);
+                Post post = new Post();
+                ParseGeoPoint point = new ParseGeoPoint();
+                point.setLongitude(LocationManager.getLocation().getLongitude());
+                point.setLatitude(LocationManager.getLocation().getLatitude());
+                post.setLocation(point);
+                post.setUser(ParseUser.getCurrentUser());
+   //             mapFragment.animateNewMarker(post);
+            } else {
+                YoYo.with(Techniques.FadeOutUp)
+                        .duration(250).withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                        createPostList.setVisibility(View.GONE);
+                        postListOpen = false;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }).playOn(createPostList);
+            }
+
+        }
+    };
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            currentView = position;
+            switch (position){
+                case 0:
+                    BuzzAnalytics.logScreen(Main.this, BuzzAnalytics.MAIN_CATEGORY, "feed");
+                    break;
+                case 1:
+                    BuzzAnalytics.logScreen(Main.this, BuzzAnalytics.MAIN_CATEGORY, "map");
+                    break;
+            }
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+
+
+        }
+    };
+
+    private class PostBarListAdapter extends BaseAdapter {
+
+        String[] list = new String[]{"Status", "Photo"};
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return list[i];
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup viewGroup) {
+            view = Main.this.getLayoutInflater().inflate(R.layout.drawer_item, null);
+            TextView text = (TextView) view.findViewById(R.id.drawer_item_text);
+            text.setText(list[position]);
+            ImageView image = (ImageView) view.findViewById(R.id.drawer_item_image);
+            switch(position){
+                case 0:
+                    image.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.post_status_icon));
+                    break;
+                case 1:
+                    image.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.post_photo_icon));
+                    break;
+            }
+            return view;
+        }
+    }
+
+    private AdapterView.OnItemClickListener postListItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            switch (position){
+                case 0:
+                    startActivityForResult(new Intent(Main.this, CreateStatusPost.class), POST_CREATED);
+                    break;
+                case 1:
+                    startActivityForResult(new Intent(Main.this, CreatePhotoPost.class), POST_CREATED);
+                    break;
+            }
+        }
+    };
 
 }

@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.leanplum.Leanplum;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -15,12 +16,15 @@ import com.parse.ParseUser;
 
 import com.parse.ParseException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import moby.mobyv02.parse.Comment;
 import moby.mobyv02.parse.Heart;
@@ -68,7 +72,7 @@ public class ParseOperation {
     }
 
     public static interface LoadFeedCallback {
-        void finished(boolean success, List<Post> posts, ParseException e);
+        void finished(boolean success, ArrayList<Post> posts, ParseException e);
     }
 
     public static interface LoadCommentsCallback {
@@ -223,6 +227,13 @@ public class ParseOperation {
         startService("deleteFollow");
     }
 
+    public static void getFeed(int pageNumber, LoadFeedCallback callback, Activity activity){
+        context = activity;
+        loadFeedCallback = callback;
+        ParseOperation.pageNumber = pageNumber;
+        startService("getFeed");
+    }
+
 
     private static void startService(String type){
         Intent i = new Intent(context, Network.class);
@@ -326,6 +337,8 @@ public class ParseOperation {
 
                 deleteFollow(parseUser, parseOperationCallback);
 
+            } else if (type.equals("getFeed")){
+                getFeed(pageNumber, loadFeedCallback);
             }
 
         }
@@ -450,7 +463,7 @@ public class ParseOperation {
         private void logIn(String username, String password, final ParseOperationCallback callback){
 
             try {
-                ParseUser.logIn(username, password);
+                final ParseUser user = ParseUser.logIn(username, password);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -469,7 +482,7 @@ public class ParseOperation {
 
         }
 
-        private void signUp(ParseUser parseUser, final ParseOperationCallback callback){
+        private void signUp(final ParseUser parseUser, final ParseOperationCallback callback){
             try {
 
                 parseUser.signUp();
@@ -504,7 +517,7 @@ public class ParseOperation {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callback.finished(true, results, null);
+       //                 callback.finished(true, results, null);
                     }
                 });
             } catch (final ParseException e) {
@@ -536,7 +549,7 @@ public class ParseOperation {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callback.finished(true, posts, null);
+           //             callback.finished(true, posts, null);
                     }
                 });
             } catch (final ParseException e) {
@@ -544,7 +557,7 @@ public class ParseOperation {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callback.finished(false, null, e);
+           //             callback.finished(false, null, e);
                     }
                 });
             }
@@ -612,9 +625,6 @@ public class ParseOperation {
             try {
                 heart.save();
                 heart.pin();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", post.getObjectId());
-                Leanplum.track("Hearts", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -671,9 +681,6 @@ public class ParseOperation {
             post.saveEventually();
             try {
                 comment.save();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", post.getObjectId());
-                Leanplum.track("Comments", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -707,10 +714,6 @@ public class ParseOperation {
                         callback.finished(true, null);
                     }
                 });
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", post.getObjectId());
-                params.put("type", "upvote");
-                Leanplum.track("Upvotes", params);
             } catch (final ParseException e) {
                 e.printStackTrace();
                 context.runOnUiThread(new Runnable() {
@@ -732,10 +735,6 @@ public class ParseOperation {
                 Upvote upvote = query.getFirst();
                 upvote.delete();
                 upvote.unpin();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", post.getObjectId());
-                params.put("type", "downvote");
-                Leanplum.track("Upvotes", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -762,10 +761,6 @@ public class ParseOperation {
             try {
                 follow.save();
                 follow.pin();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", user.getObjectId());
-                params.put("type", "follow");
-                Leanplum.track("Follows", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -794,10 +789,6 @@ public class ParseOperation {
                 Follow follow = query.getFirst();
                 follow.delete();
                 follow.unpin();
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("post", user.getObjectId());
-                params.put("type", "unfollow");
-                Leanplum.track("Follows", params);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -813,6 +804,50 @@ public class ParseOperation {
                     }
                 });
             }
+
+        }
+
+        private void getFeed(int pageNumber, final LoadFeedCallback callback){
+            HashMap<String, Object> params = new HashMap<String, Object>();
+            params.put("location", LocationManager.getLocation());
+            params.put("pageNumber", pageNumber);
+            ParseCloud.callFunctionInBackground("getFeed", params, new FunctionCallback<String>() {
+                @Override
+                public void done(String s, ParseException e) {
+                    if (e !=null){
+                        callback.finished(false, null, e);
+                    } else {
+                        JSONArray postsJsonArray = null;
+                        try {
+                            postsJsonArray = new JSONArray(s);
+                            ArrayList<Post> postPointerList = new ArrayList<Post>();
+                            ArrayList<ParseUser> userPointerList = new ArrayList<ParseUser>();
+                            ArrayList<String> objectIds = new ArrayList<String>();
+                            for (int x = 0; x < postsJsonArray.length(); x++){
+                                objectIds.add(postsJsonArray.getJSONObject(x).getString("objectId"));
+                                Post object = ParseObject.createWithoutData(Post.class, postsJsonArray.getJSONObject(x).getString("objectId"));
+                                postPointerList.add(object);
+                            }
+                            System.out.println("Objectid's length is " + objectIds.size());
+                            ParseQuery<Post> query = Post.getQuery();
+                            query.whereContainedIn("objectId", objectIds);
+                            query.include("user");
+                            ArrayList<Post> postsList = new ArrayList<Post>(query.find());
+                            System.out.println(postsList.size());
+                            Collections.sort(postsList);
+                            callback.finished(true, postsList, null);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                            callback.finished(false, null, e1);
+                        }
+                    }
+
+
+
+                }
+            });
 
         }
 

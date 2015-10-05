@@ -9,6 +9,8 @@
         android:targetSdkVersion="22" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -32,7 +34,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <permission android:protectionLevel="signature"
-        android:name="moby.mobyv02.permission.C2D_MESSAGE" />
+        android:name="permission.C2D_MESSAGE" />
     <uses-permission android:name="moby.mobyv02.permission.C2D_MESSAGE" />
 
     <application
@@ -57,15 +59,68 @@
         </activity>
         <activity android:name=".Welcome"
             android:screenOrientation="portrait"/>
+
         <activity android:name=".Signup"
             android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="Buzz"
+                    android:host="signup"/>
+            </intent-filter>
+
+        </activity>
         <activity android:name=".Login"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="Buzz"
+                    android:host="login"/>
+            </intent-filter>
+
+        </activity>
+
+
         <activity android:name=".CommentActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="Buzz"
+                    android:host="comment"/>
+            </intent-filter>
+
+        </activity>
+
         <activity android:name=".ProfileActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="Buzz"
+                    android:host="profile"/>
+            </intent-filter>
+
+            </activity>
+
+
         <activity android:name=".CreatePhotoPost"
             android:screenOrientation="portrait"/>
         <activity android:name=".SelectProfilePictureActivity"

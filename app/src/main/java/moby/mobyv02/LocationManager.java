@@ -1,6 +1,5 @@
 package moby.mobyv02;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.plus.Plus;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
@@ -55,6 +53,7 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
 
     public static void loadLocation(final Context context, LocationReceivedListener locationReceivedListener){
 
+        System.out.println("loadLocation");
         LocationManager locationManager = new LocationManager(context, locationReceivedListener);
         if (locationManager.checkLocation()){
             locationManager.connect();
@@ -118,7 +117,7 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
     }
 
     private void connect(){
-
+        System.out.println("connect");
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -166,12 +165,12 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        System.out.println("Connection suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        System.out.print(connectionResult.toString());
     }
 
     @Override

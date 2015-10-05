@@ -3,7 +3,6 @@ package moby.mobyv02.map;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -21,9 +20,9 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.Application;
+import moby.mobyv02.parse.Post;
 import moby.mobyv02.ClusterRenderer;
 import moby.mobyv02.R;
-import moby.mobyv02.parse.Post;
 
 /**
  * Created by quezadjo on 9/20/2015.
@@ -86,22 +85,28 @@ public class Node {
             System.out.println("Update marker");
             Post post = getCurrentPost();
             iconGenerator.setBackground(new ColorDrawable(0x00000000));
-            Application.imageLoader.get(post.getUser().getString("profileImage"), new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    Bitmap bm = response.getBitmap();
-                    if (bm != null) {
-                        updateMarkerImage(bm);
+            String image = post.getUser().getString("profileImage");
+            if (image!=null){
+                Application.imageLoader.get(post.getUser().getString("profileImage"), new ImageLoader.ImageListener() {
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                        Bitmap bm = response.getBitmap();
+                        if (bm != null) {
+                            updateMarkerImage(bm);
+                        }
                     }
-                }
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    if (error.networkResponse.statusCode == 404){
-                        updateMarkerImage(tree.missingProfileImage);
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error.networkResponse.statusCode == 404){
+                            updateMarkerImage(tree.missingProfileImage);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                updateMarkerImage(BitmapFactory.decodeResource(tree.getContext().getResources(), R.drawable.person_icon_graybg));
+            }
+
         }
 
     }
@@ -164,8 +169,12 @@ public class Node {
 
     public void exitNode(){
 
-            Post post = posts.get(0);
-            iconGenerator.setBackground(new ColorDrawable(0x00000000));
+        Post post = posts.get(0);
+        iconGenerator.setBackground(new ColorDrawable(0x00000000));
+        String profileImage = post.getUser().getString("profileImage");
+        if (profileImage == null){
+            updateMarkerImageOnExit(tree.missingProfileImage);
+        } else {
             Application.imageLoader.get(post.getUser().getString("profileImage"), new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -177,14 +186,19 @@ public class Node {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if (error.networkResponse.statusCode == 404) {
-                        updateMarkerImageOnExit(tree.missingProfileImage);
+                    if (error.networkResponse != null){
+                        if (error.networkResponse.statusCode == 404) {
+                            updateMarkerImageOnExit(tree.missingProfileImage);
+                        }
                     }
                 }
-            });
+            }, 80, 80);
+
+        }
 
 
     }
+
 
     private void updateMarkerImage(Bitmap bm){
 

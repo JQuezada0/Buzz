@@ -2,13 +2,7 @@ package moby.mobyv02;
 
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableRow;
@@ -18,18 +12,14 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
-import com.leanplum.Leanplum;
 import com.leanplum.activities.LeanplumFragmentActivity;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -40,8 +30,6 @@ import com.parse.SignUpCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
@@ -63,12 +51,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
-        if (BuildConfig.DEBUG) {
-            Leanplum.setAppIdForDevelopmentMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "dev_DZYELDJSN3ASeJHFHQUuuCuSf2t4uxOJvw5wUAimw6c");
-        } else {
-            Leanplum.setAppIdForProductionMode("app_fHaR2B7Xb1mamIGfU4z9FXb50eVY5QeHvPURmpXAFio", "prod_Y0Uw1nzvxdrA8sY4ruuMOt2OI84pdudG3GbpCAqbhwY");
-        }
-        Leanplum.start(this);
+        BuzzAnalytics.logScreen(this, BuzzAnalytics.ONBOARDING_CATEGORY, "welcome");
         signupButton = (Button) findViewById(R.id.welcome_signup_button);
         loginButton = (Button) findViewById(R.id.welcome_login_button);
         facebookSignin = (TableRow) findViewById(R.id.facebook_button);
@@ -77,29 +60,18 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
         loginButton.setOnClickListener(loginClickListener);
         facebookSignin.setOnClickListener(facebookClickListener);
         googlePlusSignin.setOnClickListener(googleClickListener);
-
-        try{
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "moby.mobyv02", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
     }
 
     private void facebookLogin(){
-
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, Arrays.asList(permissions), new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (e == null) {
+                    if (parseUser.isNew()){
+                        BuzzAnalytics.logLogin(Welcome.this, "Facebook", true);
+                    } else {
+                        BuzzAnalytics.logLogin(Welcome.this, "Facebook", false);
+                    }
                     createUser(parseUser);
                 } else {
                     e.printStackTrace();
@@ -122,6 +94,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                         LocationManager.updateFromSharedPreferences(Welcome.this);
                         parseUser.put("gender", object.getString("gender"));
                         parseUser.saveEventually();
+
                         startActivity(new Intent(Welcome.this, Main.class));
                         finish();
                     } catch (JSONException e) {
@@ -181,26 +154,27 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
 
     @Override
     public void onConnected(Bundle bundle) {
-        final Person currentPerson = Plus.PeopleApi.getCurrentPerson(googleApiClient);
         final ParseUser user = new ParseUser();
-        ParseUser.logInInBackground(currentPerson.getId(), currentPerson.getId(), new LogInCallback() {
+        final Person currentPerson = Plus.PeopleApi.getCurrentPerson(googleApiClient);
+        ParseUser.logInInBackground(Plus.AccountApi.getAccountName(googleApiClient), Plus.AccountApi.getAccountName(googleApiClient), new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
-                if (e == null){
+                if (e == null) {
+                    BuzzAnalytics.logLogin(Welcome.this, "Google", false);
                     startActivity(new Intent(Welcome.this, Main.class));
                     finish();
                 } else {
                     System.out.println(e.getMessage());
-                    user.setUsername(currentPerson.getId());
-                    user.setPassword(currentPerson.getId());
+                    user.setUsername(Plus.AccountApi.getAccountName(googleApiClient));
+                    user.setPassword(Plus.AccountApi.getAccountName(googleApiClient));
                     user.setEmail(Plus.AccountApi.getAccountName(googleApiClient));
                     user.put("fullName", currentPerson.getName().getGivenName() + " " + currentPerson.getName().getFamilyName());
                     user.put("profileImage", currentPerson.getImage().getUrl());
                     user.put("instagram", false);
-                    if (currentPerson.getBirthday() != null){
+                    if (currentPerson.getBirthday() != null) {
                         user.put("birthday", currentPerson.getBirthday());
                     }
-                    if (currentPerson.getGender() == 0){
+                    if (currentPerson.getGender() == 0) {
                         user.put("gender", "male");
                     } else if (currentPerson.getGender() == 1) {
                         user.put("gender", "female");
@@ -208,7 +182,8 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                     user.signUpInBackground(new SignUpCallback() {
                         @Override
                         public void done(ParseException e) {
-                            if (e == null){
+                            if (e == null) {
+                                BuzzAnalytics.logLogin(Welcome.this, "Google", true);
                                 LocationManager.updateFromSharedPreferences(Welcome.this);
                                 startActivity(new Intent(Welcome.this, Main.class));
                                 finish();

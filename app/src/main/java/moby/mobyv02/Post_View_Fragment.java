@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -13,25 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.leanplum.Leanplum;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -51,10 +43,10 @@ public class Post_View_Fragment extends Fragment {
     private TextView locale;
     private TextView distance;
     private TextView timeStamp;
-    private TextView upvotes;
+//    private TextView upvotes;
     private LinearLayout profileButton;
-    private FrameLayout upvoteButton;
-    private ImageView upvoteIcon;
+//    private FrameLayout upvoteButton;
+//    private ImageView upvoteIcon;
     private TextView usernameSmall;
     private FrameLayout frame;
     private Application app;
@@ -70,19 +62,19 @@ public class Post_View_Fragment extends Fragment {
         if (post.getType().equals("status")){
 
             v = inflater.inflate(R.layout.post_status_layout, null);
-            profilePicture = (CircleImageView) v.findViewById(R.id.post_status_layout_profileimage);
-            username = (TextView) v.findViewById(R.id.post_status_layout_username);
+            profilePicture = (CircleImageView) v.findViewById(R.id.post_profile_image);
+            username = (TextView) v.findViewById(R.id.post_name);
 //            usernameSmall = (TextView) v.findViewById(R.id.post_status_layout_username_small);
-            locale = (TextView) v.findViewById(R.id.post_status_layout_locale);
-            distance = (TextView) v.findViewById(R.id.post_status_layout_distance);
-            timeStamp = (TextView) v.findViewById(R.id.post_status_layout_timestamp);
-            upvotes = (TextView) v.findViewById(R.id.post_status_layout_upvote_count);
-            profileButton = (LinearLayout) v.findViewById(R.id.post_status_layout_profile_button);
-            upvoteButton = (FrameLayout) v.findViewById(R.id.post_status_layout_upvote_button);
+            locale = (TextView) v.findViewById(R.id.post_locale);
+            distance = (TextView) v.findViewById(R.id.post_distance);
+            timeStamp = (TextView) v.findViewById(R.id.post_time);
+//            upvotes = (TextView) v.findViewById(R.id.post_status_layout_upvote_count);
+            profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
+//            upvoteButton = (FrameLayout) v.findViewById(R.id.post_status_layout_upvote_button);
             profileButton.setOnClickListener(profileButtonClickListener);
             profilePicture.setOnClickListener(profileButtonClickListener);
-            upvoteIcon = (ImageView) v.findViewById(R.id.post_status_layout_upvote_icon);
-            upvoteButton.setOnClickListener(upvoteButtonClickListener);
+//            upvoteIcon = (ImageView) v.findViewById(R.id.post_status_layout_upvote_icon);
+//            upvoteButton.setOnClickListener(upvoteButtonClickListener);
             TextView text = (TextView) v.findViewById(R.id.post_status_layout_text);
             text.setText(post.getText());
             setUpvoteStatus();
@@ -96,19 +88,19 @@ public class Post_View_Fragment extends Fragment {
             image.setImageUrl(post.getImage(), Application.imageLoader);
             text.setText(post.getText());
 
-            profilePicture = (CircleImageView) v.findViewById(R.id.post_photo_layout_profileimage);
-            username = (TextView) v.findViewById(R.id.post_photo_layout_username);
+            profilePicture = (CircleImageView) v.findViewById(R.id.post_profile_image);
+            username = (TextView) v.findViewById(R.id.post_name);
 //            usernameSmall = (TextView) v.findViewById(R.id.post_photo_layout_username_small);
-            locale = (TextView) v.findViewById(R.id.post_photo_layout_locale);
-            distance = (TextView) v.findViewById(R.id.post_photo_layout_distance);
-            timeStamp = (TextView) v.findViewById(R.id.post_photo_layout_timestamp);
-            upvotes = (TextView) v.findViewById(R.id.post_photo_layout_upvote_count);
-            profileButton = (LinearLayout) v.findViewById(R.id.post_photo_layout_profile_button);
-            upvoteButton = (FrameLayout) v.findViewById(R.id.post_photo_layout_upvote_button);
+            locale = (TextView) v.findViewById(R.id.post_locale);
+            distance = (TextView) v.findViewById(R.id.post_distance);
+            timeStamp = (TextView) v.findViewById(R.id.post_time);
+//            upvotes = (TextView) v.findViewById(R.id.post_photo_layout_upvote_count);
+            profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
+//            upvoteButton = (FrameLayout) v.findViewById(R.id.post_photo_layout_upvote_button);
             profileButton.setOnClickListener(profileButtonClickListener);
             profilePicture.setOnClickListener(profileButtonClickListener);
-            upvoteIcon = (ImageView) v.findViewById(R.id.post_photo_layout_upvote_icon);
-            upvoteButton.setOnClickListener(upvoteButtonClickListener);
+//            upvoteIcon = (ImageView) v.findViewById(R.id.post_photo_layout_upvote_icon);
+//            upvoteButton.setOnClickListener(upvoteButtonClickListener);
             setUpvoteStatus();
             frame = (FrameLayout) v.findViewById(R.id.post_photo_layout_frame);
         }
@@ -118,13 +110,13 @@ public class Post_View_Fragment extends Fragment {
 
     private void setUpvoteStatus(){
 
-        upvotes.setText(String.valueOf(post.getUpvotes()));
+//        upvotes.setText(String.valueOf(post.getUpvotes()));
         ParseQuery<Upvote> query = Upvote.getQuery();
         query.whereEqualTo("post", post);
         query.fromLocalDatastore();
         try {
             Upvote upvote = query.getFirst();
-            upvoteIcon.setSelected(true);
+//            upvoteIcon.setSelected(true);
         } catch (ParseException e) {
 
         }
@@ -183,7 +175,7 @@ public class Post_View_Fragment extends Fragment {
         }
     };
 
-    private final View.OnClickListener upvoteButtonClickListener = new View.OnClickListener() {
+/*    private final View.OnClickListener upvoteButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
 
@@ -230,6 +222,6 @@ public class Post_View_Fragment extends Fragment {
             }
 
         }
-    };
+    }; */
 
 }

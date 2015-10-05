@@ -1,14 +1,9 @@
 package moby.mobyv02;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.ContextThemeWrapper;
@@ -26,11 +21,7 @@ import android.widget.Toast;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 
@@ -94,7 +85,7 @@ public class SelectProfilePictureFragment extends Fragment {
 
                                 if (e == null) {
                                     Intent i = new Intent(SelectProfilePictureFragment.this.signup, Main.class);
-                                    Application.logger.logEvent("Signup succeeded");
+                                    BuzzAnalytics.logLogin(SelectProfilePictureFragment.this.signup, "Buzz", true);
                                     LocationManager.updateFromSharedPreferences(SelectProfilePictureFragment.this.signup);
                                     SelectProfilePictureFragment.this.signup.startActivity(i);
                                 } else {
@@ -105,7 +96,6 @@ public class SelectProfilePictureFragment extends Fragment {
                                             Toast.makeText(SelectProfilePictureFragment.this.signup, e.getMessage(), Toast.LENGTH_SHORT).show();
                                             SelectProfilePictureFragment.this.signup.getSignUpViewPager().setCurrentItem(0, true);
                                             continueButton.setEnabled(true);
-                                            Application.logger.logEvent("Signup failed");
                                         }
                                     });
 
@@ -155,9 +145,12 @@ public class SelectProfilePictureFragment extends Fragment {
     };
 
     public void setProfilePicture(){
-        profilePicture.setImageURI(Uri.fromFile(Application.getImageCacheFile(signup)));
+        File file = Application.getImageCacheFile(signup);
+        profilePicture.setImageBitmap(null);
+        profilePicture.setImageURI(Uri.fromFile(file));
         continueButton.setVisibility(View.VISIBLE);
         selectImageButton.setText("Retake");
+        hideDialog();
     }
 
     public void hideDialog(){

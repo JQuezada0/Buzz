@@ -3,31 +3,25 @@ package moby.mobyv02;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import moby.mobyv02.map.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -59,7 +53,7 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
     protected void onClusterItemRendered(final Post clusterItem, final Marker marker){
 
         try {
-            View markerIcon = inflater.inflate(R.layout.map_marker_icon, null);
+            View markerIcon = inflater.inflate(moby.mobyv02.R.layout.map_marker_icon, null);
             loadImageAsync(clusterItem.getUser(), marker, iconGenerator, markerIcon, clusterItem, false, 0);
         } catch (IllegalArgumentException e) {
             System.out.println("Caught exception " + e.getMessage());
@@ -75,7 +69,7 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
         cluster.getItems().toArray(parr);
         Post firstPost = parr[0];
         try {
-            View markerIcon = inflater.inflate(R.layout.map_marker_icon, null);
+            View markerIcon = inflater.inflate(moby.mobyv02.R.layout.map_marker_icon, null);
             loadImageAsync(firstPost.getUser(), marker, iconGenerator, markerIcon, firstPost, true, cluster.getSize());
         } catch (IllegalArgumentException e) {
             System.out.println("Caught exception " + e.getMessage());
@@ -101,45 +95,52 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
 
     private void loadImageAsync(ParseUser user, final Marker marker, IconGenerator generator, final View v, final Post post, boolean cluster, int count){
 
-        final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
-        TextView countText = (TextView) v.findViewById(R.id.map_marker_icon_count_text);
+        final CircleImageView profileImage = (CircleImageView) v.findViewById(moby.mobyv02.R.id.map_marker_image);
+        TextView countText = (TextView) v.findViewById(moby.mobyv02.R.id.map_marker_icon_count_text);
         String imageUrl = user.getString("profileImage");
         if (!cluster) {
-            v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
+            v.findViewById(moby.mobyv02.R.id.map_marker_icon_count).setVisibility(View.GONE);
         } else {
             countText.setText(String.valueOf(count));
         }
-        Application.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
+        if (imageUrl == null){
+            profileImage.setImageDrawable(ContextCompat.getDrawable(context, moby.mobyv02.R.drawable.person_icon_graybg));
+            iconGenerator.setContentView(v);
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon()));
+        } else {
+            Application.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
 
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                projection = map.getProjection();
-                LatLngBounds bounds = projection.getVisibleRegion().latLngBounds;
-                if (bounds.contains(marker.getPosition()) && response.getBitmap() != null) {
-                    try {
-                        profileImage.setImageBitmap(response.getBitmap());
-                        iconGenerator.setContentView(v);
-                        Bitmap bm = iconGenerator.makeIcon();
-                        BitmapDescriptor bd = BitmapDescriptorFactory.fromBitmap(bm);
-                        marker.setIcon(bd);
-                        System.out.println("Render marker");
-                        if (post != null)
-                        post.setMarker(marker);
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Caught exception " + e.getMessage());
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    projection = map.getProjection();
+                    LatLngBounds bounds = projection.getVisibleRegion().latLngBounds;
+                    if (response.getBitmap() != null) {
+                        try {
+                            profileImage.setImageBitmap(response.getBitmap());
+                            iconGenerator.setContentView(v);
+                            Bitmap bm = iconGenerator.makeIcon();
+                            BitmapDescriptor bd = BitmapDescriptorFactory.fromBitmap(bm);
+                            marker.setIcon(bd);
+                            if (post != null)
+                                post.setMarker(marker);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Caught exception " + e.getMessage());
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
+                @Override
+                public void onErrorResponse(VolleyError error) {
 
-            }
-        });
+                }
+            }, 80, 80);
+        }
+
     }
 
     @Override
     public void onClustersChanged(Set<? extends Cluster<Post>> clusters){
         super.onClustersChanged(clusters);
     }
+
 }
