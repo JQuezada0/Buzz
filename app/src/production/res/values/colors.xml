@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <item name="moby_blue" type="color">#FA9A00</item>
+    <item name="moby_light_blue" type="color">#FAC56F</item>
+    <item name="google_plus" type="color">#DF4A32</item>
+    <item name="facebook" type="color">#3B5998</item>
+    <item name="turquois" type="color">#1ABC9C</item>
+    <item name="emerald" type="color">#2ECC71</item>
+    <item name="peterriver" type="color">#3498DB</item>
+    <item name="amethyst" type="color">#9B59B6</item>
+    <item name="sunflower" type="color">#F1C40F</item>
+    <item name="carrot" type="color">#E67E22</item>
+    <item name="alizarin" type="color">#E74C3C</item>
+    <item name="moby_gray" type="color">#ACACAC</item>
+
+</resources>
