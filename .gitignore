@@ -1,3 +1,6 @@
 build
 captures
 parse-cloud
+.idea
+local.properties
+.gradle
