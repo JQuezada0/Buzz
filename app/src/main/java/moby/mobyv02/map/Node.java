@@ -3,7 +3,6 @@ package moby.mobyv02.map;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -21,9 +20,9 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.Application;
+import moby.mobyv02.parse.Post;
 import moby.mobyv02.ClusterRenderer;
 import moby.mobyv02.R;
-import moby.mobyv02.parse.Post;
 
 /**
  * Created by quezadjo on 9/20/2015.
@@ -187,8 +186,10 @@ public class Node {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if (error.networkResponse.statusCode == 404) {
-                        updateMarkerImageOnExit(tree.missingProfileImage);
+                    if (error.networkResponse != null){
+                        if (error.networkResponse.statusCode == 404) {
+                            updateMarkerImageOnExit(tree.missingProfileImage);
+                        }
                     }
                 }
             }, 80, 80);

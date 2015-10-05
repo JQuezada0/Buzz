@@ -34,7 +34,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <permission android:protectionLevel="signature"
-        android:name="moby.mobyv02.permission.C2D_MESSAGE" />
+        android:name="permission.C2D_MESSAGE" />
     <uses-permission android:name="moby.mobyv02.permission.C2D_MESSAGE" />
 
     <application

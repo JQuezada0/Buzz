@@ -1,17 +1,10 @@
 package moby.mobyv02;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.facebook.appevents.AppEventsLogger;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.leanplum.Leanplum;
-import com.leanplum.activities.LeanplumFragmentActivity;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseUser;
 
 /**
  * Created by quezadjo on 9/8/2015.

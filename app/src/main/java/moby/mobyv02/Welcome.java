@@ -2,13 +2,7 @@ package moby.mobyv02;
 
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableRow;
@@ -18,14 +12,11 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
@@ -39,11 +30,7 @@ import com.parse.SignUpCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by quezadjo on 9/8/2015.
@@ -167,28 +154,27 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
 
     @Override
     public void onConnected(Bundle bundle) {
-        final Person currentPerson = Plus.PeopleApi.getCurrentPerson(googleApiClient);
         final ParseUser user = new ParseUser();
-
-        ParseUser.logInInBackground(currentPerson.getId(), currentPerson.getId(), new LogInCallback() {
+        final Person currentPerson = Plus.PeopleApi.getCurrentPerson(googleApiClient);
+        ParseUser.logInInBackground(Plus.AccountApi.getAccountName(googleApiClient), Plus.AccountApi.getAccountName(googleApiClient), new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
-                if (e == null){
+                if (e == null) {
                     BuzzAnalytics.logLogin(Welcome.this, "Google", false);
                     startActivity(new Intent(Welcome.this, Main.class));
                     finish();
                 } else {
                     System.out.println(e.getMessage());
-                    user.setUsername(currentPerson.getId());
-                    user.setPassword(currentPerson.getId());
+                    user.setUsername(Plus.AccountApi.getAccountName(googleApiClient));
+                    user.setPassword(Plus.AccountApi.getAccountName(googleApiClient));
                     user.setEmail(Plus.AccountApi.getAccountName(googleApiClient));
                     user.put("fullName", currentPerson.getName().getGivenName() + " " + currentPerson.getName().getFamilyName());
                     user.put("profileImage", currentPerson.getImage().getUrl());
                     user.put("instagram", false);
-                    if (currentPerson.getBirthday() != null){
+                    if (currentPerson.getBirthday() != null) {
                         user.put("birthday", currentPerson.getBirthday());
                     }
-                    if (currentPerson.getGender() == 0){
+                    if (currentPerson.getGender() == 0) {
                         user.put("gender", "male");
                     } else if (currentPerson.getGender() == 1) {
                         user.put("gender", "female");
@@ -196,7 +182,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                     user.signUpInBackground(new SignUpCallback() {
                         @Override
                         public void done(ParseException e) {
-                            if (e == null){
+                            if (e == null) {
                                 BuzzAnalytics.logLogin(Welcome.this, "Google", true);
                                 LocationManager.updateFromSharedPreferences(Welcome.this);
                                 startActivity(new Intent(Welcome.this, Main.class));

@@ -1,8 +1,6 @@
 package moby.mobyv02;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.DisplayMetrics;
 import android.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader;

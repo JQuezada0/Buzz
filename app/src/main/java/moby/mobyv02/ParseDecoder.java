@@ -8,9 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
 
 import moby.mobyv02.parse.Post;
 

@@ -1,7 +1,5 @@
 package moby.mobyv02;
 
-import android.location.Location;
-
 import com.parse.ParseGeoPoint;
 
 /**

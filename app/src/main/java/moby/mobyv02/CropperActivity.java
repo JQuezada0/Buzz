@@ -1,6 +1,5 @@
 package moby.mobyv02;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,14 +8,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.theartofdev.edmodo.cropper.CropImageView;
-import org.apache.commons.io.IOUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * Created by quezadjo on 9/14/2015.

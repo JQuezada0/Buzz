@@ -10,16 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leanplum.Leanplum;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import moby.mobyv02.parse.Comment;
 
 /**
  * Created by quezadjo on 9/10/2015.

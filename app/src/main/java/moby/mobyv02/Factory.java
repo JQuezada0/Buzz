@@ -1,12 +1,8 @@
 package moby.mobyv02;
 
 import android.text.Editable;
-import android.text.Selection;
 import android.text.TextWatcher;
 import android.widget.EditText;
-import android.widget.TextView;
-
-import java.io.File;
 
 /**
  * Created by quezadjo on 9/13/2015.

@@ -23,25 +23,16 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.leanplum.activities.LeanplumFragmentActivity;
 import com.nineoldandroids.animation.Animator;
-import com.parse.FunctionCallback;
 import com.parse.GetCallback;
-import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -360,14 +351,14 @@ public class Main extends LeanplumFragmentActivity{
                         .duration(250)
                         .playOn(createPostList);
                 postListOpen = true;
-                viewPager.setCurrentItem(1);
+    //            viewPager.setCurrentItem(1);
                 Post post = new Post();
                 ParseGeoPoint point = new ParseGeoPoint();
                 point.setLongitude(LocationManager.getLocation().getLongitude());
                 point.setLatitude(LocationManager.getLocation().getLatitude());
                 post.setLocation(point);
                 post.setUser(ParseUser.getCurrentUser());
-                mapFragment.animateNewMarker(post);
+   //             mapFragment.animateNewMarker(post);
             } else {
                 YoYo.with(Techniques.FadeOutUp)
                         .duration(250).withListener(new Animator.AnimatorListener() {

@@ -1,13 +1,11 @@
 package moby.mobyv02;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.multidex.MultiDex;
-import android.util.LruCache;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
@@ -16,7 +14,6 @@ import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.leanplum.Leanplum;
 import com.leanplum.LeanplumApplication;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;

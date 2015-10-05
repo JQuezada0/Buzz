@@ -3,3 +3,4 @@ captures
 parse-cloud
 .gradle
 .idea
+local.properties

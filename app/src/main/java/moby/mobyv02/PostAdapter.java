@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -28,10 +26,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import moby.mobyv02.layout.SquareImageView;
-import moby.mobyv02.parse.Heart;
 import moby.mobyv02.parse.Post;
-import moby.mobyv02.parse.Upvote;
+
+import moby.mobyv02.parse.Heart;
 
 /**
  * Created by quezadjo on 9/25/2015.
@@ -68,8 +65,11 @@ public class PostAdapter extends BaseAdapter {
     }
 
     public void addToFeed(ArrayList<Post> posts){
-        this.posts.addAll(posts);
-        notifyDataSetChanged();
+        if (posts != null){
+            this.posts.addAll(posts);
+            notifyDataSetChanged();
+        }
+
     }
 
     @Override
