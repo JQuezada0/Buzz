@@ -124,6 +124,23 @@
             android:layout_gravity="center"
             android:id="@+id/post_image"/>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/post_video_frame"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <VideoView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:id="@+id/post_video"/>
+
+        </FrameLayout>
+
+
+
     </FrameLayout>
 
     <TableRow

@@ -280,11 +280,24 @@ public class Main extends LeanplumFragmentActivity{
         postQuery.getInBackground(objectId, new GetCallback<Post>() {
             @Override
             public void done(Post post, ParseException e) {
-                mapFragment.animateNewMarker(post);
+                mapFragment.animateNewMarkerOnPost(post);
                 progressBar.setVisibility(View.GONE);
             }
         });
 
+    }
+
+    public void refreshFeed(){
+        pageNumber = 0;
+        ParseOperation.getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
+            @Override
+            public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
+                feedFragment.loadPosts(posts);
+                Main.this.posts.addAll(posts);
+                pageNumber++;
+            }
+        }, this);
+        feedFragment.refreshFinished();
     }
 
     public void closeDrawer(){
@@ -351,14 +364,19 @@ public class Main extends LeanplumFragmentActivity{
                         .duration(250)
                         .playOn(createPostList);
                 postListOpen = true;
-    //            viewPager.setCurrentItem(1);
+                viewPager.setCurrentItem(1);
                 Post post = new Post();
                 ParseGeoPoint point = new ParseGeoPoint();
                 point.setLongitude(LocationManager.getLocation().getLongitude());
                 point.setLatitude(LocationManager.getLocation().getLatitude());
                 post.setLocation(point);
                 post.setUser(ParseUser.getCurrentUser());
-   //             mapFragment.animateNewMarker(post);
+                mapFragment.animateNewMarker(post);
+                map = true;
+                feedToggle.setSelected(false);
+                feedToggle.setTextColor(getResources().getColor(R.color.moby_blue));
+                mapToggle.setSelected(true);
+                mapToggle.setTextColor(getResources().getColor(android.R.color.white));
             } else {
                 YoYo.with(Techniques.FadeOutUp)
                         .duration(250).withListener(new Animator.AnimatorListener() {
@@ -372,6 +390,7 @@ public class Main extends LeanplumFragmentActivity{
 
                         createPostList.setVisibility(View.GONE);
                         postListOpen = false;
+                        mapFragment.returnMapToNormal();
                     }
 
                     @Override
@@ -426,11 +445,11 @@ public class Main extends LeanplumFragmentActivity{
 
     private class PostBarListAdapter extends BaseAdapter {
 
-        String[] list = new String[]{"Status", "Photo"};
+        String[] list = new String[]{"Status", "Photo", "Video"};
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -456,6 +475,9 @@ public class Main extends LeanplumFragmentActivity{
                 case 1:
                     image.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.post_photo_icon));
                     break;
+                case 2:
+                    image.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.post_video_icon));
+                    break;
             }
             return view;
         }
@@ -464,12 +486,16 @@ public class Main extends LeanplumFragmentActivity{
     private AdapterView.OnItemClickListener postListItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            mapFragment.returnMapToNormal();
             switch (position){
                 case 0:
                     startActivityForResult(new Intent(Main.this, CreateStatusPost.class), POST_CREATED);
                     break;
                 case 1:
                     startActivityForResult(new Intent(Main.this, CreatePhotoPost.class), POST_CREATED);
+                    break;
+                case 2:
+                    startActivityForResult(new Intent(Main.this, CreateVideoPost.class), POST_CREATED);
                     break;
             }
         }

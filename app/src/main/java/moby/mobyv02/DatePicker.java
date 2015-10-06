@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by quezadjo on 9/25/2015.
@@ -33,8 +34,9 @@ public class DatePicker extends DialogFragment implements DatePickerDialog.OnDat
 
     @Override
     public void onDateSet(android.widget.DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-
-        signUpFragment.setDate(year, monthOfYear, dayOfMonth);
+        Calendar c = Calendar.getInstance();
+        c.set(year, monthOfYear, dayOfMonth);
+        signUpFragment.setDate(year, monthOfYear, dayOfMonth, c.getTime());
 
     }
 }

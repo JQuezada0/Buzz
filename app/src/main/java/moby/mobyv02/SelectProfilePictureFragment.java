@@ -79,7 +79,9 @@ public class SelectProfilePictureFragment extends Fragment {
                         user.setEmail(signup.email.getText().toString());
                         user.put("fullName", signup.fullName.getText().toString());
                         user.put("profileImage", file.getUrl());
-                        ParseOperation.signUp(user, new ParseOperation.ParseOperationCallback() {
+                        user.put("birthday", signup.date);
+                        user.put("gender", signup.gender.getSelectedItem().toString())
+;                        ParseOperation.signUp(user, new ParseOperation.ParseOperationCallback() {
                             @Override
                             public void finished(boolean success, final ParseException e) {
 
