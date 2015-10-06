@@ -321,7 +321,9 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
             }
         }
 
-//        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
+
+        parameters.set("cam_mode", 1 );
 
     }
 

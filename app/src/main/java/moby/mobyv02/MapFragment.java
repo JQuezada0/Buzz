@@ -271,6 +271,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void animateNewMarkerOnPost(final Post post){
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(post.getLatitude(), post.getLongitude()), 10.0f));
         successDialog.setVisibility(View.VISIBLE);
         showSuccessDialog();
         darkOverlay.setVisibility(View.VISIBLE);
@@ -283,7 +284,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Point point = p.toScreenLocation(new LatLng(post.getLatitude(), post.getLongitude()));
         v.setX(point.x);
         v.setY(point.y);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(post.getLatitude(), post.getLongitude()), 10.0f));
         map.getUiSettings().setAllGesturesEnabled(false);
         temporaryMarker = v;
         if (imageUrl == null){

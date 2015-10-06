@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -132,6 +133,7 @@ public class PostAdapter extends BaseAdapter {
             vh.profileButton = (TableRow) convertView.findViewById(R.id.post_profile_button);
             vh.videoFrame = (FrameLayout) convertView.findViewById(R.id.post_video_frame);
             vh.video = (VideoView) convertView.findViewById(R.id.post_video);
+            vh.progressBar = (CircleProgressBar) convertView.findViewById(R.id.post_progressbar);
             convertView.setTag(R.string.viewholder_tag, vh);
             convertView.setTag(R.string.post_tag, post);
         } else {
@@ -180,7 +182,9 @@ public class PostAdapter extends BaseAdapter {
             mediaController.setAnchorView(vh.video);
             vh.video.setMediaController(mediaController);
             vh.video.setVideoURI(Uri.parse(post.getVideo()));
-            vh.video.seekTo(100);
+            vh.progressBar.setColorSchemeResources(R.color.moby_blue);
+            vh.progressBar.setVisibility(View.VISIBLE);
+            setOnPreparedListener(vh);
         }
         ParseQuery<Heart> query = Heart.getQuery();
         query.whereEqualTo("post", post);
@@ -210,6 +214,16 @@ public class PostAdapter extends BaseAdapter {
             }
         });
         return convertView;
+    }
+
+    private void setOnPreparedListener(final ViewHolder vh){
+        vh.video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                vh.progressBar.setVisibility(View.GONE);
+                vh.video.seekTo(100);
+            }
+        });
     }
 
     private void setHeartClickListener(final ViewHolder vh, final Post post, final int position){
@@ -272,6 +286,7 @@ public class PostAdapter extends BaseAdapter {
         TableRow profileButton;
         FrameLayout videoFrame;
         VideoView video;
+        CircleProgressBar progressBar;
     }
 
     private class ImageListener implements ImageLoader.ImageListener {
