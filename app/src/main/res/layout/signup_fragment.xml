@@ -58,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signup_gender"
+            android:padding="5dp"
             android:imeOptions="actionNext"/>
 
         <TextView
@@ -65,7 +66,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/signup_birthday"
             android:text="Birth Date"
-            android:textSize="15sp"
+            android:textSize="20sp"
+            android:background="@color/moby_light_blue"
             android:padding="10dp"
             android:clickable="true"/>
 

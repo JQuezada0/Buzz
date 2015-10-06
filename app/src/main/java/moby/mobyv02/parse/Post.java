@@ -72,6 +72,10 @@ public class Post extends ParseObject implements ClusterItem, Comparable {
         return getString("image");
     }
 
+    public void setVideo(String video){ put("video", video); }
+
+    public String getVideo() {return getString("video"); }
+
     public void setType(String type){
         put("type", type);
     }

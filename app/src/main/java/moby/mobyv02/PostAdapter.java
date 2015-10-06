@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
+import android.widget.MediaController;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -26,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import moby.mobyv02.layout.SquareFrameLayout;
 import moby.mobyv02.parse.Post;
 
 import moby.mobyv02.parse.Heart;
@@ -39,6 +45,7 @@ public class PostAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
     private final Context context;
     private Activity activity;
+    private MediaController mediaController;
 
     public PostAdapter(ArrayList<Post> posts, Context context, Activity activity){
         this.posts.addAll(posts);
@@ -52,6 +59,12 @@ public class PostAdapter extends BaseAdapter {
         this.posts.clear();
         this.posts.addAll(posts);
         notifyDataSetChanged();
+    }
+
+    public void hideMediaControls(){
+        if (mediaController!=null){
+            mediaController.hide();
+        }
     }
 
     public void updatePost(final int position){
@@ -99,8 +112,8 @@ public class PostAdapter extends BaseAdapter {
             circleProgressBar.setColorSchemeResources(R.color.moby_blue);
             return v;
         }
-        final Post post = posts.get(position);
-        final ViewHolder vh;
+        Post post = posts.get(position);
+        ViewHolder vh;
         final ParseUser user = post.getUser();
         if (convertView == null || convertView.getTag() == null){
             convertView = inflater.inflate(R.layout.feed_post_layout, null);
@@ -118,9 +131,14 @@ public class PostAdapter extends BaseAdapter {
             vh.postText = (TextView) convertView.findViewById(R.id.post_text);
             vh.postImage = (NetworkImageView) convertView.findViewById(R.id.post_image);
             vh.profileButton = (TableRow) convertView.findViewById(R.id.post_profile_button);
-            convertView.setTag(vh);
+            vh.videoFrame = (FrameLayout) convertView.findViewById(R.id.post_video_frame);
+            vh.video = (VideoView) convertView.findViewById(R.id.post_video);
+            vh.progressBar = (CircleProgressBar) convertView.findViewById(R.id.post_progressbar);
+            convertView.setTag(R.string.viewholder_tag, vh);
+            convertView.setTag(R.string.post_tag, post);
         } else {
-            vh = (ViewHolder) convertView.getTag();
+            vh = (ViewHolder) convertView.getTag(R.string.viewholder_tag);
+            post = (Post) convertView.getTag(R.string.post_tag);
         }
 
         vh.name.setText(user.getString("fullName"));
@@ -150,10 +168,23 @@ public class PostAdapter extends BaseAdapter {
         if (type.equals("status")){
             vh.postText.setText(post.getText());
             vh.postImage.setVisibility(View.GONE);
+            vh.videoFrame.setVisibility(View.GONE);
         } else if (type.equals("photo")){
             vh.postImage.setVisibility(View.VISIBLE);
             vh.postImage.setImageUrl(post.getString("image"), Application.imageLoader);
             vh.postText.setText(post.getText());
+            vh.videoFrame.setVisibility(View.GONE);
+        } else if (type.equals("video")){
+            vh.postText.setText(post.getText());
+            vh.postImage.setVisibility(View.GONE);
+            vh.videoFrame.setVisibility(View.VISIBLE);
+            mediaController = new MediaController(context);
+            mediaController.setAnchorView(vh.video);
+            vh.video.setMediaController(mediaController);
+            vh.video.setVideoURI(Uri.parse(post.getVideo()));
+            vh.progressBar.setColorSchemeResources(R.color.moby_blue);
+            vh.progressBar.setVisibility(View.VISIBLE);
+            setOnPreparedListener(vh);
         }
         ParseQuery<Heart> query = Heart.getQuery();
         query.whereEqualTo("post", post);
@@ -164,6 +195,38 @@ public class PostAdapter extends BaseAdapter {
         } catch (ParseException e) {
             vh.heartButton.setSelected(false);
         }
+        setHeartClickListener(vh, post, position);
+        vh.commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommentActivity.currentPost = posts.get(position);
+                Intent i = new Intent(context, CommentActivity.class);
+                context.startActivity(i);
+            }
+        });
+        vh.profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Is clicekd");
+                Intent i = new Intent(context, ProfileActivity.class);
+                ProfileActivity.user = user;
+                context.startActivity(i);
+            }
+        });
+        return convertView;
+    }
+
+    private void setOnPreparedListener(final ViewHolder vh){
+        vh.video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                vh.progressBar.setVisibility(View.GONE);
+                vh.video.seekTo(100);
+            }
+        });
+    }
+
+    private void setHeartClickListener(final ViewHolder vh, final Post post, final int position){
         vh.heartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -204,24 +267,6 @@ public class PostAdapter extends BaseAdapter {
 
             }
         });
-        vh.commentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CommentActivity.currentPost = posts.get(position);
-                Intent i = new Intent(context, CommentActivity.class);
-                context.startActivity(i);
-            }
-        });
-        vh.profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("Is clicekd");
-                Intent i = new Intent(context, ProfileActivity.class);
-                ProfileActivity.user = user;
-                context.startActivity(i);
-            }
-        });
-        return convertView;
     }
 
     private class ViewHolder {
@@ -239,6 +284,9 @@ public class PostAdapter extends BaseAdapter {
         TableRow commentButton;
         TableRow chatButton;
         TableRow profileButton;
+        FrameLayout videoFrame;
+        VideoView video;
+        CircleProgressBar progressBar;
     }
 
     private class ImageListener implements ImageLoader.ImageListener {

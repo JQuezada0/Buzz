@@ -1,10 +1,12 @@
 package moby.mobyv02;
 
+import android.content.DialogInterface;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.Display;
@@ -16,12 +18,15 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.github.adnansm.timelytextview.TimelyView;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
 
 /**
  * Created by quezadjo on 9/23/2015.
@@ -45,21 +50,32 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
     private boolean stopped = false;
     private boolean startRecording = false;
     private Camera.Parameters parameters;
+    private ImageView cancelButton;
+    private ImageView continueButton;
+    private CountDownTimer timer;
+    private int currentCount = 10;
+    private TimelyView timelyView;
+    private TextView count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_activity);
-
         surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         recordButton = (ImageView) findViewById(R.id.capture_video_button);
+        cancelButton = (ImageView) findViewById(R.id.capture_video_cancel_button);
+        continueButton = (ImageView) findViewById(R.id.capture_video_ok_button);
         videoView = (VideoView) findViewById(R.id.camera_video_view);
         videoFrame = (FrameLayout) findViewById(R.id.camera_frame);
         progress = (CircleProgressBar) findViewById(R.id.video_activity_progress);
+        count = (TextView) findViewById(R.id.video_count);
+//        timelyView = (TimelyView) findViewById(R.id.countdown);
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         recordButton.setOnClickListener(recordClickListener);
+        continueButton.setOnClickListener(continueClickListener);
+        initializeTimer();
     }
 
     @Override
@@ -87,6 +103,30 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
     }
 
     @Override
+    protected void onPause(){
+        super.onPause();
+        System.out.println("onPause");
+        if (mediaRecorder != null) {
+            System.out.println("Media recorder was not null");
+            if (recording){
+                mediaRecorder.stop();
+            }
+            mediaRecorder.reset(); // clear recorder configuration
+            mediaRecorder.release(); // release the recorder object
+            mediaRecorder = null;
+        }
+        if (camera != null) {
+            System.out.println("Camera was not null");
+            camera.stopPreview();
+            camera.setPreviewCallback(null);
+            surfaceView.getHolder().removeCallback(this);
+            camera.lock();
+            camera.release();
+            camera = null;
+        }
+    }
+
+    @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
         System.out.println("surface changed");
     }
@@ -94,13 +134,6 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         System.out.println("surface destroyed");
-/*        shutdown();
-        surfaceView = (SurfaceView) findViewById(R.id.preview_view);
-        surfaceHolder = surfaceView.getHolder();
-        surfaceHolder.addCallback(this);
-        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); */
-
-
     }
 
     private void initializeRecorder(Surface surface, SurfaceHolder holder) throws IOException {
@@ -116,10 +149,10 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
 
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 
-        file = createFile();
+        file = Application.getVideoCacheFile(this);
         mediaRecorder.setOutputFile(file.getAbsolutePath());
         mediaRecorder.setMaxDuration(10000);
-        mediaRecorder.setMaxFileSize(20000000);
+        mediaRecorder.setMaxFileSize(10000000);
         mediaRecorder.setPreviewDisplay(surface);
 
         mediaController = new MediaController(this);
@@ -186,17 +219,12 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
         }
     }
 
-    private File createFile(){
-        return new File(this.getCacheDir(), "video.3gp");
-    }
-
     private void shutdown(){
 
         if (mediaRecorder != null) {
             mediaRecorder.reset(); // clear recorder configuration
             mediaRecorder.release(); // release the recorder object
             mediaRecorder = null;
-        } else {
         }
         if (camera != null) {
             camera.lock();
@@ -211,19 +239,19 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
         public void onClick(View view) {
 
             if (!recording){
-//                try {
-//                    showPreview();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 if (stopped) {
                     try {
+                        count.setVisibility(View.GONE);
+                        timer.cancel();
+                        initializeTimer();
                         startRecording = true;
                         showPreview();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    startTimer();
                 } else {
+                    startTimer();
                     mediaRecorder.start();
                     recordButton.setImageDrawable(ContextCompat.getDrawable(VideoActivity.this, R.drawable.stop_capture_video_button));
                     recording = true;
@@ -231,6 +259,11 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
                 }
 
             } else {
+                count.setVisibility(View.GONE);
+                timer.cancel();
+                currentCount = 10;
+                initializeTimer();
+                continueButton.setVisibility(View.VISIBLE);
                 recordButton.setImageDrawable(ContextCompat.getDrawable(VideoActivity.this, R.drawable.capture_video_button));
                 recording = false;
                 showVideo();
@@ -288,7 +321,50 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
             }
         }
 
-//        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
+
+        parameters.set("cam_mode", 1 );
+
+    }
+
+    private final View.OnClickListener continueClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+
+            setResult(RESULT_OK);
+            finish();
+
+        }
+    };
+
+    private void initializeTimer(){
+        currentCount = 10;
+        count.setText(String.valueOf(currentCount));
+        timer = new CountDownTimer(10000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            //    timelyView.animate(currentCount, currentCount-1).start();
+                currentCount--;
+                count.setText(String.valueOf(currentCount));
+            }
+
+            @Override
+            public void onFinish() {
+            //     timelyView.setVisibility(View.GONE);
+                count.setVisibility(View.GONE);
+                recordClickListener.onClick(recordButton);
+            }
+
+        };
+
+    }
+
+    private void startTimer(){
+        count.setVisibility(View.VISIBLE);
+//        timelyView.setVisibility(View.VISIBLE);
+//        timelyView.animate(0, currentCount);
+        timer.start();
 
     }
 }

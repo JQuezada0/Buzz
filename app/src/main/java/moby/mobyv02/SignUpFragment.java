@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Created by quezadjo on 9/14/2015.
@@ -31,6 +32,7 @@ public class SignUpFragment extends Fragment {
     EditText fullName;
     Signup signup;
     DatePicker datePicker;
+    Date date;
     private ArrayAdapter<String> genderAdapter;
     //change
 
@@ -85,6 +87,8 @@ public class SignUpFragment extends Fragment {
 
                 Toast.makeText(signup, "Please make sure passwords match", Toast.LENGTH_SHORT).show();
 
+            } else if (date == null){
+                Toast.makeText(signup, "Please select your birth date", Toast.LENGTH_SHORT).show();
             } else {
                 signup.getProfilePictureFragment().nameText.setText(fullName.getText().toString());
                 signup.getSignUpViewPager().setCurrentItem(1,true);
@@ -100,9 +104,9 @@ public class SignUpFragment extends Fragment {
         }
     };
 
-    public void setDate(int year, int month, int day){
-
-        birthday.setText(String.valueOf(year) + "/" + month + "/" + day);
+    public void setDate(int year, int month, int day, Date d){
+        date = d;
+        birthday.setText(String.valueOf(year) + "/" + (month + 1) + "/" + day);
 
     }
 }

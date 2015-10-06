@@ -8,4 +8,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="google_geo_apikey">AIzaSyCo1qATKdGhrIZYMeGO50vb5ZxNSrE2LEc</string>
     <string name="segment_project_id">ZqhMKk1Trw</string>
+    <string name="viewholder_tag">vhtag</string>
+    <string name="post_tag">posttag</string>
 </resources>

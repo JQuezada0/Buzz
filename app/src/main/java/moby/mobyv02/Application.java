@@ -40,6 +40,7 @@ public class Application extends LeanplumApplication {
     public static ImageLoader imageLoader;
     public static AppEventsLogger logger;
     public static File cacheImageFile;
+    private static File cacheVideoFile;
     public static final int FACEBOOK_REQUEST_CODE = 5000;
     private static Context context;
 
@@ -102,6 +103,17 @@ public class Application extends LeanplumApplication {
         } else {
             cacheImageFile = new File(Environment.getExternalStorageDirectory(), "image.png");
             return cacheImageFile;
+        }
+
+    }
+
+    public static File getVideoCacheFile(Context context){
+
+        if (cacheVideoFile != null){
+            return cacheVideoFile;
+        } else {
+            cacheVideoFile = new File(Environment.getExternalStorageDirectory(), "video.3gp");
+            return cacheVideoFile;
         }
 
     }

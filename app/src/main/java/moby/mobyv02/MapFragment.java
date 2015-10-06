@@ -61,11 +61,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private int lastPosition = 0;
     private MapTree mapTree;
     private ImageView fireworkAnimationImage;
-    private AnimationDrawable fireworkAnimation;
     private Projection projection;
     private FrameLayout mapFrameLayout;
     private View successDialog;
     private Button successDialogContinueButton;
+    private ImageView darkOverlay;
+    private View temporaryMarker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -74,8 +75,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (MapAdapter.googleMap == null) {
             this.inflater = inflater;
             View v = inflater.inflate(R.layout.map, null);
-            fireworkAnimationImage = (ImageView) v.findViewById(R.id.firework_animation);
-            fireworkAnimation = (AnimationDrawable) fireworkAnimationImage.getBackground();
+            this.inflater = inflater;
             mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             feedFrame = (GestureFrameLayout) v.findViewById(R.id.map_feed_frame);
             mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
@@ -83,6 +83,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
             successDialogContinueButton = (Button) v.findViewById(R.id.success_dialog_continue_button);
             successDialogContinueButton.setOnClickListener(continueOnClickListener);
+            darkOverlay = (ImageView) v.findViewById(R.id.map_dark_overlay);
             feedFrame.setVisibility(View.GONE);
             postsAdapter = new PostsAdapter(getFragmentManager());
             viewPager.addOnPageChangeListener(pageChangeListener);
@@ -124,7 +125,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onMapClick(LatLng latLng) {
                 hideFeed();
-                hideSuccessDialog();
             }
         });
 
@@ -238,6 +238,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void animateNewMarker(final Post post){
         View v = inflater.inflate(R.layout.map_marker_icon, null);
+        darkOverlay.setVisibility(View.VISIBLE);
         final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
         v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
         String imageUrl = post.getUser().getString("profileImage");
@@ -247,9 +248,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         v.setX(point.x);
         v.setY(point.y);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(post.getLatitude(), post.getLongitude()), 10.0f));
-//        YoYo.with(Techniques.BounceInDown)
-//                .duration(250)
-//                .playOn(v);
+        map.getUiSettings().setAllGesturesEnabled(false);
+        temporaryMarker = v;
         if (imageUrl == null){
             profileImage.setImageResource(R.drawable.person_icon_graybg);
         } else {
@@ -268,44 +268,68 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }, 100, 100);
         }
-//        successDialog.setVisibility(View.VISIBLE);
-//        YoYo.with(Techniques.SlideInDown)
-//                .duration(250)
-//                .playOn(successDialog);
-//        setFeed(Arrays.asList(new Post[]{post}));
+    }
+
+    public void animateNewMarkerOnPost(final Post post){
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(post.getLatitude(), post.getLongitude()), 10.0f));
+        successDialog.setVisibility(View.VISIBLE);
+        showSuccessDialog();
+        darkOverlay.setVisibility(View.VISIBLE);
+        View v = inflater.inflate(R.layout.map_marker_icon, null);
+        final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
+        v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
+        String imageUrl = post.getUser().getString("profileImage");
+        mapFrameLayout.addView(v);
+        Projection p = map.getProjection();
+        Point point = p.toScreenLocation(new LatLng(post.getLatitude(), post.getLongitude()));
+        v.setX(point.x);
+        v.setY(point.y);
+        map.getUiSettings().setAllGesturesEnabled(false);
+        temporaryMarker = v;
+        if (imageUrl == null){
+            profileImage.setImageResource(R.drawable.person_icon_graybg);
+        } else {
+            Application.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    Bitmap bm = response.getBitmap();
+                    if (bm != null){
+                        profileImage.setImageBitmap(bm);
+                    }
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    profileImage.setImageResource(R.drawable.person_icon_graybg);
+                }
+            }, 100, 100);
+        }
+    }
+
+    public void returnMapToNormal(){
+        darkOverlay.setVisibility(View.GONE);
+        map.getUiSettings().setAllGesturesEnabled(true);
+        mapFrameLayout.removeView(temporaryMarker);
     }
 
     private View.OnClickListener continueOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             hideSuccessDialog();
+            returnMapToNormal();
+            setFeed(main.posts);
         }
     };
 
-    private void hideSuccessDialog(){
-        YoYo.with(Techniques.SlideOutUp)
+    private void showSuccessDialog(){
+        YoYo.with(Techniques.FlipInX)
                 .duration(250)
-                .withListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
+                .playOn(successDialog);
+    }
 
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        successDialog.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                })
+    private void hideSuccessDialog(){
+        YoYo.with(Techniques.FlipOutX)
+                .duration(250)
                 .playOn(successDialog);
     }
 

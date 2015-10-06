@@ -19,21 +19,21 @@
         android:layout_height="match_parent"/>
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/map_dark_overlay"
             android:visibility="gone"
-            android:id="@+id/firework_animation"
-            android:background="@drawable/firework_animation"/>
+            android:background="@drawable/dark_overlay"/>
 
         <LinearLayout
             android:orientation="vertical" android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="top|center_horizontal"
             android:id="@+id/success_dialog"
-            android:visibility="gone"
             android:background="@drawable/success_dialog_bg"
             android:paddingLeft="10dp"
+            android:visibility="gone"
             android:paddingRight="10dp"
             >
 
@@ -63,6 +63,8 @@
 
 
         </LinearLayout>
+
+
 
     </FrameLayout>
 

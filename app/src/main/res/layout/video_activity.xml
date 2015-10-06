@@ -45,7 +45,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="10dp"
             android:visibility="gone"
-            android:id="@+id/capture_photo_cancel_button"
+            android:id="@+id/capture_video_cancel_button"
             android:src="@drawable/capture_photo_x"
             android:layout_gravity="bottom|left"/>
 
@@ -57,6 +57,17 @@
             android:id="@+id/toggle_video_button"
             android:src="@drawable/toggle_front_facing_camera_icon"
             android:layout_gravity="top|right"/>
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="top|left"
+            android:text="10"
+            android:id="@+id/video_count"
+            android:visibility="gone"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="30sp"/>
 
         <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
             android:layout_width="70dp"
