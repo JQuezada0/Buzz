@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import moby.mobyv02.parse.Event;
 import moby.mobyv02.parse.Post;
 
 /**
@@ -20,6 +21,7 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
 
     private ListView postList;
     private PostAdapter adapter;
+    private EventAdapter eventAdapter;
     private Main main;
     private static int lastPosition = 0;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -34,6 +36,7 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.moby_blue);
         adapter = new PostAdapter(new ArrayList<Post>(), main, main);
+        eventAdapter = new EventAdapter(new ArrayList<Event>(), main, main);
         postList.setAdapter(adapter);
         return v;
     }
@@ -49,18 +52,18 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
         }
     }
 
-    public void setInitialPosts(ArrayList<Post> posts){
-        adapter = new PostAdapter(posts, main, main);
-        postList.setAdapter(adapter);
-    }
-
-    public void loadFirstPosts(ArrayList<Post> posts){
-        adapter.setFeed(posts);
-    }
-
-    public void loadPosts(ArrayList<Post> posts){
+    public void loadPosts(ArrayList<Post> posts, boolean reset){
         adapter.addToFeed(posts);
         postList.setOnScrollListener(this);
+        if (reset)
+            postList.setAdapter(adapter);
+    }
+
+    public void loadEvents(ArrayList<Event> events, boolean reset){
+        eventAdapter.addToFeed(events);
+        postList.setOnScrollListener(this);
+        if (reset)
+            postList.setAdapter(eventAdapter);
     }
 
     @Override
@@ -72,15 +75,14 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
 
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-
+        adapter.hideMediaControls();
     }
 
     @Override
     public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         adapter.hideMediaControls();
         if (postList.getLastVisiblePosition() ==  (totalItemCount - 1)){
-            main.loadFeed();
-            System.out.println("Load feed");
+            main.loadFeed(false);
         }
 
     }

@@ -27,6 +27,7 @@ import io.fabric.sdk.android.Fabric;
 import java.io.File;
 
 import moby.mobyv02.parse.Comment;
+import moby.mobyv02.parse.Event;
 import moby.mobyv02.parse.Heart;
 import moby.mobyv02.parse.Follow;
 import moby.mobyv02.parse.Post;
@@ -56,11 +57,13 @@ public class Application extends LeanplumApplication {
         ParseObject.registerSubclass(Comment.class);
         ParseObject.registerSubclass(Follow.class);
         ParseObject.registerSubclass(Upvote.class);
+        ParseObject.registerSubclass(Event.class);
         FacebookSdk.sdkInitialize(this, FACEBOOK_REQUEST_CODE);
         Parse.initialize(this, getString(R.string.parse_application_id), getString(R.string.parse_client_key));
         ParseInstallation.getCurrentInstallation().saveInBackground();
         ParseFacebookUtils.initialize(this, FACEBOOK_REQUEST_CODE);
         BuzzAnalytics.initialize(this, this.getResources());
+        logger = AppEventsLogger.newLogger(this);
         imageLoader = new ImageLoader(Volley.newRequestQueue(this), new ImageLoader.ImageCache() {
 
             private final android.support.v4.util.LruCache<String, Bitmap> cache = new android.support.v4.util.LruCache<String, Bitmap>(20);

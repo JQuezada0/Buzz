@@ -18,18 +18,19 @@ import moby.mobyv02.parse.Post;
  */
 public class PostsAdapter extends FragmentStatePagerAdapter {
 
-    ArrayList<Post> posts = new ArrayList<Post>();
+    ArrayList<BuzzItem> posts = new ArrayList<BuzzItem>();
+    private Post_View_Fragment currentPostView;
 
     public PostsAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public void updatePosts(List<Post> posts){
+    public void updatePosts(List<BuzzItem> posts){
         this.posts.addAll(posts);
         notifyDataSetChanged();
     }
 
-    public void setPosts(List<Post> posts){
+    public void setPosts(List<BuzzItem> posts){
         this.posts.clear();
         updatePosts(posts);
     }
@@ -55,18 +56,19 @@ public class PostsAdapter extends FragmentStatePagerAdapter {
         return posts.indexOf(p);
     }
 
-    public Post getPost(int position){
+    public BuzzItem getPost(int position){
         return posts.get(position);
     }
 
-    public List<Post> getPosts(){
+    public List<BuzzItem> getPosts(){
         return posts;
     }
 
     @Override
     public Fragment getItem(final int position) {
         Post_View_Fragment f = new Post_View_Fragment();
-        f.post = posts.get(position);
+        currentPostView = f;
+        f.post = (Post) posts.get(position);
         final Callable<Void> updatePost = new Callable<Void>() {
             @Override
             public Void call() throws Exception {
@@ -80,6 +82,10 @@ public class PostsAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return posts.size();
+    }
+
+    public Post_View_Fragment getCurrentPostView(){
+        return currentPostView;
     }
 
 }

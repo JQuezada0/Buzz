@@ -18,15 +18,26 @@ import com.parse.ParseException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import moby.mobyv02.parse.Comment;
+import moby.mobyv02.parse.Event;
 import moby.mobyv02.parse.Heart;
 import moby.mobyv02.parse.Follow;
 import moby.mobyv02.parse.Post;
@@ -44,8 +55,8 @@ public class ParseOperation {
     private static ParseOperationCallback parseOperationCallback;
     private static ImageUploadCallback imageUploadCallback;
     private static LoadFeedCallback loadFeedCallback;
+    private static LoadEventsCallback loadEventsCallback;
     private static LoadCommentsCallback loadCommentsCallback;
-    private static String filePath;
     private static Activity context;
     private static String username;
     private static String password;
@@ -75,6 +86,10 @@ public class ParseOperation {
         void finished(boolean success, ArrayList<Post> posts, ParseException e);
     }
 
+    public static interface LoadEventsCallback {
+        void finished(boolean success, ArrayList<Event> events, ParseException e);
+    }
+
     public static interface LoadCommentsCallback {
         void finished(boolean success, List<Comment> comments, ParseException e);
     }
@@ -92,14 +107,6 @@ public class ParseOperation {
         ParseOperation.parseOperationCallback = callback;
         startService("savePost");
 
-    }
-
-    public static void uploadImage(String file, ImageUploadCallback callback, Activity activity){
-        context = activity;
-        System.out.println("uploadImage called");
-        ParseOperation.filePath = file;
-        ParseOperation.imageUploadCallback = callback;
-        startService("uploadImage");
     }
 
     public static void uploadImage(File file, ImageUploadCallback callback, Activity activity){
@@ -234,6 +241,13 @@ public class ParseOperation {
         startService("getFeed");
     }
 
+    public static void getEventsFeed(int pageNumber, LoadEventsCallback callback, Activity activity){
+        context = activity;
+        loadEventsCallback = callback;
+        ParseOperation.pageNumber = pageNumber;
+        startService("getEvents");
+    }
+
 
     private static void startService(String type){
         Intent i = new Intent(context, Network.class);
@@ -339,6 +353,9 @@ public class ParseOperation {
 
             } else if (type.equals("getFeed")){
                 getFeed(pageNumber, loadFeedCallback);
+
+            } else if (type.equals("getEvents")){
+                getEventsFeed(pageNumber, loadEventsCallback);
             }
 
         }
@@ -813,9 +830,14 @@ public class ParseOperation {
             params.put("pageNumber", pageNumber);
             ParseCloud.callFunctionInBackground("getFeed", params, new FunctionCallback<String>() {
                 @Override
-                public void done(String s, ParseException e) {
-                    if (e !=null){
-                        callback.finished(false, null, e);
+                public void done(String s, final ParseException e) {
+                    if (e != null) {
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.finished(false, null, e);
+                            }
+                        });
                     } else {
                         JSONArray postsJsonArray = null;
                         try {
@@ -823,7 +845,7 @@ public class ParseOperation {
                             ArrayList<Post> postPointerList = new ArrayList<Post>();
                             ArrayList<ParseUser> userPointerList = new ArrayList<ParseUser>();
                             ArrayList<String> objectIds = new ArrayList<String>();
-                            for (int x = 0; x < postsJsonArray.length(); x++){
+                            for (int x = 0; x < postsJsonArray.length(); x++) {
                                 objectIds.add(postsJsonArray.getJSONObject(x).getString("objectId"));
                                 Post object = ParseObject.createWithoutData(Post.class, postsJsonArray.getJSONObject(x).getString("objectId"));
                                 postPointerList.add(object);
@@ -832,23 +854,89 @@ public class ParseOperation {
                             ParseQuery<Post> query = Post.getQuery();
                             query.whereContainedIn("objectId", objectIds);
                             query.include("user");
-                            ArrayList<Post> postsList = new ArrayList<Post>(query.find());
+                            final ArrayList<Post> postsList = new ArrayList<Post>(query.find());
                             System.out.println(postsList.size());
                             Collections.sort(postsList);
-                            callback.finished(true, postsList, null);
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callback.finished(true, postsList, null);
+                                }
+                            });
                         } catch (JSONException e1) {
                             e1.printStackTrace();
-                        } catch (ParseException e1) {
+                        } catch (final ParseException e1) {
                             e1.printStackTrace();
-                            callback.finished(false, null, e1);
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callback.finished(false, null, e1);
+                                }
+                            });
                         }
                     }
-
 
 
                 }
             });
 
+        }
+
+        private void getEventsFeed(int pageNumber, final LoadEventsCallback callback){
+            System.out.println("getEventsFeed");
+            String urlString = context.getString(R.string.eventbrite_url);
+            String sortParam = "sort_by=distance";
+            String latParam = "location.latitude=" + LocationManager.getLocation().getLatitude();
+            String lonParam = "location.longitude=" + LocationManager.getLocation().getLongitude();
+            String expansionParam = "expand=venue";
+            String tokenParam = "token=" + context.getString(R.string.eventbrite_token);
+            urlString+= sortParam + "&" + latParam + "&" + lonParam + "&" + expansionParam + "&" + tokenParam;
+            URL url;
+            HttpURLConnection connection;
+            try {
+                url = new URL(urlString);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                InputStream is = connection.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String line;
+                StringBuffer response = new StringBuffer();
+                while ((line = br.readLine()) != null) {
+                    response.append(line);
+                }
+                String responseString = response.toString();
+                JSONObject responseObj = new JSONObject(responseString);
+                JSONArray events = responseObj.getJSONArray("events");
+                final ArrayList<Event> eventsList = new ArrayList<Event>();
+                for (int x = 0; x < events.length(); x++){
+                    Event event = new Event();
+                    JSONObject eventObject = events.getJSONObject(x);
+                    event.setName(eventObject.getJSONObject("name").getString("text"));
+                    event.setText(eventObject.getJSONObject("description").getString("text"));
+                    event.setUrl(eventObject.getString("url"));
+                    if (!eventObject.isNull("logo"))
+                    event.setImage(eventObject.getJSONObject("logo").getString("url"));
+                    JSONObject venue = eventObject.getJSONObject("venue");
+                    event.setLocale(venue.getJSONObject("address").getString("city") + ", " + venue.getJSONObject("address").getString("region"));
+                    ParseGeoPoint location = new ParseGeoPoint();
+                    location.setLatitude(venue.getJSONObject("address").getDouble("latitude"));
+                    location.setLongitude(venue.getJSONObject("address").getDouble("longitude"));
+                    eventsList.add(event);
+                }
+
+                context.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.finished(true, eventsList, null);
+                    }
+                });
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
 

@@ -66,7 +66,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, Arrays.asList(permissions), new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
-                if (e == null) {
+                if (parseUser != null) {
                     if (parseUser.isNew()){
                         BuzzAnalytics.logLogin(Welcome.this, "Facebook", true);
                     } else {
@@ -74,7 +74,10 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                     }
                     createUser(parseUser);
                 } else {
-                    e.printStackTrace();
+                    if (e!=null){
+                        e.printStackTrace();
+                    }
+                    BuzzAnalytics.logError(Welcome.this, "Error logging in with FB. User pressed back?");
                     System.out.println("Error");
                 }
 
@@ -92,7 +95,11 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                 if (object != null) {
                     try {
                         LocationManager.updateFromSharedPreferences(Welcome.this);
+                        System.out.println(object.toString());
                         parseUser.put("gender", object.getString("gender"));
+                        parseUser.put("fullName", object.getString("name"));
+                        parseUser.put("email", object.getString("email"));
+                        parseUser.put("profileImage", "http://graph.facebook.com/" + object.getString("id") + "/picture?type=large");
                         parseUser.saveEventually();
 
                         startActivity(new Intent(Welcome.this, Main.class));

@@ -21,6 +21,8 @@ import android.widget.VideoView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -107,7 +109,7 @@ public class PostAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup viewGroup) {
         if (position == posts.size()){
-            View v = inflater.inflate(R.layout.loading_fragment, null);
+            View v = inflater.inflate(R.layout.loading_fragment, viewGroup);
             CircleProgressBar circleProgressBar = (CircleProgressBar) v.findViewById(R.id.login_progressbar);
             circleProgressBar.setColorSchemeResources(R.color.moby_blue);
             return v;
@@ -116,7 +118,7 @@ public class PostAdapter extends BaseAdapter {
         ViewHolder vh;
         final ParseUser user = post.getUser();
         if (convertView == null || convertView.getTag() == null){
-            convertView = inflater.inflate(R.layout.feed_post_layout, null);
+            convertView = inflater.inflate(R.layout.feed_post_layout, viewGroup, false);
             vh = new ViewHolder();
             vh.name = (TextView) convertView.findViewById(R.id.post_name);
             vh.locale = (TextView) convertView.findViewById(R.id.post_locale);
@@ -213,6 +215,10 @@ public class PostAdapter extends BaseAdapter {
                 context.startActivity(i);
             }
         });
+        System.out.println(convertView.getParent());
+//        YoYo.with(Techniques.SlideInLeft)
+//                .duration(250)
+//                .playOn(convertView);
         return convertView;
     }
 

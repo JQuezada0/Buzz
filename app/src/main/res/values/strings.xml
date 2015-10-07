@@ -10,4 +10,7 @@
     <string name="segment_project_id">ZqhMKk1Trw</string>
     <string name="viewholder_tag">vhtag</string>
     <string name="post_tag">posttag</string>
+    <string name="event_tag">eventtag</string>
+    <string name="eventbrite_token">AMKEM2Y3N6OWVF7PED4S</string>
+    <string name="eventbrite_url">https://www.eventbriteapi.com/v3/events/search/?</string>
 </resources>

@@ -3,6 +3,7 @@ package moby.mobyv02;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +24,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.leanplum.activities.LeanplumFragmentActivity;
 import com.nineoldandroids.animation.Animator;
@@ -36,12 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import moby.mobyv02.parse.Event;
 import moby.mobyv02.parse.Post;
 
 /**
  * Created by quezadjo on 9/7/2015.
  */
-public class Main extends LeanplumFragmentActivity{
+public class Main extends FragmentActivity {
 
 
 
@@ -51,10 +54,12 @@ public class Main extends LeanplumFragmentActivity{
     private static final int POST_CREATED = 1000;
     private int pageNumber = 0;
     private int currentView = 0;
+    private boolean eventMode = false;
 
     //////////////////////////INITIALIZATIONS//////////////////////////////////
     private int currentToggle = WORLD_TOGGLED;
     public List<Post> posts = new ArrayList<Post>();
+    public ArrayList<Event> events = new ArrayList<Event>();
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -142,7 +147,7 @@ public class Main extends LeanplumFragmentActivity{
         }
         postListOpen = false;
         createPostList.setVisibility(View.GONE);
-        loadFeed();
+        loadFeed(false);
     }
 
     @Override
@@ -179,17 +184,37 @@ public class Main extends LeanplumFragmentActivity{
         }
     }
 
-    public void loadFeed(){
+    public void loadFeed(final boolean reset){
+        System.out.println("loadFeed");
         progressBar.setVisibility(View.VISIBLE);
         ParseOperation.getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
-                feedFragment.loadPosts(posts);
-                Main.this.posts.addAll(posts);
+                if (e == null){
+                    feedFragment.loadPosts(posts, reset);
+                    Main.this.posts.addAll(posts);
+                    progressBar.setVisibility(View.GONE);
+                    pageNumber++;
+                } else {
+                    Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_LONG);
+                }
+
+            }
+        }, this);
+    }
+
+    public void loadEventsFeed(final boolean reset){
+
+        ParseOperation.getEventsFeed(0, new ParseOperation.LoadEventsCallback() {
+            @Override
+            public void finished(boolean success, ArrayList<Event> events, ParseException e) {
                 progressBar.setVisibility(View.GONE);
+                feedFragment.loadEvents(events, reset);
+                Main.this.events.addAll(events);
                 pageNumber++;
             }
         }, this);
+
     }
 
     private void initialize(){
@@ -253,7 +278,10 @@ public class Main extends LeanplumFragmentActivity{
         mapToggle.setSelected(false);
         mapToggle.setTextColor(getResources().getColor(R.color.moby_blue));
         viewPager.setCurrentItem(0, true);
-
+        if (eventMode == true){
+            loadFeed(true);
+        }
+        eventMode = false;
     }
 
       public void toggleMap(){
@@ -264,7 +292,11 @@ public class Main extends LeanplumFragmentActivity{
         mapToggle.setSelected(true);
         mapToggle.setTextColor(getResources().getColor(android.R.color.white));
         viewPager.setCurrentItem(1, true);
-        mapFragment.setFeed(posts);
+          if (!eventMode){
+              mapFragment.setFeed(posts);
+          } else {
+
+          }
     }
 
     private void displayPostOnMap(String objectId){
@@ -292,7 +324,7 @@ public class Main extends LeanplumFragmentActivity{
         ParseOperation.getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
-                feedFragment.loadPosts(posts);
+                feedFragment.loadPosts(posts, false);
                 Main.this.posts.addAll(posts);
                 pageNumber++;
             }
@@ -500,5 +532,11 @@ public class Main extends LeanplumFragmentActivity{
             }
         }
     };
+
+    public void toggleEvents(){
+        progressBar.setVisibility(View.VISIBLE);
+        loadEventsFeed(true);
+        eventMode = true;
+    }
 
 }

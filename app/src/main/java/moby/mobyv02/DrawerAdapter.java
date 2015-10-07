@@ -29,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DrawerAdapter extends BaseAdapter {
 
     private Context c;
-    private String[] items = new String[]{ParseUser.getCurrentUser().getString("fullName"), "Feed", "Map", "Profile"};
+    private String[] items = new String[]{ParseUser.getCurrentUser().getString("fullName"), "News Feed", "Map", "Profile"};
     private Main main;
 
     public DrawerAdapter(Context c, Main m){
@@ -98,6 +98,8 @@ public class DrawerAdapter extends BaseAdapter {
             case 3:
                 iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.moby_people_icon));
                 break;
+            case 4:
+                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.people_icon));
         }
         return view;
     }
@@ -153,6 +155,12 @@ public class DrawerAdapter extends BaseAdapter {
                     Intent i = new Intent(DrawerAdapter.this.c, ProfileActivity.class);
                     i.putExtra("self", true);
                     DrawerAdapter.this.c.startActivity(i);
+                    break;
+                case 4:
+                    main.closeDrawer();
+                    Intent peopleIntent = new Intent(DrawerAdapter.this.c, PeopleActivity.class);
+                    DrawerAdapter.this.c.startActivity(peopleIntent);
+                    break;
             }
         }
     };

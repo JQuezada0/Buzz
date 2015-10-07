@@ -93,6 +93,8 @@ public class ProfileActivity extends FragmentActivity {
                 }
                 initialize();
             }
+        } else {
+            initialize();
         }
     }
 

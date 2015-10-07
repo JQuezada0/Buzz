@@ -136,6 +136,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name="com.facebook.FacebookActivity"/>
         <activity android:name=".CameraActivity"/>
+        <activity android:name=".PeopleActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
