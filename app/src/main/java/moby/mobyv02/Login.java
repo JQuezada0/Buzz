@@ -63,7 +63,7 @@ public class Login extends LeanplumFragmentActivity {
             } else {
                 progressBar.setVisibility(View.VISIBLE);
                 loginButton.setEnabled(false);
-                ParseOperation.logIn(username.getText().toString(), password.getText().toString(), new ParseOperation.ParseOperationCallback() {
+                new ParseOperation("Network").logIn(username.getText().toString(), password.getText().toString(), new ParseOperation.ParseOperationCallback() {
                     @Override
                     public void finished(boolean success, final ParseException e) {
                         if (success) {

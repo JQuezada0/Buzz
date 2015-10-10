@@ -3,6 +3,7 @@ package moby.mobyv02;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +24,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.leanplum.activities.LeanplumFragmentActivity;
 import com.nineoldandroids.animation.Animator;
@@ -36,12 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import moby.mobyv02.parse.Event;
 import moby.mobyv02.parse.Post;
 
 /**
  * Created by quezadjo on 9/7/2015.
  */
-public class Main extends LeanplumFragmentActivity{
+public class Main extends FragmentActivity {
 
 
 
@@ -51,10 +54,12 @@ public class Main extends LeanplumFragmentActivity{
     private static final int POST_CREATED = 1000;
     private int pageNumber = 0;
     private int currentView = 0;
+    private boolean eventMode = false;
 
     //////////////////////////INITIALIZATIONS//////////////////////////////////
     private int currentToggle = WORLD_TOGGLED;
     public List<Post> posts = new ArrayList<Post>();
+    public ArrayList<Event> events = new ArrayList<Event>();
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -130,6 +135,8 @@ public class Main extends LeanplumFragmentActivity{
         setClickListeners();
 
         setPostBarInfo();
+
+        loadFeed(true);
     }
 
     @Override
@@ -142,7 +149,6 @@ public class Main extends LeanplumFragmentActivity{
         }
         postListOpen = false;
         createPostList.setVisibility(View.GONE);
-        loadFeed();
     }
 
     @Override
@@ -179,17 +185,43 @@ public class Main extends LeanplumFragmentActivity{
         }
     }
 
-    public void loadFeed(){
+    public void loadFeed(final boolean reset){
+        System.out.println("loadFeed");
         progressBar.setVisibility(View.VISIBLE);
-        ParseOperation.getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
+        new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
-                feedFragment.loadPosts(posts);
-                Main.this.posts.addAll(posts);
+                if (e == null && posts != null){
+                    feedFragment.loadPosts(posts, reset);
+                    Main.this.posts.addAll(posts);
+                    progressBar.setVisibility(View.GONE);
+                    pageNumber++;
+                } else {
+                    if (e != null){
+                        Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        BuzzAnalytics.logError(Main.this, e.getMessage());
+                    } else {
+                        Toast.makeText(Main.this, "An error has occured. Please try again later.", Toast.LENGTH_LONG).show();
+                        BuzzAnalytics.logError(Main.this, "Unknown error loading feed");
+                    }
+                }
+
+            }
+        }, this);
+    }
+
+    public void loadEventsFeed(final boolean reset){
+
+        new ParseOperation("Network").getEventsFeed(0, new ParseOperation.LoadEventsCallback() {
+            @Override
+            public void finished(boolean success, ArrayList<Event> events, ParseException e) {
                 progressBar.setVisibility(View.GONE);
+                feedFragment.loadEvents(events, reset);
+                Main.this.events.addAll(events);
                 pageNumber++;
             }
         }, this);
+
     }
 
     private void initialize(){
@@ -246,14 +278,16 @@ public class Main extends LeanplumFragmentActivity{
     public void toggleFeed(){
 
         mapFragment.hideFeed();
-        mapFragment.clearMap();
         map = false;
         feedToggle.setSelected(true);
         feedToggle.setTextColor(getResources().getColor(android.R.color.white));
         mapToggle.setSelected(false);
         mapToggle.setTextColor(getResources().getColor(R.color.moby_blue));
         viewPager.setCurrentItem(0, true);
-
+        if (eventMode == true){
+            loadFeed(true);
+        }
+        eventMode = false;
     }
 
       public void toggleMap(){
@@ -264,7 +298,12 @@ public class Main extends LeanplumFragmentActivity{
         mapToggle.setSelected(true);
         mapToggle.setTextColor(getResources().getColor(android.R.color.white));
         viewPager.setCurrentItem(1, true);
-        mapFragment.setFeed(posts);
+          if (!eventMode){
+              System.out.println(posts.size());
+              mapFragment.setFeed(posts);
+          } else {
+
+          }
     }
 
     private void displayPostOnMap(String objectId){
@@ -289,10 +328,11 @@ public class Main extends LeanplumFragmentActivity{
 
     public void refreshFeed(){
         pageNumber = 0;
-        ParseOperation.getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
+        new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
-                feedFragment.loadPosts(posts);
+                feedFragment.loadPosts(posts, true);
+                Main.this.posts.clear();
                 Main.this.posts.addAll(posts);
                 pageNumber++;
             }
@@ -304,8 +344,6 @@ public class Main extends LeanplumFragmentActivity{
         drawerLayout.closeDrawers();
     }
 
-
-
     ////////////////////////////CLICK LISTENERS/////////////////////////////////////////////
 
     final View.OnClickListener feedToggleClickListener = new View.OnClickListener() {
@@ -313,36 +351,6 @@ public class Main extends LeanplumFragmentActivity{
         public void onClick(View view) {
             toggleFeed();
         }
-    };
-
-    private final View.OnClickListener createStatusPostClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-
-            startActivityForResult(new Intent(Main.this, CreateStatusPost.class), POST_CREATED);
-        }
-
-    };
-
-    private final View.OnClickListener createPhotoPostClickListener = new View.OnClickListener(){
-
-        @Override
-        public void onClick(View view) {
-            startActivityForResult(new Intent(Main.this, CreatePhotoPost.class), POST_CREATED);
-        }
-
-
-    };
-
-    private final View.OnClickListener createVideoPostClickListener = new View.OnClickListener(){
-
-        @Override
-        public void onClick(View view) {
-            startActivityForResult(new Intent(Main.this, CreateVideoPost.class), POST_CREATED);
-        }
-
-
     };
 
 
@@ -500,5 +508,11 @@ public class Main extends LeanplumFragmentActivity{
             }
         }
     };
+
+    public void toggleEvents(){
+        progressBar.setVisibility(View.VISIBLE);
+        loadEventsFeed(true);
+        eventMode = true;
+    }
 
 }

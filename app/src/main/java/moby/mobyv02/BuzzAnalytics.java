@@ -19,6 +19,7 @@ public class BuzzAnalytics {
     public static String POST_CATEGORY = "post";
     public static String COMMENT_CATEGORY = "comment";
     public static String PROFILE_CATEGORY = "profile";
+    public static String EVENTS_CATEGORY = "events";
 
     public static void initialize(Context context, Resources res){
         initializeAnalytics(context, res);
@@ -92,6 +93,12 @@ public class BuzzAnalytics {
     public static void logFacebookClick(Context context){
         Properties properties = new Properties();
 
+    }
+
+    public static void logError(Context context, String error){
+        Properties properties = new Properties();
+        properties.put("Message", error);
+        Analytics.with(context).track("Error", properties);
     }
 
 }

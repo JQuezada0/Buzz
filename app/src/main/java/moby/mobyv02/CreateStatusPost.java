@@ -157,11 +157,11 @@ public class CreateStatusPost extends FragmentActivity {
                     e.printStackTrace();
                 }
                 bm.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                ParseOperation.uploadImage(Application.getImageCacheFile(CreateStatusPost.this), new ParseOperation.ImageUploadCallback() {
+                new ParseOperation("Network").uploadImage(Application.getImageCacheFile(CreateStatusPost.this), new ParseOperation.ImageUploadCallback() {
                     @Override
                     public void finished(boolean success, ParseFile file, ParseException e) {
                         post.put("image", file.getUrl());
-                        ParseOperation.savePost(post, new ParseOperation.ParseOperationCallback() {
+                        new ParseOperation("Network").savePost(post, new ParseOperation.ParseOperationCallback() {
                             @Override
                             public void finished(boolean success, ParseException e) {
                                 if (e == null) {

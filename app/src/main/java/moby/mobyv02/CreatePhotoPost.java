@@ -123,7 +123,7 @@ public class CreatePhotoPost extends LeanplumFragmentActivity {
             final ParseGeoPoint location = LocationManager.getLocation();
             try {
                 FileInputStream fis = new FileInputStream(file);
-                ParseOperation.uploadImage(file, new ParseOperation.ImageUploadCallback() {
+                new ParseOperation("Network").uploadImage(file, new ParseOperation.ImageUploadCallback() {
                     @Override
                     public void finished(boolean success, ParseFile file, ParseException e) {
 
@@ -141,7 +141,7 @@ public class CreatePhotoPost extends LeanplumFragmentActivity {
                         ParseGeoPoint l = LocationManager.getLocation();
                         post.setLocation(new ParseGeoPoint(l.getLatitude(), l.getLongitude()));
                         post.setUser(ParseUser.getCurrentUser());
-                        ParseOperation.savePost(post, new ParseOperation.ParseOperationCallback() {
+                        new ParseOperation("Network").savePost(post, new ParseOperation.ParseOperationCallback() {
                             @Override
                             public void finished(boolean success, ParseException e) {
 

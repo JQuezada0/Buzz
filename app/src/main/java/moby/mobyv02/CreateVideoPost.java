@@ -121,7 +121,7 @@ public class CreateVideoPost extends FragmentActivity {
                             post.setLocation(new ParseGeoPoint(l.getLatitude(), l.getLongitude()));
                             post.setUser(ParseUser.getCurrentUser());
                             progressBar.setShowProgressText(false);
-                            ParseOperation.savePost(post, new ParseOperation.ParseOperationCallback() {
+                            new ParseOperation("Network").savePost(post, new ParseOperation.ParseOperationCallback() {
                                 @Override
                                 public void finished(boolean success, ParseException e) {
                                     if (success) {

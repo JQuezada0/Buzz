@@ -127,7 +127,7 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
 
     }
 
-    public static void updateLocation(Context c){
+    public static void updateLocation(final Context c){
 
         LocationReceivedListener locationReceivedListener = new LocationReceivedListener() {
             @Override
@@ -139,6 +139,7 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
             public void locationReceived(ParseGeoPoint location) {
                 ParseUser user = ParseUser.getCurrentUser();
                 user.put("location", location);
+                user.put("locale", Application.getLocale(c, location));
                 System.out.println("Updated location is " + location.getLatitude() + "; " + location.getLongitude());
                 user.saveEventually();
             }

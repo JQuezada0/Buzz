@@ -20,6 +20,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.Application;
+import moby.mobyv02.BuzzItem;
 import moby.mobyv02.parse.Post;
 import moby.mobyv02.ClusterRenderer;
 import moby.mobyv02.R;
@@ -29,7 +30,7 @@ import moby.mobyv02.R;
  */
 public class Node {
 
-    private ArrayList<Post> posts = new ArrayList<Post>();
+    private ArrayList<BuzzItem> posts = new ArrayList<BuzzItem>();
     private Marker marker;
     private int position = 0;
     private final MapTree tree;
@@ -72,22 +73,22 @@ public class Node {
         return true;
     }
 
-    public Post getCurrentPost(){
+    public BuzzItem getCurrentPost(){
         return posts.get(position);
     }
 
-    public List<Post> getPosts(){
+    public List<BuzzItem> getPosts(){
         return posts;
     }
 
     public void updateMarker(){
         if (!tree.getCreation()) {
             System.out.println("Update marker");
-            Post post = getCurrentPost();
+            BuzzItem post = getCurrentPost();
             iconGenerator.setBackground(new ColorDrawable(0x00000000));
-            String image = post.getUser().getString("profileImage");
+            String image = post.getProfileImage();
             if (image!=null){
-                Application.imageLoader.get(post.getUser().getString("profileImage"), new ImageLoader.ImageListener() {
+                Application.imageLoader.get(image, new ImageLoader.ImageListener() {
                     @Override
                     public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                         Bitmap bm = response.getBitmap();
@@ -111,10 +112,10 @@ public class Node {
 
     }
 
-    public Node createFromPost(Post post){
-        Cluster<Post> cluster = isFromCluster(post);
+    public Node createFromPost(BuzzItem post){
+        Cluster<BuzzItem> cluster = isFromCluster(post);
         if (cluster != null){
-            posts = new ArrayList<Post>(cluster.getItems());
+            posts = new ArrayList<BuzzItem>(cluster.getItems());
         }else {
             posts.clear();
             posts.add(post);
@@ -125,15 +126,15 @@ public class Node {
         return this;
     }
 
-    public Cluster<Post> isFromCluster(Post post){
-        ClusterManager<Post> clusterManager = tree.getClusterManager();
+    public Cluster<BuzzItem> isFromCluster(BuzzItem post){
+        ClusterManager<BuzzItem> clusterManager = tree.getClusterManager();
         ClusterRenderer clusterRenderer = tree.getClusterRenderer();
         ArrayList<Marker> clusterMarkers = new ArrayList<Marker>(clusterManager.getClusterMarkerCollection().getMarkers());
-        ArrayList<Post> clusterPosts;
+        ArrayList<BuzzItem> clusterPosts;
         for (Marker marker : clusterMarkers){
-            Cluster<Post> currentCluster = clusterRenderer.getCluster(marker);
-            clusterPosts = new ArrayList<Post>(currentCluster.getItems());
-            for (Post p : clusterPosts){
+            Cluster<BuzzItem> currentCluster = clusterRenderer.getCluster(marker);
+            clusterPosts = new ArrayList<BuzzItem>(currentCluster.getItems());
+            for (BuzzItem p : clusterPosts){
                 if (p.getObjectId().equals(post.getObjectId())){
                     this.marker = marker;
                     return currentCluster;
@@ -143,13 +144,13 @@ public class Node {
         return null;
     }
 
-    public Marker findMarkerFromPost(Post post){
+    public Marker findMarkerFromPost(BuzzItem post){
 
-        ClusterManager<Post> clusterManager = tree.getClusterManager();
+        ClusterManager<BuzzItem> clusterManager = tree.getClusterManager();
         ClusterRenderer clusterRenderer = tree.getClusterRenderer();
         ArrayList<Marker> clusterMarkers = new ArrayList<Marker>(clusterManager.getMarkerCollection().getMarkers());
         for (Marker marker : clusterMarkers){
-            Post p = clusterRenderer.getClusterItem(marker);
+            BuzzItem p = clusterRenderer.getClusterItem(marker);
             if (p.getObjectId().equals(post.getObjectId())){
                 return marker;
             }
@@ -169,13 +170,13 @@ public class Node {
 
     public void exitNode(){
 
-        Post post = posts.get(0);
+        BuzzItem post = posts.get(0);
         iconGenerator.setBackground(new ColorDrawable(0x00000000));
-        String profileImage = post.getUser().getString("profileImage");
+        String profileImage = post.getProfileImage();
         if (profileImage == null){
             updateMarkerImageOnExit(tree.missingProfileImage);
         } else {
-            Application.imageLoader.get(post.getUser().getString("profileImage"), new ImageLoader.ImageListener() {
+            Application.imageLoader.get(post.getProfileImage(), new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     Bitmap bm = response.getBitmap();

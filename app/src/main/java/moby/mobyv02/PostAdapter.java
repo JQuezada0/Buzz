@@ -21,6 +21,8 @@ import android.widget.VideoView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -29,6 +31,7 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.layout.SquareFrameLayout;
@@ -55,7 +58,7 @@ public class PostAdapter extends BaseAdapter {
     }
 
 
-    public void setFeed(ArrayList<Post> posts){
+    public void setFeed(List<Post> posts){
         this.posts.clear();
         this.posts.addAll(posts);
         notifyDataSetChanged();
@@ -107,7 +110,7 @@ public class PostAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup viewGroup) {
         if (position == posts.size()){
-            View v = inflater.inflate(R.layout.loading_fragment, null);
+            View v = inflater.inflate(R.layout.loading_fragment, viewGroup, false);
             CircleProgressBar circleProgressBar = (CircleProgressBar) v.findViewById(R.id.login_progressbar);
             circleProgressBar.setColorSchemeResources(R.color.moby_blue);
             return v;
@@ -116,7 +119,7 @@ public class PostAdapter extends BaseAdapter {
         ViewHolder vh;
         final ParseUser user = post.getUser();
         if (convertView == null || convertView.getTag() == null){
-            convertView = inflater.inflate(R.layout.feed_post_layout, null);
+            convertView = inflater.inflate(R.layout.feed_post_layout, viewGroup, false);
             vh = new ViewHolder();
             vh.name = (TextView) convertView.findViewById(R.id.post_name);
             vh.locale = (TextView) convertView.findViewById(R.id.post_locale);
@@ -207,9 +210,8 @@ public class PostAdapter extends BaseAdapter {
         vh.profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Is clicekd");
                 Intent i = new Intent(context, ProfileActivity.class);
-                ProfileActivity.user = user;
+                i.putExtra("user", user.getObjectId());
                 context.startActivity(i);
             }
         });
@@ -239,7 +241,7 @@ public class PostAdapter extends BaseAdapter {
                         vh.heartCount.setText(String.valueOf(post.getHearts() + 1) + " hearts");
                     }
                     vh.heartButton.setSelected(true);
-                    ParseOperation.createHeart(post, new ParseOperation.ParseOperationCallback() {
+                    new ParseOperation("Network").createHeart(post, new ParseOperation.ParseOperationCallback() {
                         @Override
                         public void finished(boolean success, ParseException e) {
                             updatePost(position);
@@ -257,7 +259,7 @@ public class PostAdapter extends BaseAdapter {
                         vh.heartCount.setText(String.valueOf(post.getHearts() - 1) + " hearts");
                     }
                     vh.heartButton.setSelected(false);
-                    ParseOperation.deleteHeart(post, new ParseOperation.ParseOperationCallback() {
+                    new ParseOperation("Network").deleteHeart(post, new ParseOperation.ParseOperationCallback() {
                         @Override
                         public void finished(boolean success, ParseException e) {
                             updatePost(position);
