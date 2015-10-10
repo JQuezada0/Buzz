@@ -135,6 +135,8 @@ public class Main extends FragmentActivity {
         setClickListeners();
 
         setPostBarInfo();
+
+        loadFeed(true);
     }
 
     @Override
@@ -147,7 +149,6 @@ public class Main extends FragmentActivity {
         }
         postListOpen = false;
         createPostList.setVisibility(View.GONE);
-        loadFeed(false);
     }
 
     @Override
@@ -187,16 +188,22 @@ public class Main extends FragmentActivity {
     public void loadFeed(final boolean reset){
         System.out.println("loadFeed");
         progressBar.setVisibility(View.VISIBLE);
-        ParseOperation.getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
+        new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
-                if (e == null){
+                if (e == null && posts != null){
                     feedFragment.loadPosts(posts, reset);
                     Main.this.posts.addAll(posts);
                     progressBar.setVisibility(View.GONE);
                     pageNumber++;
                 } else {
-                    Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_LONG);
+                    if (e != null){
+                        Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        BuzzAnalytics.logError(Main.this, e.getMessage());
+                    } else {
+                        Toast.makeText(Main.this, "An error has occured. Please try again later.", Toast.LENGTH_LONG).show();
+                        BuzzAnalytics.logError(Main.this, "Unknown error loading feed");
+                    }
                 }
 
             }
@@ -205,7 +212,7 @@ public class Main extends FragmentActivity {
 
     public void loadEventsFeed(final boolean reset){
 
-        ParseOperation.getEventsFeed(0, new ParseOperation.LoadEventsCallback() {
+        new ParseOperation("Network").getEventsFeed(0, new ParseOperation.LoadEventsCallback() {
             @Override
             public void finished(boolean success, ArrayList<Event> events, ParseException e) {
                 progressBar.setVisibility(View.GONE);
@@ -271,7 +278,6 @@ public class Main extends FragmentActivity {
     public void toggleFeed(){
 
         mapFragment.hideFeed();
-        mapFragment.clearMap();
         map = false;
         feedToggle.setSelected(true);
         feedToggle.setTextColor(getResources().getColor(android.R.color.white));
@@ -293,6 +299,7 @@ public class Main extends FragmentActivity {
         mapToggle.setTextColor(getResources().getColor(android.R.color.white));
         viewPager.setCurrentItem(1, true);
           if (!eventMode){
+              System.out.println(posts.size());
               mapFragment.setFeed(posts);
           } else {
 
@@ -321,10 +328,11 @@ public class Main extends FragmentActivity {
 
     public void refreshFeed(){
         pageNumber = 0;
-        ParseOperation.getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
+        new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
-                feedFragment.loadPosts(posts, false);
+                feedFragment.loadPosts(posts, true);
+                Main.this.posts.clear();
                 Main.this.posts.addAll(posts);
                 pageNumber++;
             }
@@ -336,8 +344,6 @@ public class Main extends FragmentActivity {
         drawerLayout.closeDrawers();
     }
 
-
-
     ////////////////////////////CLICK LISTENERS/////////////////////////////////////////////
 
     final View.OnClickListener feedToggleClickListener = new View.OnClickListener() {
@@ -345,36 +351,6 @@ public class Main extends FragmentActivity {
         public void onClick(View view) {
             toggleFeed();
         }
-    };
-
-    private final View.OnClickListener createStatusPostClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-
-            startActivityForResult(new Intent(Main.this, CreateStatusPost.class), POST_CREATED);
-        }
-
-    };
-
-    private final View.OnClickListener createPhotoPostClickListener = new View.OnClickListener(){
-
-        @Override
-        public void onClick(View view) {
-            startActivityForResult(new Intent(Main.this, CreatePhotoPost.class), POST_CREATED);
-        }
-
-
-    };
-
-    private final View.OnClickListener createVideoPostClickListener = new View.OnClickListener(){
-
-        @Override
-        public void onClick(View view) {
-            startActivityForResult(new Intent(Main.this, CreateVideoPost.class), POST_CREATED);
-        }
-
-
     };
 
 

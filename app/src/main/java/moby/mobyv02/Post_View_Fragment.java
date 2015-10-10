@@ -48,7 +48,6 @@ public class Post_View_Fragment extends Fragment {
     private TextView distance;
     private TextView timeStamp;
     private LinearLayout profileButton;
-    private TextView usernameSmall;
     private FrameLayout frame;
     private Application app;
     private Activity main;
@@ -165,9 +164,8 @@ public class Post_View_Fragment extends Fragment {
     private final View.OnClickListener profileButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            ProfileActivity.user = post.getUser();
             Intent i = new Intent(getActivity(), ProfileActivity.class);
-            i.putExtra("self", false);
+            i.putExtra("user", user.getObjectId());
             startActivity(i);
         }
     };

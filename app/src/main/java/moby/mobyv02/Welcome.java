@@ -101,7 +101,6 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
                         parseUser.put("email", object.getString("email"));
                         parseUser.put("profileImage", "http://graph.facebook.com/" + object.getString("id") + "/picture?type=large");
                         parseUser.saveEventually();
-
                         startActivity(new Intent(Welcome.this, Main.class));
                         finish();
                     } catch (JSONException e) {

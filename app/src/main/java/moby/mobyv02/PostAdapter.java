@@ -31,6 +31,7 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.layout.SquareFrameLayout;
@@ -57,7 +58,7 @@ public class PostAdapter extends BaseAdapter {
     }
 
 
-    public void setFeed(ArrayList<Post> posts){
+    public void setFeed(List<Post> posts){
         this.posts.clear();
         this.posts.addAll(posts);
         notifyDataSetChanged();
@@ -109,7 +110,7 @@ public class PostAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup viewGroup) {
         if (position == posts.size()){
-            View v = inflater.inflate(R.layout.loading_fragment, viewGroup);
+            View v = inflater.inflate(R.layout.loading_fragment, viewGroup, false);
             CircleProgressBar circleProgressBar = (CircleProgressBar) v.findViewById(R.id.login_progressbar);
             circleProgressBar.setColorSchemeResources(R.color.moby_blue);
             return v;
@@ -209,16 +210,11 @@ public class PostAdapter extends BaseAdapter {
         vh.profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Is clicekd");
                 Intent i = new Intent(context, ProfileActivity.class);
-                ProfileActivity.user = user;
+                i.putExtra("user", user.getObjectId());
                 context.startActivity(i);
             }
         });
-        System.out.println(convertView.getParent());
-//        YoYo.with(Techniques.SlideInLeft)
-//                .duration(250)
-//                .playOn(convertView);
         return convertView;
     }
 
@@ -245,7 +241,7 @@ public class PostAdapter extends BaseAdapter {
                         vh.heartCount.setText(String.valueOf(post.getHearts() + 1) + " hearts");
                     }
                     vh.heartButton.setSelected(true);
-                    ParseOperation.createHeart(post, new ParseOperation.ParseOperationCallback() {
+                    new ParseOperation("Network").createHeart(post, new ParseOperation.ParseOperationCallback() {
                         @Override
                         public void finished(boolean success, ParseException e) {
                             updatePost(position);
@@ -263,7 +259,7 @@ public class PostAdapter extends BaseAdapter {
                         vh.heartCount.setText(String.valueOf(post.getHearts() - 1) + " hearts");
                     }
                     vh.heartButton.setSelected(false);
-                    ParseOperation.deleteHeart(post, new ParseOperation.ParseOperationCallback() {
+                    new ParseOperation("Network").deleteHeart(post, new ParseOperation.ParseOperationCallback() {
                         @Override
                         public void finished(boolean success, ParseException e) {
                             updatePost(position);

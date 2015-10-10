@@ -66,7 +66,7 @@ public class SelectProfilePictureFragment extends Fragment {
         public void onClick(View view) {
             continueButton.setEnabled(false);
             signup.showProgress();
-            ParseOperation.uploadImage(Application.getImageCacheFile(signup), new ParseOperation.ImageUploadCallback() {
+            new ParseOperation("Network").uploadImage(Application.getImageCacheFile(signup), new ParseOperation.ImageUploadCallback() {
                 @Override
                 public void finished(boolean success, ParseFile file, ParseException e) {
 
@@ -81,7 +81,7 @@ public class SelectProfilePictureFragment extends Fragment {
                         user.put("profileImage", file.getUrl());
                         user.put("birthday", signup.date);
                         user.put("gender", signup.gender.getSelectedItem().toString())
-;                        ParseOperation.signUp(user, new ParseOperation.ParseOperationCallback() {
+;                        new ParseOperation("Network").signUp(user, new ParseOperation.ParseOperationCallback() {
                             @Override
                             public void finished(boolean success, final ParseException e) {
 

@@ -26,18 +26,24 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
     private static int lastPosition = 0;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        main = (Main) getActivity();
+        adapter = new PostAdapter(new ArrayList<Post>(), main, main);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup Container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.feed_fragment, null);
-        main = (Main) getActivity();
         postList = (ListView) v.findViewById(R.id.post_list);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.feed_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.moby_blue);
-        adapter = new PostAdapter(new ArrayList<Post>(), main, main);
         eventAdapter = new EventAdapter(new ArrayList<Event>(), main, main);
         postList.setAdapter(adapter);
+        postList.setOnScrollListener(this);
         return v;
     }
 
@@ -54,14 +60,12 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
 
     public void loadPosts(ArrayList<Post> posts, boolean reset){
         adapter.addToFeed(posts);
-        postList.setOnScrollListener(this);
         if (reset)
             postList.setAdapter(adapter);
     }
 
     public void loadEvents(ArrayList<Event> events, boolean reset){
         eventAdapter.addToFeed(events);
-        postList.setOnScrollListener(this);
         if (reset)
             postList.setAdapter(eventAdapter);
     }
@@ -81,7 +85,7 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
     @Override
     public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         adapter.hideMediaControls();
-        if (postList.getLastVisiblePosition() ==  (totalItemCount - 1)){
+        if ((postList.getLastVisiblePosition() ==  (totalItemCount - 1)) && totalItemCount > 10){
             main.loadFeed(false);
         }
 

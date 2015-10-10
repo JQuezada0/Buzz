@@ -153,9 +153,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void updateMarker(Marker m){
-        Marker marker = null;
-        if (m.isCluster())
+        Marker marker = m;
+        if (m.isCluster()){
             marker = m.getMarkers().get(0);
+        }
         Object[] data = marker.getData();
         BuzzItem bi = (BuzzItem) data[0];
         updateMarker(bi);
@@ -294,11 +295,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void clearMap(){
-
-    }
-
     public void setFeed(List<Post> posts){
+        System.out.println(posts.size());
         currentPosts.clear();
         currentPosts.addAll(posts);
         eventMode = false;

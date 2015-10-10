@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Environment;
 import android.support.multidex.MultiDex;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ import com.leanplum.LeanplumApplication;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -25,6 +28,8 @@ import com.parse.ParseUser;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import moby.mobyv02.parse.Comment;
 import moby.mobyv02.parse.Event;
@@ -137,6 +142,23 @@ public class Application extends LeanplumApplication {
             }, image.getWidth(), image.getHeight());
         } else {
             image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_icon_graybg));
+        }
+    }
+
+    public static String getLocale(Context context, ParseGeoPoint location){
+        if (location == null){
+            return "";
+        }
+        try {
+            Geocoder geocoder = new Geocoder(context);
+            List<Address> addresses;
+                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (addresses.size() == 0)
+                return "";
+            return addresses.get(0).getLocality();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 

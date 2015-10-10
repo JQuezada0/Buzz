@@ -48,7 +48,7 @@ public class Comment_Add_Comment_Fragment extends Fragment {
         @Override
         public void onClick(View view) {
             commentActivity.showProgressBar();
-            ParseOperation.createComment(commentText.getText().toString(), new ParseOperation.ParseOperationCallback() {
+            new ParseOperation("Network").createComment(commentText.getText().toString(), new ParseOperation.ParseOperationCallback() {
                 @Override
                 public void finished(boolean success, ParseException e) {
                     commentActivity.hideProgressBar();
