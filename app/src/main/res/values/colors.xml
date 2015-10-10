@@ -14,5 +14,6 @@
     <item name="carrot" type="color">#E67E22</item>
     <item name="alizarin" type="color">#E74C3C</item>
     <item name="moby_gray" type="color">#ACACAC</item>
+    <item name="moby_light_gray" type="color">#EEEEEE</item>
 
 </resources>

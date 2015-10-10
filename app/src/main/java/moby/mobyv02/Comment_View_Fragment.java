@@ -47,7 +47,7 @@ public class Comment_View_Fragment extends Fragment implements AbsListView.OnScr
 
     private void loadInitialComments(){
 
-        ParseOperation.loadInitialComments(new ParseOperation.LoadCommentsCallback() {
+        new ParseOperation("Network").loadInitialComments(new ParseOperation.LoadCommentsCallback() {
             @Override
             public void finished(boolean success, List<Comment> comments, ParseException e) {
 
@@ -66,7 +66,7 @@ public class Comment_View_Fragment extends Fragment implements AbsListView.OnScr
 
     private void loadFirstComments(){
         if (adapter.getCount() < maxComments){
-            ParseOperation.loadComments(0, new ParseOperation.LoadCommentsCallback() {
+            new ParseOperation("Network").loadComments(0, new ParseOperation.LoadCommentsCallback() {
                 @Override
                 public void finished(boolean success, List<Comment> comments, ParseException e) {
                     commentActivity.hideProgressBar();
@@ -87,7 +87,7 @@ public class Comment_View_Fragment extends Fragment implements AbsListView.OnScr
 
         commentActivity.showProgressBar();
         if (adapter.getCount() < maxComments){
-            ParseOperation.loadComments(pageNumber, new ParseOperation.LoadCommentsCallback() {
+            new ParseOperation("Network").loadComments(pageNumber, new ParseOperation.LoadCommentsCallback() {
                 @Override
                 public void finished(boolean success, List<Comment> comments, ParseException e) {
                     commentActivity.hideProgressBar();

@@ -13,7 +13,7 @@
         android:layout_weight="1.5">
 
     <fragment
-        class="com.google.android.gms.maps.SupportMapFragment"
+        class="com.androidmapsextensions.SupportMapFragment"
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -72,6 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map_feed_frame"
+        android:visibility="gone"
         android:clickable="true"
         android:layout_weight="1">
 

@@ -46,8 +46,8 @@ public class ParseDecoder {
             }
             System.out.println(key + ": " + data.get(key));
         }
-        post.put("createdDate", DateParser.parse(data.getJSONObject("createdAt").getString("iso")));
-        post.put("updatedAt", DateParser.parse(data.getJSONObject("updatedAt").getString("iso")));
+        post.put("createdDate", DateParser.parse((String) data.get("createdAt")));
+        post.put("updatedAt", DateParser.parse((String) data.get("updatedAt")));
         post.setLocation(getLocation(data.getJSONObject("location")));
         post.put("user", decodeUser(data.getJSONObject("user")));
         return post;
@@ -71,7 +71,7 @@ public class ParseDecoder {
                 user.put(key, data.get(key));
             }
         }
-        user.put("createdAt", DateParser.parse(data.getJSONObject("updatedAt").getString("iso")));
+        user.put("createdAt", DateParser.parse(data.getJSONObject("createdAt").getString("iso")));
         user.put("updatedAt", DateParser.parse(data.getJSONObject("createdAt").getString("iso")));
         return user;
     }

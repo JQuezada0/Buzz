@@ -30,7 +30,7 @@ import moby.mobyv02.parse.Post;
 /**
  * Created by quezadjo on 9/10/2015.
  */
-public class ClusterRenderer extends DefaultClusterRenderer<Post> implements ClusterManager.OnClusterClickListener<Post>, ClusterManager.OnClusterItemClickListener<Post>{
+public class ClusterRenderer extends DefaultClusterRenderer<BuzzItem> implements ClusterManager.OnClusterClickListener<BuzzItem>, ClusterManager.OnClusterItemClickListener<BuzzItem>{
 
     private IconGenerator iconGenerator;
     private final Context context;
@@ -39,7 +39,7 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
     private GoogleMap map;
     private Projection projection;
 
-    public ClusterRenderer(Context context, GoogleMap map, ClusterManager<Post> clusterManager, MapFragment m) {
+    public ClusterRenderer(Context context, GoogleMap map, ClusterManager<BuzzItem> clusterManager, MapFragment m) {
         super(context, map, clusterManager);
         iconGenerator = new IconGenerator(context);
         this.context = context;
@@ -50,11 +50,11 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
     }
 
     @Override
-    protected void onClusterItemRendered(final Post clusterItem, final Marker marker){
+    protected void onClusterItemRendered(final BuzzItem clusterItem, final Marker marker){
 
         try {
             View markerIcon = inflater.inflate(moby.mobyv02.R.layout.map_marker_icon, null);
-            loadImageAsync(clusterItem.getUser(), marker, iconGenerator, markerIcon, clusterItem, false, 0);
+            loadImageAsync(clusterItem.getProfileImage(), marker, iconGenerator, markerIcon, clusterItem, false, 0);
         } catch (IllegalArgumentException e) {
             System.out.println("Caught exception " + e.getMessage());
         }
@@ -63,14 +63,14 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
     }
 
     @Override
-    protected void onClusterRendered(final Cluster<Post> cluster, final Marker marker){
+    protected void onClusterRendered(final Cluster<BuzzItem> cluster, final Marker marker){
         iconGenerator.setBackground(new ColorDrawable(0x00000000));
-        final Post[] parr = new Post[cluster.getSize()];
+        final BuzzItem[] parr = new BuzzItem[cluster.getSize()];
         cluster.getItems().toArray(parr);
-        Post firstPost = parr[0];
+        BuzzItem firstPost = parr[0];
         try {
             View markerIcon = inflater.inflate(moby.mobyv02.R.layout.map_marker_icon, null);
-            loadImageAsync(firstPost.getUser(), marker, iconGenerator, markerIcon, firstPost, true, cluster.getSize());
+            loadImageAsync(firstPost.getProfileImage(), marker, iconGenerator, markerIcon, firstPost, true, cluster.getSize());
         } catch (IllegalArgumentException e) {
             System.out.println("Caught exception " + e.getMessage());
         }
@@ -79,25 +79,24 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
 
 
     @Override
-    public boolean onClusterClick(Cluster<Post> cluster) {
-        final Post[] posts = new Post[cluster.getSize()];
+    public boolean onClusterClick(Cluster<BuzzItem> cluster) {
+        final BuzzItem[] posts = new BuzzItem[cluster.getSize()];
         cluster.getItems().toArray(posts);
-        mapFragment.markerClusterClicked(getMarker(cluster), posts[0], cluster.getSize());
+        mapFragment.markerClusterClicked(posts[0]);
         return false;
     }
 
     @Override
-    public boolean onClusterItemClick(Post post) {
+    public boolean onClusterItemClick(BuzzItem post) {
 
-        mapFragment.markerClusterItemClicked(post.getMarker(), post);
+        mapFragment.markerClusterItemClicked(post);
         return false;
     }
 
-    private void loadImageAsync(ParseUser user, final Marker marker, IconGenerator generator, final View v, final Post post, boolean cluster, int count){
+    private void loadImageAsync(String imageUrl, final Marker marker, IconGenerator generator, final View v, final BuzzItem post, boolean cluster, int count){
 
         final CircleImageView profileImage = (CircleImageView) v.findViewById(moby.mobyv02.R.id.map_marker_image);
         TextView countText = (TextView) v.findViewById(moby.mobyv02.R.id.map_marker_icon_count_text);
-        String imageUrl = user.getString("profileImage");
         if (!cluster) {
             v.findViewById(moby.mobyv02.R.id.map_marker_icon_count).setVisibility(View.GONE);
         } else {
@@ -121,8 +120,8 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
                             Bitmap bm = iconGenerator.makeIcon();
                             BitmapDescriptor bd = BitmapDescriptorFactory.fromBitmap(bm);
                             marker.setIcon(bd);
-                            if (post != null)
-                                post.setMarker(marker);
+    //                       if (post != null)
+    //                            post.setMarker(marker);
                         } catch (IllegalArgumentException e) {
                             System.out.println("Caught exception " + e.getMessage());
                         }
@@ -136,11 +135,6 @@ public class ClusterRenderer extends DefaultClusterRenderer<Post> implements Clu
             }, 80, 80);
         }
 
-    }
-
-    @Override
-    public void onClustersChanged(Set<? extends Cluster<Post>> clusters){
-        super.onClustersChanged(clusters);
     }
 
 }

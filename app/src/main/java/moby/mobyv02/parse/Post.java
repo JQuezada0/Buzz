@@ -1,7 +1,7 @@
 package moby.mobyv02.parse;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+import com.androidmapsextensions.Marker;
 import com.google.maps.android.clustering.ClusterItem;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
@@ -13,6 +13,7 @@ import com.parse.ParseUser;
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
+import moby.mobyv02.BuzzItem;
 import moby.mobyv02.LocationManager;
 
 /**
@@ -20,7 +21,7 @@ import moby.mobyv02.LocationManager;
  */
 
 @ParseClassName("Post")
-public class Post extends ParseObject implements ClusterItem, Comparable {
+public class Post extends BuzzItem {
 
     private Marker marker;
 
@@ -40,12 +41,32 @@ public class Post extends ParseObject implements ClusterItem, Comparable {
         return getString("text");
     }
 
+    @Override
+    public int getHeartCount() {
+        return 0;
+    }
+
+    @Override
+    public int getCommentCount() {
+        return 0;
+    }
+
     public void setLocation(ParseGeoPoint location){
         put("location", location);
     }
 
     public ParseGeoPoint getLocation(){
         return getParseGeoPoint("location");
+    }
+
+    @Override
+    public long getTime() {
+        return 0;
+    }
+
+    @Override
+    public String getFormattedTime() {
+        return null;
     }
 
     public void setColor(String color){
@@ -58,6 +79,20 @@ public class Post extends ParseObject implements ClusterItem, Comparable {
 
     public void setLocale(String locale){
         put("locale", locale);
+    }
+
+    public void setProfileImage(String profileImage){
+        put("profileImage", profileImage);
+    }
+
+    @Override
+    public String getProfileImage() {
+        return getUser().getString("profileImage");
+    }
+
+    @Override
+    public String getName() {
+        return getUser().getString("fullName");
     }
 
     public String getLocale(){
@@ -112,10 +147,12 @@ public class Post extends ParseObject implements ClusterItem, Comparable {
         this.marker = marker;
     }
 
+    @Override
     public double getLongitude(){
         return getLocation().getLongitude();
     }
 
+    @Override
     public double getLatitude(){
         return getLocation().getLatitude();
     }
@@ -126,11 +163,6 @@ public class Post extends ParseObject implements ClusterItem, Comparable {
 
     public static ParseQuery<Post> getQuery() {
         return ParseQuery.getQuery(Post.class);
-    }
-
-    @Override
-    public LatLng getPosition() {
-        return new LatLng(getLatitude(), getLongitude());
     }
 
     @Override
@@ -186,4 +218,8 @@ public class Post extends ParseObject implements ClusterItem, Comparable {
 
     }
 
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(getLatitude(), getLongitude());
+    }
 }

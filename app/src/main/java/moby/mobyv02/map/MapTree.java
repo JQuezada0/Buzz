@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import moby.mobyv02.BuzzItem;
 import moby.mobyv02.ClusterRenderer;
 import moby.mobyv02.R;
 import moby.mobyv02.parse.Post;
@@ -24,9 +25,9 @@ import moby.mobyv02.parse.Post;
 public class MapTree {
 
     private final LinkedList<Node> nodes = new LinkedList<Node>();
-    private final ArrayList<Post> posts;
+    private final ArrayList<BuzzItem> posts;
     private final Context context;
-    private final ClusterManager<Post> clusterManager;
+    private final ClusterManager<BuzzItem> clusterManager;
     private final ClusterRenderer clusterRenderer;
     private final GoogleMap map;
     private int position = 0;
@@ -34,7 +35,7 @@ public class MapTree {
     private boolean creation = true;
     protected static Bitmap missingProfileImage;
 
-    private MapTree(Context context, ClusterManager<Post> clusterManager, ClusterRenderer clusterRenderer, GoogleMap map, ArrayList<Post> posts){
+    private MapTree(Context context, ClusterManager<BuzzItem> clusterManager, ClusterRenderer clusterRenderer, GoogleMap map, ArrayList<BuzzItem> posts){
 
         this.clusterManager = clusterManager;
         this.clusterRenderer = clusterRenderer;
@@ -45,7 +46,7 @@ public class MapTree {
         this.missingProfileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.person_icon_graybg);
     }
 
-    private void calculateTree(Post initialPost){
+    private void calculateTree(BuzzItem initialPost){
         startTree(initialPost);
         System.out.println("Tree creation has begun. The current amount of posts is " + posts.size() + ". The max Nodes is " + maxNodes + ".");
         while (position < maxNodes - 1){
@@ -57,15 +58,15 @@ public class MapTree {
         creation = false;
     }
 
-    public static MapTree createTree(Context context, ClusterManager<Post> clusterManager, ClusterRenderer clusterRenderer, GoogleMap map, ArrayList<Post> posts, Post initialPost){
+    public static MapTree createTree(Context context, ClusterManager<BuzzItem> clusterManager, ClusterRenderer clusterRenderer, GoogleMap map, ArrayList<BuzzItem> posts, BuzzItem initialPost){
 
         MapTree mapTree = new MapTree(context, clusterManager, clusterRenderer, map, posts);
         mapTree.calculateTree(initialPost);
         return mapTree;
     }
 
-    private void startTree(Post post){
-        System.out.println(post.getUser().getString("profileImage"));
+    private void startTree(BuzzItem post){
+        System.out.println(post.getProfileImage());
         Node firstNode = new Node(this, 0).createFromPost(post);
         nodes.add(firstNode);
         updateMap();
@@ -145,7 +146,7 @@ public class MapTree {
     private Node findNextNode(){
 
         Node node = getCurrentNode();
-        ArrayList<Post> sortedPosts = getSortedPosts(node.getCurrentPost());
+        ArrayList<BuzzItem> sortedPosts = getSortedPosts(node.getCurrentPost());
         Node newNode = new Node(this, position);
         newNode.createFromPost(sortedPosts.get(0));
         return newNode;
@@ -169,16 +170,16 @@ public class MapTree {
         return true;
     }
 
-    private ArrayList<Post> getSortedPosts(Post post){
+    private ArrayList<BuzzItem> getSortedPosts(BuzzItem post){
 
-        ArrayList<Post> sortedPostsList = new ArrayList<>(posts);
+        ArrayList<BuzzItem> sortedPostsList = new ArrayList<>(posts);
         sortedPostsList.removeAll(getAllTraversedPosts());
         Collections.sort(sortedPostsList);
         return sortedPostsList;
 
     }
 
-    protected ClusterManager<Post> getClusterManager(){
+    protected ClusterManager<BuzzItem> getClusterManager(){
         return clusterManager;
     }
 
@@ -186,9 +187,9 @@ public class MapTree {
         return clusterRenderer;
     }
 
-    private ArrayList<Post> getAllTraversedPosts(){
+    private ArrayList<BuzzItem> getAllTraversedPosts(){
 
-        ArrayList<Post> traversedPosts = new ArrayList<Post>();
+        ArrayList<BuzzItem> traversedPosts = new ArrayList<BuzzItem>();
 
         for (Node node : nodes){
             traversedPosts.addAll(node.getPosts());
@@ -209,7 +210,7 @@ public class MapTree {
         return clusterMarkerCollectionSize + clusterItemMarkerCollectionSize;
     }
 
-    public ArrayList<Post> getNewPosts(){
+    public ArrayList<BuzzItem> getNewPosts(){
         return getAllTraversedPosts();
     }
 

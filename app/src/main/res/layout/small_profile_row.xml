@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_button"
+        android:background="@drawable/view_shadow"
+        android:padding="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/person_icon_graybg"
+            android:id="@+id/profile_image"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:orientation="vertical">
+
+            <TableRow
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:maxWidth="200dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Stephen Curry"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/profile_name"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="match_parent">
+
+                <ImageView
+                    android:layout_height="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/location_icon"/>
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:text="Oracle Arena"
+                    android:ellipsize="end"
+                    android:id="@+id/profile_locale"
+                    android:textColor="@color/moby_blue"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="left|bottom"
+                    android:text="27 Posts"
+                    android:id="@+id/profile_post_count"
+                    android:textColor="@color/moby_gray"/>
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:text="18 Friends"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|bottom"
+                    android:id="@+id/profile_friend_count"
+                    android:textColor="@color/moby_gray"/>
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:text="57 Hearts"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right|bottom"
+                    android:id="@+id/profile_heart_count"
+                    android:textColor="@color/moby_gray"/>
+
+            </TableRow>
+
+
+        </LinearLayout>
+
+    </TableRow>
+
+</LinearLayout>
