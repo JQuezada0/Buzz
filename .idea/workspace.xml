@@ -64,7 +64,7 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.3143165">
+            <state vertical-scroll-proportion="1.3938357">
               <caret line="139" column="5" selection-start-line="139" selection-start-column="5" selection-end-line="139" selection-end-column="5" />
               <folding>
                 <element signature="e#12070#12313#0" expanded="true" />
@@ -4255,11 +4255,11 @@
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/BitmapDownSampler.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Application.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/FeedFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Main.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ParseOperation.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/MapFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ClusterRenderer.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/ParseDecoder.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Main.java" />
       </list>
     </option>
   </component>
@@ -5333,6 +5333,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46178687">
           <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -5346,7 +5347,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/moby/mobyv02/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3143165">
+        <state vertical-scroll-proportion="1.3938357">
           <caret line="139" column="5" selection-start-line="139" selection-start-column="5" selection-end-line="139" selection-end-column="5" />
           <folding>
             <element signature="e#12070#12313#0" expanded="true" />
