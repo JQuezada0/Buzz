@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Buzz.iml" filepath="$PROJECT_DIR$/Buzz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/libs/android-maps-extensions/android-maps-extensions/android-maps-extensions.iml" filepath="$PROJECT_DIR$/app/libs/android-maps-extensions/android-maps-extensions/android-maps-extensions.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
