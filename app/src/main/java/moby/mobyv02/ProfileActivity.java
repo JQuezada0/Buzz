@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
+import com.nhaarman.listviewanimations.appearance.simple.SwingLeftInAnimationAdapter;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
@@ -79,6 +80,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_layout);
         postAdapter = new PostAdapter(new ArrayList<Post>(), this, this);
+        SwingLeftInAnimationAdapter animationAdapter = new SwingLeftInAnimationAdapter(postAdapter);
         profileImage = (CircleImageView) findViewById(R.id.image);
         name = (TextView) findViewById(R.id.name);
         locale = (TextView) findViewById(R.id.locale);
@@ -98,7 +100,8 @@ public class ProfileActivity extends AppCompatActivity {
         progress = (CircleProgressBar) findViewById(R.id.progress);
         profileFrame = (LinearLayout) findViewById(R.id.profile_layout);
         progress.setColorSchemeResources(R.color.moby_blue);
-        list.setAdapter(postAdapter);
+        animationAdapter.setAbsListView(list);
+        list.setAdapter(animationAdapter);
         friendButton.setOnClickListener(followClickListener);
         readBehaviour(getIntent().getExtras());
         setSupportActionBar(toolbar);

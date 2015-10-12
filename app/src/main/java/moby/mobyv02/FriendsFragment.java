@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
+import com.nhaarman.listviewanimations.appearance.simple.SwingLeftInAnimationAdapter;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -38,7 +39,9 @@ public class FriendsFragment extends Fragment {
         list = (ListView) v.findViewById(R.id.user_list);
         friendsActivity = (FriendsActivity) getActivity();
         profileRowAdapter = new ProfileRowAdapter(friendsActivity);
-        list.setAdapter(profileRowAdapter);
+        SwingLeftInAnimationAdapter animationAdapter = new SwingLeftInAnimationAdapter(profileRowAdapter);
+        animationAdapter.setAbsListView(list);
+        list.setAdapter(animationAdapter);
         progress = (CircleProgressBar) v.findViewById(R.id.progress);
         progress.setColorSchemeResources(R.color.moby_blue);
         list.setOnItemClickListener(profileClickListener);

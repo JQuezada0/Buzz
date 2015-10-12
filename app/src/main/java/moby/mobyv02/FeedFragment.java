@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.appearance.simple.SwingLeftInAnimationAdapter;
+
 import java.util.ArrayList;
 
 import moby.mobyv02.parse.Event;
@@ -25,12 +27,14 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
     private Main main;
     private static int lastPosition = 0;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SwingLeftInAnimationAdapter animationAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         main = (Main) getActivity();
         adapter = new PostAdapter(new ArrayList<Post>(), main, main);
+        animationAdapter = new SwingLeftInAnimationAdapter(adapter);
     }
 
 
@@ -38,11 +42,12 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
     public View onCreateView(LayoutInflater inflater, ViewGroup Container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.feed_fragment, null);
         postList = (ListView) v.findViewById(R.id.post_list);
+        animationAdapter.setAbsListView(postList);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.feed_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.moby_blue);
         eventAdapter = new EventAdapter(new ArrayList<Event>(), main, main);
-        postList.setAdapter(adapter);
+        postList.setAdapter(animationAdapter);
         postList.setOnScrollListener(this);
         return v;
     }
@@ -59,9 +64,11 @@ public class FeedFragment extends Fragment implements AbsListView.OnScrollListen
     }
 
     public void loadPosts(ArrayList<Post> posts, boolean reset){
-        adapter.addToFeed(posts);
-        if (reset)
-            postList.setAdapter(adapter);
+        if (reset){
+            adapter.setFeed(posts);
+        } else {
+            adapter.addToFeed(posts);
+        }
     }
 
     public void loadEvents(ArrayList<Event> events, boolean reset){
