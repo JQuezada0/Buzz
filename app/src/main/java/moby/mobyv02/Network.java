@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.Parse;
 import com.parse.ParseCloud;
@@ -37,6 +38,7 @@ import java.util.List;
 import moby.mobyv02.parse.Comment;
 import moby.mobyv02.parse.Event;
 import moby.mobyv02.parse.Follow;
+import moby.mobyv02.parse.Friend;
 import moby.mobyv02.parse.Heart;
 import moby.mobyv02.parse.Post;
 import moby.mobyv02.parse.Upvote;
@@ -157,6 +159,18 @@ public class Network extends IntentService {
         } else if (type.equals("getDiscovery")){
 
             getDiscoveryFeed(parseOperation.discoveryCallback);
+
+        } else if (type.equals("getFriends")){
+
+            getFriends(parseOperation.getFriendsCallback);
+
+        } else if (type.equals("getPendingFriends")){
+
+            getPendingFriends(parseOperation.getPendingFriendsCallback);
+
+        } else if (type.equals("getReceivedFriends")){
+
+            getReceivedFriends(parseOperation.getReceivedFriendsCallback);
 
         }
 
@@ -848,11 +862,8 @@ public class Network extends IntentService {
                 public int compare(ParseUser lhs, ParseUser rhs) {
                     ParseGeoPoint userALocation = lhs.getParseGeoPoint("location");
                     ParseGeoPoint userBLocation = rhs.getParseGeoPoint("location");
-                    if (userALocation == null){
-                        return 1;
-                    }
-                    if (userBLocation == null){
-                        return -1;
+                    if (userALocation == null || userBLocation == null){
+                        return 0;
                     }
                     if (userALocation == null && userBLocation == null){
                         return 0;
@@ -885,6 +896,105 @@ public class Network extends IntentService {
             });
 
         }
+    }
+
+    private void getFriends(final ParseOperation.GetFriendsCallback callback){
+        List<ParseQuery<Friend>> queries = new ArrayList<ParseQuery<Friend>>();
+        ParseQuery<Friend> friendQuery = Friend.getQuery();
+        friendQuery.whereEqualTo("from", ParseUser.getCurrentUser());
+        friendQuery.whereEqualTo("accepted", true);
+        ParseQuery<Friend> friendQueryTo = Friend.getQuery();
+        friendQueryTo.whereEqualTo("to", ParseUser.getCurrentUser());
+        friendQueryTo.whereEqualTo("accepted", true);
+        queries.add(friendQuery);
+        queries.add(friendQueryTo);
+        ParseQuery<Friend> finalQuery = ParseQuery.or(queries);
+        finalQuery.include("to");
+        finalQuery.include("from");
+        finalQuery.findInBackground(new FindCallback<Friend>() {
+            @Override
+            public void done(final List<Friend> list, final ParseException e) {
+                if (e == null) {
+
+                    parseOperation.context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.finished(true, list, e);
+                        }
+                    });
+
+                } else {
+                    parseOperation.context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.finished(false, null, e);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void getPendingFriends(final ParseOperation.GetFriendsCallback callback){
+
+        ParseQuery<Friend> friendQuery = Friend.getQuery();
+        friendQuery.whereEqualTo("from", ParseUser.getCurrentUser());
+        friendQuery.whereEqualTo("accepted", false);
+        friendQuery.whereEqualTo("rejected", false);
+        friendQuery.include("to");
+        friendQuery.findInBackground(new FindCallback<Friend>() {
+            @Override
+            public void done(final List<Friend> list, final ParseException e) {
+                if (e == null){
+
+                    parseOperation.context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.finished(true, list, e);
+                        }
+                    });
+
+                } else {
+                    parseOperation.context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.finished(false, null, e);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void getReceivedFriends(final ParseOperation.GetFriendsCallback callback){
+
+        ParseQuery<Friend> friendQuery = Friend.getQuery();
+        friendQuery.whereEqualTo("to", ParseUser.getCurrentUser());
+        friendQuery.whereEqualTo("accepted", false);
+        friendQuery.whereEqualTo("rejected", false);
+        friendQuery.include("from");
+        friendQuery.findInBackground(new FindCallback<Friend>() {
+            @Override
+            public void done(final List<Friend> list, final ParseException e) {
+                if (e == null){
+
+                    parseOperation.context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.finished(true, list, e);
+                        }
+                    });
+
+                } else {
+                    parseOperation.context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.finished(false, null, e);
+                        }
+                    });
+                }
+            }
+        });
     }
 
 

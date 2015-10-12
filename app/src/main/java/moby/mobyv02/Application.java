@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Environment;
 import android.support.multidex.MultiDex;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
@@ -16,7 +17,6 @@ import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.leanplum.LeanplumApplication;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseFacebookUtils;
@@ -33,6 +33,7 @@ import java.util.List;
 
 import moby.mobyv02.parse.Comment;
 import moby.mobyv02.parse.Event;
+import moby.mobyv02.parse.Friend;
 import moby.mobyv02.parse.Heart;
 import moby.mobyv02.parse.Follow;
 import moby.mobyv02.parse.Post;
@@ -41,7 +42,7 @@ import moby.mobyv02.parse.Upvote;
 /**
  * Created by quezadjo on 9/8/2015.
  */
-public class Application extends LeanplumApplication {
+public class Application extends android.app.Application {
 
     public static ImageLoader imageLoader;
     public static AppEventsLogger logger;
@@ -60,7 +61,7 @@ public class Application extends LeanplumApplication {
         ParseObject.registerSubclass(Post.class);
         ParseObject.registerSubclass(Heart.class);
         ParseObject.registerSubclass(Comment.class);
-        ParseObject.registerSubclass(Follow.class);
+        ParseObject.registerSubclass(Friend.class);
         ParseObject.registerSubclass(Upvote.class);
         ParseObject.registerSubclass(Event.class);
         FacebookSdk.sdkInitialize(this, FACEBOOK_REQUEST_CODE);

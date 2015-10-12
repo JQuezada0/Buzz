@@ -29,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DrawerAdapter extends BaseAdapter {
 
     private Context c;
-    private String[] items = new String[]{ParseUser.getCurrentUser().getString("fullName"), "News Feed", "Map", "People"};
+    private String[] items = new String[]{ParseUser.getCurrentUser().getString("fullName"), "News Feed", "Map", "Discovery", "Friends"};
     private Main main;
 
     public DrawerAdapter(Context c, Main m){
@@ -160,6 +160,11 @@ public class DrawerAdapter extends BaseAdapter {
                     main.closeDrawer();
                     Intent peopleIntent = new Intent(DrawerAdapter.this.c, PeopleActivity.class);
                     DrawerAdapter.this.c.startActivity(peopleIntent);
+                    break;
+                case 4:
+                    main.closeDrawer();
+                    Intent friendIntent = new Intent(DrawerAdapter.this.c, FriendsActivity.class);
+                    DrawerAdapter.this.c.startActivity(friendIntent);
                     break;
             }
         }

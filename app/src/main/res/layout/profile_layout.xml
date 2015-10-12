@@ -8,8 +8,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/profile_layout"
-    android:visibility="gone">
+    android:id="@+id/profile_layout">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -21,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/moby_blue"
-        android:id="@+id/moby_main_toolbar">
+        android:id="@+id/toolbar">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -33,18 +32,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:gravity="center_vertical">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/buzz_app_icon_white_small"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Buzz"
-                    android:textStyle="bold"
-                    android:textSize="25sp"
-                    android:paddingLeft="10dp"/>
 
             </TableRow>
 
@@ -88,7 +76,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Follow"
+                        android:text="Add Friend"
                         android:gravity="center"
                         android:id="@+id/follow_text"
                         android:textSize="20sp"
@@ -224,6 +212,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="10dp"
+                android:visibility="gone"
                 android:background="@drawable/gray_border"
                 android:orientation="vertical">
 
@@ -260,6 +249,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="10dp"
+                android:visibility="gone"
                 android:background="@drawable/gray_border"
                 android:orientation="vertical">
 
