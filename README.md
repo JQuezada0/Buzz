@@ -1,6 +1,9 @@
 # Setting up the repo
 
-Create new directory for project /n
+Create new directory for project.
+
+#
+
 Run "git init" in directory
 Run "git remote add origin https://github.com/JQuezada0/Buzz.git"
 Run "git pull origin"
