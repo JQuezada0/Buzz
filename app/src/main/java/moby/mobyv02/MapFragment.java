@@ -28,6 +28,9 @@ import com.androidmapsextensions.ClusterOptions;
 import com.androidmapsextensions.ClusterOptionsProvider;
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.MarkerOptions;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.PointTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.androidmapsextensions.GoogleMap;
 import com.androidmapsextensions.OnMapReadyCallback;
@@ -289,7 +292,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     marker.setData(data);
                 }
             }
-
         }
     }
 
@@ -306,6 +308,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         currentEvents.addAll(events);
         eventMode = true;
         updateMap();
+    }
+
+    public void showCaseViewStepThree(){
+        ShowcaseView showcaseView = main.getShowcaseView();
+        Display display = main.getWindowManager().getDefaultDisplay();
+        final Point size = new Point();
+        display.getSize(size);
+        Point p = map.getProjection().toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
+        p.y += main.getMainViewPager().getHeight() / 4;
+        Target target = new PointTarget(p);
+        showcaseView.setTarget(target);
+        showcaseView.setContentTitle("Map posts");
+        showcaseView.setContentText("Tap here to view posts from your map");
     }
 
     public void markerClusterClicked(BuzzItem post){

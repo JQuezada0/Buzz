@@ -65,6 +65,7 @@ public class Main extends FragmentActivity {
     public List<Post> posts = new ArrayList<Post>();
     public ArrayList<Event> events = new ArrayList<Event>();
     private boolean firstTime = true;
+    private boolean tutorial = false;
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -150,21 +151,8 @@ public class Main extends FragmentActivity {
 
         loadFeed(true);
 
-        Target target = new ViewTarget(R.id.moby_main_feed_toggle, this);
+//        firstTime = getSharedPreferences("user", 0).getBoolean("firstTime", true);
 
-        firstTime = getSharedPreferences("user", 0).getBoolean("firstTime", false);
-
-        if (firstTime){
-            setShowcaseView();
-        }
-
-        showcaseView = new ShowcaseView.Builder(this)
-                .setTarget(target)
-                .setContentTitle("Feed toggle")
-                .setContentText("Tap here to switch to your feed")
-                .hideOnTouchOutside()
-                .setStyle(R.style.CustomShowcaseTheme)
-                .build();
     }
 
     @Override
@@ -177,13 +165,38 @@ public class Main extends FragmentActivity {
         }
         postListOpen = false;
         createPostList.setVisibility(View.GONE);
-        showcaseView.show();
     }
 
     private void showcaseViewStepOne(){
 
-        
+        Target target = new ViewTarget(R.id.moby_main_feed_toggle, this);
+        tutorial = true;
+        firstTime = false;
+        getSharedPreferences("user", 0).edit().putBoolean("firstTime", firstTime).apply();
+        showcaseView = new ShowcaseView.Builder(this)
+                .setTarget(target)
+                .setContentTitle("Feed toggle")
+                .setContentText("Tap here to switch to your feed")
+                .setStyle(R.style.CustomShowcaseTheme)
+                .build();
+        showcaseView.show();
+        showcaseView.hideButton();
+    }
 
+    private void showcaseViewStepTwo(){
+        Target target = new ViewTarget(R.id.moby_main_map_toggle, this);
+        showcaseView.setTarget(target);
+        showcaseView.setContentTitle("Map Toggle");
+        showcaseView.setContentText("Tap here to switch back to your map");
+
+    }
+
+    public ShowcaseView getShowcaseView(){
+        return showcaseView;
+    }
+
+    public boolean getTutorial(){
+        return tutorial;
     }
 
     @Override
@@ -195,6 +208,10 @@ public class Main extends FragmentActivity {
 
         }
 
+    }
+
+    public ViewPager getMainViewPager(){
+        return viewPager;
     }
 
     private void setPostBarInfo(){
@@ -221,7 +238,6 @@ public class Main extends FragmentActivity {
     }
 
     public void loadFeed(final boolean reset){
-        System.out.println("loadFeed");
         progressBar.setVisibility(View.VISIBLE);
         new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
@@ -231,6 +247,10 @@ public class Main extends FragmentActivity {
                     Main.this.posts.addAll(posts);
                     progressBar.setVisibility(View.GONE);
                     pageNumber++;
+                    mapFragment.setFeed(Main.this.posts);
+                    if (firstTime){
+                        showcaseViewStepOne();
+                    }
                 } else {
                     if (e != null) {
                         Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -323,6 +343,9 @@ public class Main extends FragmentActivity {
             loadFeed(true);
         }
         eventMode = false;
+        if (tutorial){
+            showcaseViewStepTwo();
+        }
     }
 
       public void toggleMap(){
@@ -336,9 +359,10 @@ public class Main extends FragmentActivity {
           if (!eventMode){
               System.out.println(posts.size());
               mapFragment.setFeed(posts);
-          } else {
-
           }
+        if (tutorial){
+            mapFragment.showCaseViewStepThree();
+        }
     }
 
     private void displayPostOnMap(String objectId){
