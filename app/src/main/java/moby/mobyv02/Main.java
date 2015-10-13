@@ -191,13 +191,13 @@ public class Main extends FragmentActivity {
         new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
-                if (e == null && posts != null){
+                if (e == null && posts != null) {
                     feedFragment.loadPosts(posts, reset);
                     Main.this.posts.addAll(posts);
                     progressBar.setVisibility(View.GONE);
                     pageNumber++;
                 } else {
-                    if (e != null){
+                    if (e != null) {
                         Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         BuzzAnalytics.logError(Main.this, e.getMessage());
                     } else {
@@ -331,10 +331,13 @@ public class Main extends FragmentActivity {
         new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
-                feedFragment.loadPosts(posts, true);
-                Main.this.posts.clear();
-                Main.this.posts.addAll(posts);
-                pageNumber++;
+                if (e == null){
+                    feedFragment.loadPosts(posts, true);
+                    Main.this.posts.clear();
+                    Main.this.posts.addAll(posts);
+                    pageNumber++;
+                }
+
             }
         }, this);
         feedFragment.refreshFinished();

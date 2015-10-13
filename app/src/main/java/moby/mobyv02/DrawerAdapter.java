@@ -100,6 +100,10 @@ public class DrawerAdapter extends BaseAdapter {
                 break;
             case 4:
                 iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.people_icon));
+                break;
+            case 5:
+                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.nearby_events_icon));
+                break;
         }
         return view;
     }
