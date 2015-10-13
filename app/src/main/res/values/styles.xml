@@ -11,4 +11,24 @@
 
     </style>
 
+    <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
+        <item name="sv_backgroundColor">#663d43FF</item>
+        <item name="sv_showcaseColor">#25467A</item>
+        <item name="sv_titleTextAppearance">@style/CustomShowcaseTitle</item>
+        <item name="sv_detailTextAppearance">@style/CustomShowcaseDetail</item>
+
+    </style>
+
+    <style name="CustomShowcaseTitle" parent="TextAppearance.ShowcaseView.Title">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CustomShowcaseDetail" parent="TextAppearance.ShowcaseView.Title">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+
+
 </resources>

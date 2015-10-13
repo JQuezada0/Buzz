@@ -21,6 +21,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -67,6 +71,7 @@ public class Main extends FragmentActivity {
 
     private boolean map;
     private boolean feedIsLoading;
+    private ShowcaseView showcaseView;
 
         //////////////////////VIEWS///////////////////////
 
@@ -128,7 +133,9 @@ public class Main extends FragmentActivity {
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle); //Set the toggle to open the drawer upon clicking on it
 
-        feedToggle.setSelected(true); //Set the default view for the app to the feed view
+        feedToggle.setSelected(false); //Set the default view for the app to the feed view
+
+        viewPager.setCurrentItem(1);
 
         feedIsLoading = true; //Set to true to indicate that the feed is currently loading
 
@@ -137,6 +144,16 @@ public class Main extends FragmentActivity {
         setPostBarInfo();
 
         loadFeed(true);
+
+        Target target = new ViewTarget(R.id.moby_main_feed_toggle, this);
+
+        showcaseView = new ShowcaseView.Builder(this)
+                .setTarget(target)
+                .setContentTitle("Feed toggle")
+                .setContentText("Tap here to switch to your feed")
+                .hideOnTouchOutside()
+                .setStyle(R.style.CustomShowcaseTheme)
+                .build();
     }
 
     @Override
@@ -149,6 +166,7 @@ public class Main extends FragmentActivity {
         }
         postListOpen = false;
         createPostList.setVisibility(View.GONE);
+        showcaseView.show();
     }
 
     @Override

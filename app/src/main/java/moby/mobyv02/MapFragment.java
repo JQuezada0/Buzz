@@ -28,8 +28,6 @@ import com.androidmapsextensions.ClusterOptions;
 import com.androidmapsextensions.ClusterOptionsProvider;
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.MarkerOptions;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.androidmapsextensions.GoogleMap;
 import com.androidmapsextensions.OnMapReadyCallback;
@@ -472,15 +470,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     };
 
     private void showSuccessDialog(){
-        YoYo.with(Techniques.FlipInX)
-                .duration(250)
-                .playOn(successDialog);
+        successDialog.setVisibility(View.VISIBLE);
     }
 
     private void hideSuccessDialog(){
-        YoYo.with(Techniques.FlipOutX)
-                .duration(250)
-                .playOn(successDialog);
+        successDialog.setVisibility(View.GONE);
     }
 
     private class ClusterIconGenerator implements ClusterOptionsProvider {

@@ -21,7 +21,6 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.github.adnansm.timelytextview.TimelyView;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import java.io.File;
@@ -54,7 +53,6 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
     private ImageView continueButton;
     private CountDownTimer timer;
     private int currentCount = 10;
-    private TimelyView timelyView;
     private TextView count;
 
     @Override
@@ -69,7 +67,6 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
         videoFrame = (FrameLayout) findViewById(R.id.camera_frame);
         progress = (CircleProgressBar) findViewById(R.id.video_activity_progress);
         count = (TextView) findViewById(R.id.video_count);
-//        timelyView = (TimelyView) findViewById(R.id.countdown);
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
