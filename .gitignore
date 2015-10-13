@@ -4,3 +4,4 @@ parse-cloud
 .gradle
 .idea
 local.properties
+gradle
