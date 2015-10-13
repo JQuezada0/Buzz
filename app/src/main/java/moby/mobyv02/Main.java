@@ -64,6 +64,7 @@ public class Main extends FragmentActivity {
     private int currentToggle = WORLD_TOGGLED;
     public List<Post> posts = new ArrayList<Post>();
     public ArrayList<Event> events = new ArrayList<Event>();
+    private boolean firstTime = true;
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -133,9 +134,13 @@ public class Main extends FragmentActivity {
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle); //Set the toggle to open the drawer upon clicking on it
 
-        feedToggle.setSelected(false); //Set the default view for the app to the feed view
-
         viewPager.setCurrentItem(1);
+
+        map = true;
+        feedToggle.setSelected(false);
+        feedToggle.setTextColor(getResources().getColor(R.color.moby_blue));
+        mapToggle.setSelected(true);
+        mapToggle.setTextColor(getResources().getColor(android.R.color.white));
 
         feedIsLoading = true; //Set to true to indicate that the feed is currently loading
 
@@ -146,6 +151,12 @@ public class Main extends FragmentActivity {
         loadFeed(true);
 
         Target target = new ViewTarget(R.id.moby_main_feed_toggle, this);
+
+        firstTime = getSharedPreferences("user", 0).getBoolean("firstTime", false);
+
+        if (firstTime){
+            setShowcaseView();
+        }
 
         showcaseView = new ShowcaseView.Builder(this)
                 .setTarget(target)
@@ -167,6 +178,12 @@ public class Main extends FragmentActivity {
         postListOpen = false;
         createPostList.setVisibility(View.GONE);
         showcaseView.show();
+    }
+
+    private void showcaseViewStepOne(){
+
+        
+
     }
 
     @Override
