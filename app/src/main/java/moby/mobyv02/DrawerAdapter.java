@@ -29,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DrawerAdapter extends BaseAdapter {
 
     private Context c;
-    private String[] items = new String[]{ParseUser.getCurrentUser().getString("fullName"), "News Feed", "Map", "People"};
+    private String[] items = new String[]{ParseUser.getCurrentUser().getString("fullName"), "News Feed", "Map", "Discovery", "Friends"};
     private Main main;
 
     public DrawerAdapter(Context c, Main m){
@@ -59,6 +59,7 @@ public class DrawerAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = LayoutInflater.from(c).inflate(R.layout.drawer_item, null);
+
         TextView tv = (TextView) view.findViewById(R.id.drawer_item_text);
         ImageView iv = (ImageView) view.findViewById(R.id.drawer_item_image);
         final CircleImageView cv = (CircleImageView) view.findViewById(R.id.drawer_item_profile);
@@ -100,6 +101,10 @@ public class DrawerAdapter extends BaseAdapter {
                 break;
             case 4:
                 iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.people_icon));
+                break;
+            case 5:
+                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.nearby_events_icon));
+                break;
         }
         return view;
     }
@@ -160,6 +165,11 @@ public class DrawerAdapter extends BaseAdapter {
                     main.closeDrawer();
                     Intent peopleIntent = new Intent(DrawerAdapter.this.c, PeopleActivity.class);
                     DrawerAdapter.this.c.startActivity(peopleIntent);
+                    break;
+                case 4:
+                    main.closeDrawer();
+                    Intent friendIntent = new Intent(DrawerAdapter.this.c, FriendsActivity.class);
+                    DrawerAdapter.this.c.startActivity(friendIntent);
                     break;
             }
         }

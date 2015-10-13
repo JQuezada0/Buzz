@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/moby_light_gray">
+
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -16,33 +22,27 @@ android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         android:background="@color/moby_blue"
         android:id="@+id/toolbar">
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/buzz_app_icon_white_small"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Buzz"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:paddingLeft="10dp"/>
 
         </android.support.v7.widget.Toolbar>
 
-
-<android.support.design.widget.TabLayout
-    android:id="@+id/tabs"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/moby_light_blue" />
-
 </android.support.design.widget.AppBarLayout>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/user_list"></ListView>
 
-    <android.support.v4.view.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/view_pager"/>
+
+
+
 
 </LinearLayout>
+
+<com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+android:layout_width="70dp"
+android:layout_height="70dp"
+android:layout_gravity="center"
+android:visibility="gone"
+android:id="@+id/progress"/>
+
+</FrameLayout>

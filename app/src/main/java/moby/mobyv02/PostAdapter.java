@@ -21,8 +21,6 @@ import android.widget.VideoView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -56,7 +54,6 @@ public class PostAdapter extends BaseAdapter {
         this.context = context;
         this.activity = activity;
     }
-
 
     public void setFeed(List<Post> posts){
         this.posts.clear();

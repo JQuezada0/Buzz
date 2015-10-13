@@ -67,7 +67,7 @@ public class VideoActivity extends FragmentActivity implements SurfaceHolder.Cal
         videoFrame = (FrameLayout) findViewById(R.id.camera_frame);
         progress = (CircleProgressBar) findViewById(R.id.video_activity_progress);
         count = (TextView) findViewById(R.id.video_count);
-         surfaceHolder = surfaceView.getHolder();
+        surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         recordButton.setOnClickListener(recordClickListener);

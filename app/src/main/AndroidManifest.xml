@@ -128,8 +128,6 @@
 
         <activity android:name=".CreatePhotoPost"
             android:screenOrientation="portrait"/>
-        <activity android:name=".SelectProfilePictureActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name=".CropperActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".VideoActivity"/>
@@ -150,6 +148,20 @@
                 android:value=".Main" />
         </activity>
 
+        <activity android:name=".FriendsActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Main" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main" />
+
+            <data
+                android:scheme="Buzz"
+                android:host="friends"/>
+
+        </activity>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -167,7 +179,7 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
+        <receiver android:name=".ParsePushReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />

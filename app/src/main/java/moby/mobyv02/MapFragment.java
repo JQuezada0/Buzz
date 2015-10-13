@@ -28,8 +28,10 @@ import com.androidmapsextensions.ClusterOptions;
 import com.androidmapsextensions.ClusterOptionsProvider;
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.MarkerOptions;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.PointTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.androidmapsextensions.GoogleMap;
 import com.androidmapsextensions.OnMapReadyCallback;
@@ -146,6 +148,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 viewPager.setAdapter(postsAdapter);
                 feedFrame.setVisibility(View.VISIBLE);
                 updateMarker(marker);
+                if (main.getTutorial()){
+                    showCaseViewStepFour();
+                }
                 return false;
             }
         });
@@ -291,7 +296,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     marker.setData(data);
                 }
             }
-
         }
     }
 
@@ -308,6 +312,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         currentEvents.addAll(events);
         eventMode = true;
         updateMap();
+    }
+
+    public void showCaseViewStepThree(){
+        ShowcaseView showcaseView = main.getShowcaseView();
+        Display display = main.getWindowManager().getDefaultDisplay();
+        final Point size = new Point();
+        display.getSize(size);
+        Point p = map.getProjection().toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
+        p.y += main.getMainViewPager().getHeight() / 4;
+        Target target = new PointTarget(p);
+        showcaseView.setTarget(target);
+        showcaseView.setContentTitle("Map posts");
+        showcaseView.setContentText("Tap here to view posts from your map");
+    }
+
+    public void showCaseViewStepFour(){
+
+        ShowcaseView showcaseView = main.getShowcaseView();
+        Target target = new ViewTarget(feedFrame);
+        showcaseView.setTarget(target);
+        showcaseView.setContentTitle("Hide posts");
+        showcaseView.setContentText("Swipe down to hide the posts");
+        showcaseView.setShouldCentreText(true);
     }
 
     public void markerClusterClicked(BuzzItem post){
@@ -362,6 +389,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
             if (velocityY > 2000){
                 feedFrame.setVisibility(View.GONE);
+                if (main.getTutorial()){
+                    main.toggleFeed();
+                    main.showcaseViewStepFour();
+                }
             }
             return true;
         }
@@ -385,6 +416,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void animateNewMarker(final Post post){
         View v = inflater.inflate(R.layout.map_marker_icon, null);
+        if (inflater == null){
+            inflater = LayoutInflater.from(main);
+        }
         darkOverlay.setVisibility(View.VISIBLE);
         final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
         v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
@@ -469,15 +503,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     };
 
     private void showSuccessDialog(){
-        YoYo.with(Techniques.FlipInX)
-                .duration(250)
-                .playOn(successDialog);
+        successDialog.setVisibility(View.VISIBLE);
     }
 
     private void hideSuccessDialog(){
-        YoYo.with(Techniques.FlipOutX)
-                .duration(250)
-                .playOn(successDialog);
+        successDialog.setVisibility(View.GONE);
     }
 
     private class ClusterIconGenerator implements ClusterOptionsProvider {
