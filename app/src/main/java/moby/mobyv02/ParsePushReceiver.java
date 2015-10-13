@@ -53,42 +53,14 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver {
             if (uriString.equals("")) {
                 uriIntent = new Intent(mContext, Main.class);
             }
-            final Intent finalUriIntent = uriIntent;
-            System.out.println("Getting profile Image");
-            if (profileImage != null && !profileImage.equals("")){
-                imageLoader.get(profileImage, new ImageLoader.ImageListener() {
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                        if (response.getBitmap() != null){
-                            try {
-                                System.out.println("Show notification");
-                                showNotification(response.getBitmap(), mContext, data.getString("title"), data.getString("alert"), finalUriIntent);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        try {
-                            showNotification(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.person_icon_graybg), mContext, data.getString("title"), data.getString("alert"), finalUriIntent);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            } else {
-                showNotification(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.person_icon_graybg), mContext, data.getString("title"), data.getString("alert"), finalUriIntent);
-            }
-
+            showNotification(mContext, data.getString("title"), data.getString("alert"), uriIntent);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void showNotification(Bitmap bm, Context context, String title, String message, Intent intent){
+    private void showNotification(Context context, String title, String message, Intent intent){
 
         PendingIntent resultIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new NotificationCompat.Builder(context)

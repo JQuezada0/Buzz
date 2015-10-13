@@ -203,15 +203,12 @@ public class ProfileActivity extends AppCompatActivity {
         List<ParseQuery<Friend>> queries = new ArrayList<ParseQuery<Friend>>();
         ParseQuery<Friend> friendQuery = Friend.getQuery();
         friendQuery.whereEqualTo("to", user);
+        friendQuery.whereEqualTo("from", ParseUser.getCurrentUser());
         ParseQuery<Friend> friendQueryFrom = Friend.getQuery();
+        friendQueryFrom.whereEqualTo("from", user);
         friendQueryFrom.whereEqualTo("to", ParseUser.getCurrentUser());
-        ParseQuery<Friend> receivedFriendQuery = Friend.getQuery();
-        receivedFriendQuery.whereEqualTo("to", ParseUser.getCurrentUser());
-        receivedFriendQuery.whereEqualTo("accepted", false);
-        receivedFriendQuery.whereEqualTo("rejected", false);
         queries.add(friendQuery);
         queries.add(friendQueryFrom);
-        queries.add(receivedFriendQuery);
         ParseQuery<Friend> finalQuery = ParseQuery.or(queries);
         finalQuery.findInBackground(new FindCallback<Friend>() {
             @Override
@@ -233,6 +230,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setFriendStatus(Friend friend){
         this.friend = friend;
+        System.out.println(friend.getObjectId());
         if (!friend.getTo().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
 
             if (!friend.getAccepted() && !friend.getRejected()){
@@ -286,7 +284,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void unFriend(){
-
+        System.out.println("unfriending");
         followText.setText("Add Friend");
         followIcon.setImageResource(R.drawable.plus_icon);
         friendButton.setBackgroundColor(ContextCompat.getColor(this, R.color.moby_blue));
