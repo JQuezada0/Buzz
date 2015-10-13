@@ -57,7 +57,6 @@ public class PostAdapter extends BaseAdapter {
         this.activity = activity;
     }
 
-
     public void setFeed(List<Post> posts){
         this.posts.clear();
         this.posts.addAll(posts);

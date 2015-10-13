@@ -6,6 +6,8 @@ import android.provider.ContactsContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -19,8 +21,10 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
+import com.nhaarman.listviewanimations.appearance.simple.SwingLeftInAnimationAdapter;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -35,12 +39,13 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.parse.Follow;
+import moby.mobyv02.parse.Friend;
 import moby.mobyv02.parse.Post;
 
 /**
  * Created by quezadjo on 9/10/2015.
  */
-public class ProfileActivity extends FragmentActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     private ParseUser user;
     private CircleImageView profileImage;
@@ -61,17 +66,21 @@ public class ProfileActivity extends FragmentActivity {
     private CircleProgressBar progress;
     private LinearLayout profileFrame;
 
-    private TableRow followButton;
+    private TableRow friendButton;
 
-    private boolean followingUser = false;
+    private boolean friendStatus = false;
+    private boolean received = false;
 
     private Follow follow;
+    private Friend friend;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_layout);
         postAdapter = new PostAdapter(new ArrayList<Post>(), this, this);
+        SwingLeftInAnimationAdapter animationAdapter = new SwingLeftInAnimationAdapter(postAdapter);
         profileImage = (CircleImageView) findViewById(R.id.image);
         name = (TextView) findViewById(R.id.name);
         locale = (TextView) findViewById(R.id.locale);
@@ -84,15 +93,19 @@ public class ProfileActivity extends FragmentActivity {
         hearts = (TextView) findViewById(R.id.hearts);
         postMap = (TextView) findViewById(R.id.post_map);
         list = (ListView) findViewById(R.id.post_list);
-        followButton = (TableRow) findViewById(R.id.follow_button);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        friendButton = (TableRow) findViewById(R.id.follow_button);
         followIcon = (ImageView) findViewById(R.id.follow_icon);
         followText = (TextView) findViewById(R.id.follow_text);
         progress = (CircleProgressBar) findViewById(R.id.progress);
         profileFrame = (LinearLayout) findViewById(R.id.profile_layout);
         progress.setColorSchemeResources(R.color.moby_blue);
-        list.setAdapter(postAdapter);
-        followButton.setOnClickListener(followClickListener);
+        animationAdapter.setAbsListView(list);
+        list.setAdapter(animationAdapter);
+        friendButton.setOnClickListener(followClickListener);
         readBehaviour(getIntent().getExtras());
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -102,7 +115,7 @@ public class ProfileActivity extends FragmentActivity {
     }
 
     private void initialize(final CircleImageView profileImage){
-        setFollowStatus();
+        getFriendStatus();
         name.setText(user.getString("fullName"));
         aboutMe.setText(user.getString("aboutMe"));
         friends.setText(String.valueOf(user.getInt("friends")));
@@ -157,14 +170,19 @@ public class ProfileActivity extends FragmentActivity {
                 e.printStackTrace();
             }
         } else if (bundle.getString("user").equals("self")){
-            followButton.setVisibility(View.GONE);
+            friendButton.setVisibility(View.GONE);
             ProfileActivity.this.user = ParseUser.getCurrentUser();
             initialize(profileImage);
             loadPosts(postAdapter);
         } else {
-            System.out.println("Other user profile");
             String objectId = bundle.getString("user");
-            System.out.println(objectId);
+            if (objectId.equals(ParseUser.getCurrentUser().getObjectId())){
+                friendButton.setVisibility(View.GONE);
+                ProfileActivity.this.user = ParseUser.getCurrentUser();
+                initialize(profileImage);
+                loadPosts(postAdapter);
+                return;
+            }
             ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
             userQuery.getInBackground(objectId, new GetCallback<ParseUser>() {
                 @Override
@@ -184,50 +202,97 @@ public class ProfileActivity extends FragmentActivity {
 
     }
 
-    private void setFollowStatus(){
-
-        ParseQuery<Follow> userQuery = Follow.getQuery();
-        userQuery.fromLocalDatastore();
-        userQuery.whereEqualTo("fromUser", ParseUser.getCurrentUser());
-        userQuery.whereEqualTo("toUser", user);
-        userQuery.findInBackground(new FindCallback<Follow>() {
+    private void getFriendStatus(){
+        List<ParseQuery<Friend>> queries = new ArrayList<ParseQuery<Friend>>();
+        ParseQuery<Friend> friendQuery = Friend.getQuery();
+        friendQuery.whereEqualTo("to", user);
+        friendQuery.whereEqualTo("from", ParseUser.getCurrentUser());
+        ParseQuery<Friend> friendQueryFrom = Friend.getQuery();
+        friendQueryFrom.whereEqualTo("from", user);
+        friendQueryFrom.whereEqualTo("to", ParseUser.getCurrentUser());
+        queries.add(friendQuery);
+        queries.add(friendQueryFrom);
+        ParseQuery<Friend> finalQuery = ParseQuery.or(queries);
+        finalQuery.findInBackground(new FindCallback<Friend>() {
             @Override
-            public void done(List<Follow> list, ParseException e) {
-                if (e == null){
-                    if (list.size() > 0){
-                        setFollowing();
-                        follow = list.get(0);
-                    } else {
-                        followingUser = false;
+            public void done(List<Friend> list, ParseException e) {
+                System.out.println("Query finished");
+                if (e == null) {
+                    System.out.println("Size of results is " + list.size());
+                    if (list.size() > 0) {
+                        setFriendStatus(list.get(0));
                     }
                 } else {
-                    if (e != null){
-                        Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                        BuzzAnalytics.logError(ProfileActivity.this, e.getMessage());
-                    } else {
-                        Toast.makeText(ProfileActivity.this, "An error has occurred. Please try again later", Toast.LENGTH_LONG).show();
-                        BuzzAnalytics.logError(ProfileActivity.this, "Unknown error has occurred during profile load");
-                    }
-
+                    e.printStackTrace();
                 }
             }
         });
 
+
     }
 
-    private void setFollowing(){
-        followingUser = true;
-        followText.setText("Unfollow");
+    private void setFriendStatus(Friend friend){
+        this.friend = friend;
+        System.out.println(friend.getObjectId());
+        if (!friend.getTo().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+
+            if (!friend.getAccepted() && !friend.getRejected()){
+
+                followText.setText("request sent");
+                followIcon.setImageResource(R.drawable.minus_icon);
+                friendButton.setBackgroundColor(ContextCompat.getColor(this, R.color.moby_light_blue));
+                friendStatus = true;
+
+            } else if (!friend.getAccepted() && friend.getRejected()){
+
+                followText.setText("Add friend");
+                followIcon.setImageResource(R.drawable.plus_icon);
+                friendStatus = false;
+
+            } else if (friend.getAccepted() && !friend.getRejected()){
+
+                followText.setText("Unfriend");
+                followIcon.setImageResource(R.drawable.minus_icon);
+                friendButton.setBackgroundColor(ContextCompat.getColor(this, R.color.moby_light_blue));
+                friendStatus = true;
+            }
+
+        } else if (friend.getTo().getObjectId().equals(ParseUser.getCurrentUser().getObjectId()) && !friend.getAccepted()) {
+            received = true;
+            followText.setText("Accept friend request");
+            followIcon.setImageResource(R.drawable.plus_icon);
+            friendButton.setBackgroundColor(ContextCompat.getColor(this, R.color.moby_light_blue));
+        } else {
+            followText.setText("Unfriend");
+            followIcon.setImageResource(R.drawable.minus_icon);
+            friendButton.setBackgroundColor(ContextCompat.getColor(this, R.color.moby_light_blue));
+            friendStatus = true;
+        }
+
+    }
+
+    private void addFriend(){
+        Friend friend = new Friend();
+        friend.setTo(user);
+        friend.setFrom(ParseUser.getCurrentUser());
+        friend.setAccepted(false);
+        friend.setCancelled(false);
+        friend.setRejected(false);
+        friend.saveInBackground();
+        this.friend = friend;
+        followText.setText("Request Sent");
         followIcon.setImageResource(R.drawable.minus_icon);
-        followButton.setBackgroundColor(ContextCompat.getColor(this, R.color.moby_light_blue));
-
+        friendButton.setBackgroundColor(ContextCompat.getColor(this, R.color.moby_light_blue));
+        friendStatus = true;
     }
 
-    private void setNotFollowing(){
-        followingUser = false;
-        followText.setText("Follow");
+    private void unFriend(){
+        System.out.println("unfriending");
+        followText.setText("Add Friend");
         followIcon.setImageResource(R.drawable.plus_icon);
-        followButton.setBackgroundColor(ContextCompat.getColor(this, R.color.moby_blue));
+        friendButton.setBackgroundColor(ContextCompat.getColor(this, R.color.moby_blue));
+        friend.deleteInBackground();
+        friendStatus = false;
     }
 
     private void loadPosts(final PostAdapter postAdapter){
@@ -243,8 +308,6 @@ public class ProfileActivity extends FragmentActivity {
                     Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
                     postAdapter.setFeed(list);
- //                   user.put("posts", list.size());
- //                   user.saveEventually();
                     progress.setVisibility(View.GONE);
                     profileFrame.setVisibility(View.VISIBLE);
                 }
@@ -257,41 +320,28 @@ public class ProfileActivity extends FragmentActivity {
     private final View.OnClickListener followClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (followingUser){
-                unFollow();
+            if (!received){
+
+                if (friendStatus){
+                    unFriend();
+                } else {
+                    addFriend();
+                }
+
             } else {
-                follow();
+
+                received = false;
+                friend.setAccepted(true);
+                friend.saveInBackground();
+                followText.setText("Unfriend");
+                followIcon.setImageResource(R.drawable.minus_icon);
+                friendButton.setBackgroundColor(ContextCompat.getColor(ProfileActivity.this, R.color.moby_light_blue));
+                friendStatus = true;
+
             }
+
 
         }
     };
-
-    private void follow(){
-        followers.setText(String.valueOf(Integer.parseInt(followers.getText().toString()) + 1));
-        Follow follow = new Follow();
-        follow.setTo(user);
-        follow.setFrom(ParseUser.getCurrentUser());
-        new ParseOperation("Network").createFollow(user, follow, new ParseOperation.CreateFollowCallback() {
-            @Override
-            public void finished(boolean success, Follow follow, ParseException e) {
-                ProfileActivity.this.follow = follow;
-            }
-        }, this);
-        this.follow = follow;
-        setFollowing();
-    }
-
-    private void unFollow(){
-        followers.setText(String.valueOf(Integer.parseInt(followers.getText().toString()) - 1));
-        new ParseOperation("Network").deleteFollow(user, follow, new ParseOperation.CreateFollowCallback() {
-
-
-            @Override
-            public void finished(boolean success, Follow follow, ParseException e) {
-
-            }
-        }, this);
-        setNotFollowing();
-    }
 
 }

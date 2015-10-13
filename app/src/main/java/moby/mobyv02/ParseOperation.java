@@ -39,6 +39,7 @@ import java.util.List;
 
 import moby.mobyv02.parse.Comment;
 import moby.mobyv02.parse.Event;
+import moby.mobyv02.parse.Friend;
 import moby.mobyv02.parse.Heart;
 import moby.mobyv02.parse.Follow;
 import moby.mobyv02.parse.Post;
@@ -63,6 +64,9 @@ public class ParseOperation {
     public static GetUsersCallback discoveryCallback;
     public static GetUsersCallback followerCallback;
     public static GetUsersCallback followingCallback;
+    public static GetFriendsCallback getFriendsCallback;
+    public static GetFriendsCallback getPendingFriendsCallback;
+    public static GetFriendsCallback getReceivedFriendsCallback;
     public static Activity context;
     public static String username;
     public static String password;
@@ -101,6 +105,10 @@ public class ParseOperation {
 
     public interface CreateFollowCallback {
         void finished(boolean success, Follow follow, ParseException e);
+    }
+
+    public interface GetFriendsCallback {
+        void finished(boolean success, List<Friend> friends, ParseException e);
     }
 
     public  void saveParseObject(ParseObject parseObject, ParseOperationCallback callback, Activity activity){
@@ -275,6 +283,24 @@ public class ParseOperation {
         context = activity;
         discoveryCallback = callback;
         startService("getDiscovery");
+    }
+
+    public static void getFriends(GetFriendsCallback callback, Activity activity){
+        context = activity;
+        getFriendsCallback = callback;
+        startService("getFriends");
+    }
+
+    public static void getPendingFriends(GetFriendsCallback callback ,Activity activity){
+        context = activity;
+        getPendingFriendsCallback = callback;
+        startService("getPendingFriends");
+    }
+
+    public static void getReceivedFriends(GetFriendsCallback callback, Activity activity){
+        context = activity;
+        getReceivedFriendsCallback = callback;
+        startService("getReceivedFriends");
     }
 
     private static void startService(String type){

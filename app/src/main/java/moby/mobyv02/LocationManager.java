@@ -151,17 +151,18 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
 
     @Override
     public void onConnected(Bundle bundle) {
-        while(!googleApiClient.isConnected()){
+       /* while(!googleApiClient.isConnected()){
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
         locationRequest.setInterval(100);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,  this);
+        System.out.println("Waiting for location");
     }
 
     @Override

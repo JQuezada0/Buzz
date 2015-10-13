@@ -44,6 +44,6 @@ public class Dispatch_Activity extends FragmentActivity implements LocationRecei
 
     @Override
     public void locationReceived(ParseGeoPoint location) {
-        //Only used when updating location.
+
     }
 }

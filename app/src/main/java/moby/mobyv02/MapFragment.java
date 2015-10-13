@@ -385,6 +385,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void animateNewMarker(final Post post){
         View v = inflater.inflate(R.layout.map_marker_icon, null);
+        if (inflater == null){
+            inflater = LayoutInflater.from(main);
+        }
         darkOverlay.setVisibility(View.VISIBLE);
         final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
         v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
