@@ -59,6 +59,7 @@ public class DrawerAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = LayoutInflater.from(c).inflate(R.layout.drawer_item, null);
+
         TextView tv = (TextView) view.findViewById(R.id.drawer_item_text);
         ImageView iv = (ImageView) view.findViewById(R.id.drawer_item_image);
         final CircleImageView cv = (CircleImageView) view.findViewById(R.id.drawer_item_profile);

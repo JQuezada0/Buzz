@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,6 +22,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -60,6 +65,8 @@ public class Main extends FragmentActivity {
     private int currentToggle = WORLD_TOGGLED;
     public List<Post> posts = new ArrayList<Post>();
     public ArrayList<Event> events = new ArrayList<Event>();
+    private boolean firstTime = true;
+    private boolean tutorial = false;
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -67,6 +74,7 @@ public class Main extends FragmentActivity {
 
     private boolean map;
     private boolean feedIsLoading;
+    private ShowcaseView showcaseView;
 
         //////////////////////VIEWS///////////////////////
 
@@ -128,7 +136,13 @@ public class Main extends FragmentActivity {
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle); //Set the toggle to open the drawer upon clicking on it
 
-        feedToggle.setSelected(true); //Set the default view for the app to the feed view
+        viewPager.setCurrentItem(1);
+
+        map = true;
+        feedToggle.setSelected(false);
+        feedToggle.setTextColor(getResources().getColor(R.color.moby_blue));
+        mapToggle.setSelected(true);
+        mapToggle.setTextColor(getResources().getColor(android.R.color.white));
 
         feedIsLoading = true; //Set to true to indicate that the feed is currently loading
 
@@ -137,6 +151,9 @@ public class Main extends FragmentActivity {
         setPostBarInfo();
 
         loadFeed(true);
+
+        firstTime = getSharedPreferences("user", 0).getBoolean("firstTime", true);
+
     }
 
     @Override
@@ -151,6 +168,47 @@ public class Main extends FragmentActivity {
         createPostList.setVisibility(View.GONE);
     }
 
+    private void showcaseViewStepOne(){
+
+        Target target = new ViewTarget(R.id.moby_main_feed_toggle, this);
+        tutorial = true;
+        firstTime = false;
+        getSharedPreferences("user", 0).edit().putBoolean("firstTime", firstTime).apply();
+        showcaseView = new ShowcaseView.Builder(this)
+                .setTarget(target)
+                .setContentTitle("Feed toggle")
+                .setContentText("Tap here to switch to your feed")
+                .setStyle(R.style.CustomShowcaseTheme)
+                .build();
+        showcaseView.show();
+        showcaseView.hideButton();
+    }
+
+    private void showcaseViewStepTwo(){
+        Target target = new ViewTarget(R.id.moby_main_map_toggle, this);
+        showcaseView.setTarget(target);
+        showcaseView.setContentTitle("Map Toggle");
+        showcaseView.setContentText("Tap here to switch back to your map");
+
+    }
+
+    public void showcaseViewStepFour(){
+
+
+        drawerLayout.openDrawer(Gravity.LEFT);
+        showcaseView.setTarget(new ViewTarget(drawerList.getChildAt(3)));
+        showcaseView.setContentTitle("Find new friends");
+        showcaseView.setContentText("Go into the discovery section to find new friends. ");
+    }
+
+    public ShowcaseView getShowcaseView(){
+        return showcaseView;
+    }
+
+    public boolean getTutorial(){
+        return tutorial;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -160,6 +218,10 @@ public class Main extends FragmentActivity {
 
         }
 
+    }
+
+    public ViewPager getMainViewPager(){
+        return viewPager;
     }
 
     private void setPostBarInfo(){
@@ -186,7 +248,6 @@ public class Main extends FragmentActivity {
     }
 
     public void loadFeed(final boolean reset){
-        System.out.println("loadFeed");
         progressBar.setVisibility(View.VISIBLE);
         new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
@@ -196,6 +257,10 @@ public class Main extends FragmentActivity {
                     Main.this.posts.addAll(posts);
                     progressBar.setVisibility(View.GONE);
                     pageNumber++;
+                    mapFragment.setFeed(Main.this.posts);
+                    if (firstTime){
+                        showcaseViewStepOne();
+                    }
                 } else {
                     if (e != null) {
                         Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -288,6 +353,9 @@ public class Main extends FragmentActivity {
             loadFeed(true);
         }
         eventMode = false;
+        if (tutorial){
+            showcaseViewStepTwo();
+        }
     }
 
       public void toggleMap(){
@@ -301,9 +369,10 @@ public class Main extends FragmentActivity {
           if (!eventMode){
               System.out.println(posts.size());
               mapFragment.setFeed(posts);
-          } else {
-
           }
+        if (tutorial){
+            mapFragment.showCaseViewStepThree();
+        }
     }
 
     private void displayPostOnMap(String objectId){

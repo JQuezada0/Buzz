@@ -862,8 +862,11 @@ public class Network extends IntentService {
                 public int compare(ParseUser lhs, ParseUser rhs) {
                     ParseGeoPoint userALocation = lhs.getParseGeoPoint("location");
                     ParseGeoPoint userBLocation = rhs.getParseGeoPoint("location");
-                    if (userALocation == null || userBLocation == null){
-                        return 0;
+                    if (userALocation == null){
+                        return 1;
+                    }
+                    if (userBLocation == null){
+                        return -1;
                     }
                     if (userALocation == null && userBLocation == null){
                         return 0;
