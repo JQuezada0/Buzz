@@ -31,6 +31,7 @@ import com.androidmapsextensions.MarkerOptions;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.PointTarget;
 import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.androidmapsextensions.GoogleMap;
 import com.androidmapsextensions.OnMapReadyCallback;
@@ -147,6 +148,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 viewPager.setAdapter(postsAdapter);
                 feedFrame.setVisibility(View.VISIBLE);
                 updateMarker(marker);
+                if (main.getTutorial()){
+                    showCaseViewStepFour();
+                }
                 return false;
             }
         });
@@ -323,6 +327,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         showcaseView.setContentText("Tap here to view posts from your map");
     }
 
+    public void showCaseViewStepFour(){
+
+        ShowcaseView showcaseView = main.getShowcaseView();
+        Target target = new ViewTarget(feedFrame);
+        showcaseView.setTarget(target);
+        showcaseView.setContentTitle("Hide posts");
+        showcaseView.setContentText("Swipe down to hide the posts");
+        showcaseView.setShouldCentreText(true);
+    }
+
     public void markerClusterClicked(BuzzItem post){
         if (mapTree != null){
             mapTree.resetAllNodes();
@@ -375,6 +389,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
             if (velocityY > 2000){
                 feedFrame.setVisibility(View.GONE);
+                if (main.getTutorial()){
+                    main.getShowcaseView().hide();
+                }
             }
             return true;
         }

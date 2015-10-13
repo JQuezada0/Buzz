@@ -151,7 +151,7 @@ public class Main extends FragmentActivity {
 
         loadFeed(true);
 
-//        firstTime = getSharedPreferences("user", 0).getBoolean("firstTime", true);
+        firstTime = getSharedPreferences("user", 0).getBoolean("firstTime", true);
 
     }
 
