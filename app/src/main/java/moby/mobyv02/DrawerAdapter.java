@@ -103,7 +103,7 @@ public class DrawerAdapter extends BaseAdapter {
                 iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.people_icon));
                 break;
             case 5:
-                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.nearby_events_icon));
+                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.chat_icon));
                 break;
         }
         return view;
@@ -170,6 +170,9 @@ public class DrawerAdapter extends BaseAdapter {
                     main.closeDrawer();
                     Intent friendIntent = new Intent(DrawerAdapter.this.c, FriendsActivity.class);
                     DrawerAdapter.this.c.startActivity(friendIntent);
+                    break;
+                case 5:
+                    main.closeDrawer();
                     break;
             }
         }
