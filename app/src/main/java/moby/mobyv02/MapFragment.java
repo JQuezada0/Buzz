@@ -299,8 +299,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void setFeed(List<Post> posts){
-        System.out.println(posts.size());
+    public void setFeed(List<BuzzItem> posts){
         currentPosts.clear();
         currentPosts.addAll(posts);
         eventMode = false;
@@ -390,7 +389,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (velocityY > 2000){
                 feedFrame.setVisibility(View.GONE);
                 if (main.getTutorial()){
-                    main.toggleFeed();
+                //   main.toggleFeed();
                     main.showcaseViewStepFour();
                 }
             }
@@ -498,7 +497,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         public void onClick(View view) {
             hideSuccessDialog();
             returnMapToNormal();
-            setFeed(main.posts);
+            setFeed(new ArrayList<BuzzItem>(main.posts));
         }
     };
 

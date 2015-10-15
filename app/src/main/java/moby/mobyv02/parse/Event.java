@@ -5,7 +5,9 @@ import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
 import moby.mobyv02.BuzzItem;
@@ -80,6 +82,16 @@ public class Event extends BuzzItem {
     }
 
     @Override
+    public ParseUser getUser() {
+        return null;
+    }
+
+    @Override
+    public String getType() {
+        return null;
+    }
+
+    @Override
     public double getLatitude(){
         return getLocation().getLatitude();
     }
@@ -110,6 +122,11 @@ public class Event extends BuzzItem {
             timeElapsed = String.valueOf(time) + "m";
         }
         return timeElapsed;
+    }
+
+    @Override
+    public String getVideo() {
+        return null;
     }
 
     public String getImage(){
@@ -148,5 +165,11 @@ public class Event extends BuzzItem {
                         Math.cos(fromLat) * Math.cos(toLat) *
                                 Math.pow(Math.sin(deltaLon/2), 2) ) );
         return radius * angle;
+    }
+
+    public String getFormattedDistance(ParseGeoPoint currentLocation){
+        double distance = currentLocation.distanceInKilometersTo(getLocation());
+        DecimalFormat f = new DecimalFormat("##.00");
+        return f.format(distance) + " km";
     }
 }

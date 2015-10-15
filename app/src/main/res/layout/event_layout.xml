@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_button"
+        android:background="@android:color/white"
+        android:padding="10dp"
+        android:clickable="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:orientation="vertical">
+
+            <TableRow
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:maxWidth="200dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Stephen Curry"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/event_name"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="match_parent">
+
+                <ImageView
+                    android:layout_height="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/location_icon"/>
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:text="Oracle Arena"
+                    android:ellipsize="end"
+                    android:id="@+id/event_locale"
+                    android:textColor="@color/moby_blue"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:text="4184 km away"
+                    android:id="@+id/event_distance"
+                    android:textColor="@color/moby_gray"/>
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:text="7 min"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right|bottom"
+                    android:id="@+id/event_time"
+                    android:textColor="@color/moby_gray"/>
+
+            </TableRow>
+
+
+        </LinearLayout>
+
+    </TableRow>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/moby_gray"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/post_photo_layout_frame"
+        android:background="#000000">
+
+        <moby.mobyv02.layout.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitXY"
+            android:background="@android:color/white"
+            android:id="@+id/event_image"/>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:maxHeight="200dp"
+            android:orientation="vertical"
+            android:background="@drawable/post_text_overlay_bg"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/white"
+                android:text="This is a test text overlay. "
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:id="@+id/event_text"/>
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</LinearLayout>

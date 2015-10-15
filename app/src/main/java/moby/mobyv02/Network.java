@@ -729,6 +729,7 @@ public class Network extends IntentService {
                 ParseGeoPoint location = new ParseGeoPoint();
                 location.setLatitude(venue.getJSONObject("address").getDouble("latitude"));
                 location.setLongitude(venue.getJSONObject("address").getDouble("longitude"));
+                event.setLocation(location);
                 eventsList.add(event);
             }
 

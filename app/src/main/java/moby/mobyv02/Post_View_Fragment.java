@@ -26,11 +26,14 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.w3c.dom.Text;
+
 import java.text.DecimalFormat;
 import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.layout.SquareVideoView;
+import moby.mobyv02.parse.Event;
 import moby.mobyv02.parse.Post;
 import moby.mobyv02.parse.Upvote;
 
@@ -40,7 +43,7 @@ import moby.mobyv02.parse.Upvote;
 public class Post_View_Fragment extends Fragment {
 
     private ParseUser user;
-    public Post post;
+    public BuzzItem item;
     public Callable<Void> updatePost;
     private CircleImageView profilePicture;
     private TextView username;
@@ -60,58 +63,74 @@ public class Post_View_Fragment extends Fragment {
         View v = null;
         main = getActivity();
         app = (Application) main.getApplication();
-        user = post.getUser();
-        if (post.getType().equals("status")){
+        if (item.getType() != null){
+            user = item.getUser();
+            if (item.getType().equals("status")){
 
-            v = inflater.inflate(R.layout.post_status_layout, null);
-            profilePicture = (CircleImageView) v.findViewById(R.id.post_profile_image);
-            username = (TextView) v.findViewById(R.id.post_name);
-            locale = (TextView) v.findViewById(R.id.post_locale);
-            distance = (TextView) v.findViewById(R.id.post_distance);
-            timeStamp = (TextView) v.findViewById(R.id.post_time);
-            profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
-            profileButton.setOnClickListener(profileButtonClickListener);
-            profilePicture.setOnClickListener(profileButtonClickListener);
-            TextView text = (TextView) v.findViewById(R.id.post_status_layout_text);
-            text.setText(post.getText());
+                v = inflater.inflate(R.layout.post_status_layout, null);
+                profilePicture = (CircleImageView) v.findViewById(R.id.post_profile_image);
+                username = (TextView) v.findViewById(R.id.post_name);
+                locale = (TextView) v.findViewById(R.id.post_locale);
+                distance = (TextView) v.findViewById(R.id.post_distance);
+                timeStamp = (TextView) v.findViewById(R.id.post_time);
+                profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
+                profileButton.setOnClickListener(profileButtonClickListener);
+                profilePicture.setOnClickListener(profileButtonClickListener);
+                TextView text = (TextView) v.findViewById(R.id.post_status_layout_text);
+                text.setText(item.getText());
 
-        } else if (post.getType().equals("photo")){
+            } else if (item.getType().equals("photo")){
 
-            v = inflater.inflate(R.layout.post_photo_layout, null);
-            TextView text = (TextView) v.findViewById(R.id.post_photo_layout_text);
-            final NetworkImageView image = (NetworkImageView) v.findViewById(R.id.post_photo_layout_image);
-            image.setImageUrl(post.getImage(), Application.imageLoader);
-            text.setText(post.getText());
+                v = inflater.inflate(R.layout.post_photo_layout, null);
+                TextView text = (TextView) v.findViewById(R.id.post_photo_layout_text);
+                final NetworkImageView image = (NetworkImageView) v.findViewById(R.id.post_photo_layout_image);
+                image.setImageUrl(item.getImage(), Application.imageLoader);
+                text.setText(item.getText());
 
-            profilePicture = (CircleImageView) v.findViewById(R.id.post_profile_image);
-            username = (TextView) v.findViewById(R.id.post_name);
-            locale = (TextView) v.findViewById(R.id.post_locale);
-            distance = (TextView) v.findViewById(R.id.post_distance);
-            timeStamp = (TextView) v.findViewById(R.id.post_time);
-            profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
-            profileButton.setOnClickListener(profileButtonClickListener);
-            profilePicture.setOnClickListener(profileButtonClickListener);
-            frame = (FrameLayout) v.findViewById(R.id.post_photo_layout_frame);
-        } else if (post.getType().equals("video")){
+                profilePicture = (CircleImageView) v.findViewById(R.id.post_profile_image);
+                username = (TextView) v.findViewById(R.id.post_name);
+                locale = (TextView) v.findViewById(R.id.post_locale);
+                distance = (TextView) v.findViewById(R.id.post_distance);
+                timeStamp = (TextView) v.findViewById(R.id.post_time);
+                profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
+                profileButton.setOnClickListener(profileButtonClickListener);
+                profilePicture.setOnClickListener(profileButtonClickListener);
+                frame = (FrameLayout) v.findViewById(R.id.post_photo_layout_frame);
+            } else if (item.getType().equals("video")){
 
-            v = inflater.inflate(R.layout.post_video_layout, null);
-            TextView text = (TextView) v.findViewById(R.id.post_photo_layout_text);
-            video = (SquareVideoView) v.findViewById(R.id.post_video_layout_video);
-            text.setText(post.getText());
-            mediaController = new MediaController(main);
-            mediaController.setAnchorView(video);
-            video.setMediaController(mediaController);
-            video.setVideoURI(Uri.parse(post.getVideo()));
-            profilePicture = (CircleImageView) v.findViewById(R.id.post_profile_image);
-            username = (TextView) v.findViewById(R.id.post_name);
-            locale = (TextView) v.findViewById(R.id.post_locale);
-            distance = (TextView) v.findViewById(R.id.post_distance);
-            timeStamp = (TextView) v.findViewById(R.id.post_time);
-            profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
-            profileButton.setOnClickListener(profileButtonClickListener);
-            profilePicture.setOnClickListener(profileButtonClickListener);
+                v = inflater.inflate(R.layout.post_video_layout, null);
+                TextView text = (TextView) v.findViewById(R.id.post_photo_layout_text);
+                video = (SquareVideoView) v.findViewById(R.id.post_video_layout_video);
+                text.setText(item.getText());
+                mediaController = new MediaController(main);
+                mediaController.setAnchorView(video);
+                video.setMediaController(mediaController);
+                video.setVideoURI(Uri.parse(item.getVideo()));
+                profilePicture = (CircleImageView) v.findViewById(R.id.post_profile_image);
+                username = (TextView) v.findViewById(R.id.post_name);
+                locale = (TextView) v.findViewById(R.id.post_locale);
+                distance = (TextView) v.findViewById(R.id.post_distance);
+                timeStamp = (TextView) v.findViewById(R.id.post_time);
+                profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
+                profileButton.setOnClickListener(profileButtonClickListener);
+                profilePicture.setOnClickListener(profileButtonClickListener);
+            }
+            setUserInfo();
+        } else {
+            v = inflater.inflate(R.layout.event_layout, null);
+            username = (TextView) v.findViewById(R.id.event_name);
+            locale = (TextView) v.findViewById(R.id.event_locale);
+            distance = (TextView) v.findViewById(R.id.event_distance);
+            timeStamp = (TextView) v.findViewById(R.id.event_time);
+            final NetworkImageView image = (NetworkImageView) v.findViewById(R.id.event_image);
+            final TextView text = (TextView) v.findViewById(R.id.event_text);
+            username.setText(item.getName());
+            locale.setText(item.getLocale());
+            distance.setText(item.getFormattedDistance(LocationManager.getLocation()));
+            timeStamp.setText(item.getFormattedTime());
+            image.setImageUrl(item.getImage(), Application.imageLoader);
+            text.setText(item.getText());
         }
-        setUserInfo();
         return v;
     }
 
@@ -153,8 +172,8 @@ public class Post_View_Fragment extends Fragment {
             });
         }
         username.setText(user.getString("fullName"));
-        locale.setText(post.getLocale());
-        double distanceAwayKm = post.getLocation().distanceInKilometersTo(new ParseGeoPoint(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
+        locale.setText(item.getLocale());
+        double distanceAwayKm = item.getLocation().distanceInKilometersTo(new ParseGeoPoint(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
         DecimalFormat f = new DecimalFormat("##.00");
         String distanceAway = String.valueOf(f.format(distanceAwayKm)) + " km";
         distance.setText(distanceAway);

@@ -94,7 +94,7 @@ public class DrawerAdapter extends BaseAdapter {
                 iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.moby_feed_icon));
                 break;
             case 2:
-                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.moby_map_icon));
+                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.nearby_events_icon));
                 break;
             case 3:
                 iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.moby_people_icon));
@@ -149,11 +149,11 @@ public class DrawerAdapter extends BaseAdapter {
 
                 case 1:
                     main.closeDrawer();
-                    main.toggleFeed();
+                    main.togglePeople();
                     break;
                 case 2:
                     main.closeDrawer();
-                    main.toggleMap();
+                    main.toggleEvents();
                     break;
                 case 0:
                     main.closeDrawer();

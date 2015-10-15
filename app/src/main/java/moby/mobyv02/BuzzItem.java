@@ -5,6 +5,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.parse.Parse;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 /**
  * Created by Johnil on 10/6/2015.
@@ -34,6 +35,18 @@ public abstract class BuzzItem extends ParseObject implements ClusterItem, Compa
     public abstract double getLatitude();
 
     public abstract double getLongitude();
+
+    public abstract ParseUser getUser();
+
+    public abstract String getType();
+
+    public abstract String getImage();
+
+    public abstract String getFormattedDistance(ParseGeoPoint location);
+
+    public abstract String getFormattedTime(long time);
+
+    public abstract String getVideo();
 
     public void setMarker(Marker marker){
         this.marker = marker;

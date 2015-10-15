@@ -68,7 +68,7 @@ public class PostsAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(final int position) {
         Post_View_Fragment f = new Post_View_Fragment();
         currentPostView = f;
-        f.post = (Post) posts.get(position);
+        f.item = posts.get(position);
         final Callable<Void> updatePost = new Callable<Void>() {
             @Override
             public Void call() throws Exception {

@@ -68,7 +68,7 @@
                         android:gravity="center"
                         android:id="@+id/moby_main_feed_toggle"
                         android:textSize="15sp"
-                        android:text="Feed"/>
+                        android:text="People"/>
 
                     <Button
                         android:layout_width="75dp"
@@ -79,7 +79,7 @@
                         android:id="@+id/moby_main_map_toggle"
                         android:background="@drawable/map_toggle"
                         android:textSize="15sp"
-                        android:text="Map"/>
+                        android:text="Events"/>
 
                 </LinearLayout>
 

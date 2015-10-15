@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.leanplum.activities.LeanplumFragmentActivity;
 import com.nineoldandroids.animation.Animator;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
@@ -65,7 +66,7 @@ public class Main extends FragmentActivity {
     private int currentToggle = WORLD_TOGGLED;
     public List<Post> posts = new ArrayList<Post>();
     public ArrayList<Event> events = new ArrayList<Event>();
-    private boolean firstTime = true;
+    private boolean firstTime = false;
     private boolean tutorial = false;
     ///////////////////////////////////////////////////////////////////////////
 
@@ -83,8 +84,8 @@ public class Main extends FragmentActivity {
         private Button followerToggleButton;
         private DrawerLayout drawerLayout;
         private ListView drawerList;
-        private Button feedToggle;
-        private Button mapToggle;
+        private Button peopleToggle;
+        private Button eventsToggle;
         private TableRow createPostBar;
         private ListView createPostList;
         private Toolbar toolbar;
@@ -139,10 +140,10 @@ public class Main extends FragmentActivity {
         viewPager.setCurrentItem(1);
 
         map = true;
-        feedToggle.setSelected(false);
-        feedToggle.setTextColor(getResources().getColor(R.color.moby_blue));
-        mapToggle.setSelected(true);
-        mapToggle.setTextColor(getResources().getColor(android.R.color.white));
+        eventsToggle.setSelected(false);
+        eventsToggle.setTextColor(getResources().getColor(R.color.moby_blue));
+        peopleToggle.setSelected(true);
+        peopleToggle.setTextColor(getResources().getColor(android.R.color.white));
 
         feedIsLoading = true; //Set to true to indicate that the feed is currently loading
 
@@ -152,7 +153,7 @@ public class Main extends FragmentActivity {
 
         loadFeed(true);
 
-        firstTime = getSharedPreferences("user", 0).getBoolean("firstTime", true);
+ //       firstTime = getSharedPreferences("user", 0).getBoolean("firstTime", true);
 
     }
 
@@ -253,12 +254,11 @@ public class Main extends FragmentActivity {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
                 if (e == null && posts != null) {
-                    feedFragment.loadPosts(posts, reset);
                     Main.this.posts.addAll(posts);
                     progressBar.setVisibility(View.GONE);
                     pageNumber++;
-                    mapFragment.setFeed(Main.this.posts);
-                    if (firstTime){
+                    mapFragment.setFeed(new ArrayList<BuzzItem>(Main.this.posts));
+                    if (firstTime) {
                         showcaseViewStepOne();
                     }
                 } else {
@@ -276,14 +276,26 @@ public class Main extends FragmentActivity {
     }
 
     public void loadEventsFeed(final boolean reset){
-
+        progressBar.setVisibility(View.VISIBLE);
         new ParseOperation("Network").getEventsFeed(0, new ParseOperation.LoadEventsCallback() {
             @Override
             public void finished(boolean success, ArrayList<Event> events, ParseException e) {
-                progressBar.setVisibility(View.GONE);
-                feedFragment.loadEvents(events, reset);
-                Main.this.events.addAll(events);
-                pageNumber++;
+                if (e == null && events != null){
+                    progressBar.setVisibility(View.GONE);
+                    Main.this.events.addAll(events);
+                    mapFragment.setFeed(new ArrayList<BuzzItem>(Main.this.events));
+                    pageNumber++;
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                    if (e != null) {
+                        Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        BuzzAnalytics.logError(Main.this, e.getMessage());
+                    } else {
+                        Toast.makeText(Main.this, "An error has occured. Please try again later.", Toast.LENGTH_LONG).show();
+                        BuzzAnalytics.logError(Main.this, "Unknown error loading feed");
+                    }
+                }
+
             }
         }, this);
 
@@ -293,8 +305,8 @@ public class Main extends FragmentActivity {
 
         ///////////////////BUTTONS/////////////////////////////////////////
 
-        feedToggle = (Button) findViewById(R.id.moby_main_feed_toggle);
-        mapToggle = (Button) findViewById(R.id.moby_main_map_toggle);
+        peopleToggle = (Button) findViewById(R.id.moby_main_feed_toggle);
+        eventsToggle = (Button) findViewById(R.id.moby_main_map_toggle);
         followerToggleButton = (Button) findViewById(R.id.follower_toggle_button);
 
         ////////////////////////////////////////////////////////////////////
@@ -334,42 +346,32 @@ public class Main extends FragmentActivity {
 
     private void setClickListeners() {
 
-        feedToggle.setOnClickListener(feedToggleClickListener);
-        mapToggle.setOnClickListener(mapToggleClickListener);
+        peopleToggle.setOnClickListener(feedToggleClickListener);
+        eventsToggle.setOnClickListener(mapToggleClickListener);
         createPostBar.setOnClickListener(postBarClickListener);
 
     }
 
-    public void toggleFeed(){
+    public void togglePeople(){
 
-        mapFragment.hideFeed();
-        map = false;
-        feedToggle.setSelected(true);
-        feedToggle.setTextColor(getResources().getColor(android.R.color.white));
-        mapToggle.setSelected(false);
-        mapToggle.setTextColor(getResources().getColor(R.color.moby_blue));
-        viewPager.setCurrentItem(0, true);
-        if (eventMode == true){
-            loadFeed(true);
-        }
+        peopleToggle.setSelected(true);
+        peopleToggle.setTextColor(getResources().getColor(android.R.color.white));
+        eventsToggle.setSelected(false);
+        eventsToggle.setTextColor(getResources().getColor(R.color.moby_blue));
+        loadFeed(false);
         eventMode = false;
         if (tutorial){
             showcaseViewStepTwo();
         }
     }
 
-      public void toggleMap(){
+      public void toggleEvents(){
 
-        map = true;
-        feedToggle.setSelected(false);
-        feedToggle.setTextColor(getResources().getColor(R.color.moby_blue));
-        mapToggle.setSelected(true);
-        mapToggle.setTextColor(getResources().getColor(android.R.color.white));
-        viewPager.setCurrentItem(1, true);
-          if (!eventMode){
-              System.out.println(posts.size());
-              mapFragment.setFeed(posts);
-          }
+        peopleToggle.setSelected(false);
+        peopleToggle.setTextColor(getResources().getColor(R.color.moby_blue));
+        eventsToggle.setSelected(true);
+        eventsToggle.setTextColor(getResources().getColor(android.R.color.white));
+        loadEventsFeed(false);
         if (tutorial){
             mapFragment.showCaseViewStepThree();
         }
@@ -379,10 +381,10 @@ public class Main extends FragmentActivity {
 
         progressBar.setVisibility(View.VISIBLE);
         map = true;
-        feedToggle.setSelected(false);
-        feedToggle.setTextColor(getResources().getColor(R.color.moby_blue));
-        mapToggle.setSelected(true);
-        mapToggle.setTextColor(getResources().getColor(android.R.color.white));
+        peopleToggle.setSelected(false);
+        peopleToggle.setTextColor(getResources().getColor(R.color.moby_blue));
+        eventsToggle.setSelected(true);
+        eventsToggle.setTextColor(getResources().getColor(android.R.color.white));
         viewPager.setCurrentItem(1, true);
         ParseQuery<Post> postQuery = Post.getQuery();
         postQuery.getInBackground(objectId, new GetCallback<Post>() {
@@ -421,7 +423,7 @@ public class Main extends FragmentActivity {
     final View.OnClickListener feedToggleClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            toggleFeed();
+            togglePeople();
         }
     };
 
@@ -430,7 +432,7 @@ public class Main extends FragmentActivity {
 
         @Override
         public void onClick(View view) {
-            toggleMap();
+            toggleEvents();
         }
 
     };
@@ -453,10 +455,10 @@ public class Main extends FragmentActivity {
                 post.setUser(ParseUser.getCurrentUser());
                 mapFragment.animateNewMarker(post);
                 map = true;
-                feedToggle.setSelected(false);
-                feedToggle.setTextColor(getResources().getColor(R.color.moby_blue));
-                mapToggle.setSelected(true);
-                mapToggle.setTextColor(getResources().getColor(android.R.color.white));
+                peopleToggle.setSelected(false);
+                peopleToggle.setTextColor(getResources().getColor(R.color.moby_blue));
+                eventsToggle.setSelected(true);
+                eventsToggle.setTextColor(getResources().getColor(android.R.color.white));
             } else {
                 YoYo.with(Techniques.FadeOutUp)
                         .duration(250).withListener(new Animator.AnimatorListener() {
@@ -580,11 +582,5 @@ public class Main extends FragmentActivity {
             }
         }
     };
-
-    public void toggleEvents(){
-        progressBar.setVisibility(View.VISIBLE);
-        loadEventsFeed(true);
-        eventMode = true;
-    }
 
 }
