@@ -49,7 +49,7 @@ public class Application extends android.app.Application {
     public static File cacheImageFile;
     private static File cacheVideoFile;
     public static final int FACEBOOK_REQUEST_CODE = 5000;
-    private static Context context;
+    public static Context context;
 
     @Override
     public void onCreate()
@@ -100,7 +100,11 @@ public class Application extends android.app.Application {
 
     public static void initParseInstallation(Intent intent){
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("user", ParseUser.getCurrentUser());
+        if (ParseUser.getCurrentUser() == null){
+            installation.put("user", "anon");
+        } else {
+            installation.put("user", ParseUser.getCurrentUser());
+        }
         installation.saveInBackground();
         ParseAnalytics.trackAppOpenedInBackground(intent);
     }

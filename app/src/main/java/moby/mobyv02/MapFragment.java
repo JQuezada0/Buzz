@@ -285,7 +285,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         }
                     }, 100, 100);
                 } else {
-                    Bitmap finalBitmap = BitmapFactory.decodeResource(main.getResources(), R.drawable.person_icon_graybg);
+                    Bitmap finalBitmap = BitmapDownSampler.getBitmap(100, 100, main.getResources(), R.drawable.person_icon_graybg);
                     profileImage.setImageBitmap(finalBitmap);
                     iconGenerator.setContentView(v);
                     BitmapDescriptor bd = BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon());

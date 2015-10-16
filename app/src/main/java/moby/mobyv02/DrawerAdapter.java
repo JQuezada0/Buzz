@@ -29,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DrawerAdapter extends BaseAdapter {
 
     private Context c;
-    private String[] items = new String[]{ParseUser.getCurrentUser().getString("fullName"), "News Feed", "Map", "Discovery", "Friends"};
+    private String[] items = new String[]{"", "Discovery"};
     private Main main;
 
     public DrawerAdapter(Context c, Main m){
@@ -64,34 +64,42 @@ public class DrawerAdapter extends BaseAdapter {
         ImageView iv = (ImageView) view.findViewById(R.id.drawer_item_image);
         final CircleImageView cv = (CircleImageView) view.findViewById(R.id.drawer_item_profile);
         if (i == 0){
-            tv.setText(items[0]);
-            iv.setVisibility(View.GONE);
-            cv.setVisibility(View.VISIBLE);
-            String profileImage = ParseUser.getCurrentUser().getString("profileImage");
-            if (profileImage == null){
-                cv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.person_icon_graybg));
+            if (ParseUser.getCurrentUser() == null){
+                tv.setText("Sign In");
+                iv.setVisibility(View.GONE);
+                cv.setVisibility(View.VISIBLE);
+                cv.setImageResource(R.drawable.person_icon_graybg);
+                return view;
             } else {
-                Application.imageLoader.get(profileImage, new ImageLoader.ImageListener() {
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                        Bitmap bm = response.getBitmap();
-                        if (bm != null){
-                            cv.setImageBitmap(bm);
+                tv.setText(ParseUser.getCurrentUser().getString("fullName"));
+                iv.setVisibility(View.GONE);
+                cv.setVisibility(View.VISIBLE);
+                String profileImage = ParseUser.getCurrentUser().getString("profileImage");
+                if (profileImage == null) {
+                    cv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.person_icon_graybg));
+                } else {
+                    Application.imageLoader.get(profileImage, new ImageLoader.ImageListener() {
+                        @Override
+                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                            Bitmap bm = response.getBitmap();
+                            if (bm != null) {
+                                cv.setImageBitmap(bm);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        cv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.person_icon_graybg));
-                    }
-                }, 100, 100);
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            cv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.person_icon_graybg));
+                        }
+                    }, 100, 100);
+                }
             }
             return view;
         }
         tv.setText(items[i]);
         switch (i){
             case 1:
-                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.moby_feed_icon));
+                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.nearby_events_icon));
                 break;
             case 2:
                 iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.nearby_events_icon));
@@ -147,7 +155,7 @@ public class DrawerAdapter extends BaseAdapter {
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             switch (position){
 
-                case 1:
+                case 10:
                     main.closeDrawer();
                     main.togglePeople();
                     break;
@@ -161,7 +169,7 @@ public class DrawerAdapter extends BaseAdapter {
                     i.putExtra("user", "self");
                     DrawerAdapter.this.c.startActivity(i);
                     break;
-                case 3:
+                case 1:
                     main.closeDrawer();
                     Intent peopleIntent = new Intent(DrawerAdapter.this.c, PeopleActivity.class);
                     DrawerAdapter.this.c.startActivity(peopleIntent);

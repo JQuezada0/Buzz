@@ -1,5 +1,6 @@
 package moby.mobyv02;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
@@ -50,6 +51,22 @@ public class BitmapDownSampler {
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
 
+    }
+
+    public static Bitmap getBitmap(int height, int width, Resources r, int id){
+        int imageHeight = height;
+        int imageWidth = width;
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(r, id, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, imageWidth, imageHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(r, id, options);
     }
 
     public static Bitmap getMarkerBitmap(Bitmap bm){

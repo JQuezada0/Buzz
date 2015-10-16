@@ -1,10 +1,12 @@
 package moby.mobyv02;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
 
 /**
  * Created by quezadjo on 9/8/2015.
@@ -29,16 +31,19 @@ public class Dispatch_Activity extends FragmentActivity implements LocationRecei
         if (location == null){
             LocationManager.loadLocation(this, this);
         } else {
-            LocationManager.updateLocation(this);
+            if (ParseUser.getCurrentUser() != null){
+                LocationManager.updateLocation(this);
+            }
             Intent intent = new Intent(this, Main.class);
-            System.out.println(intent.toUri(0));
             startActivity(intent);
         }
     }
 
     @Override
     public void locationReceived() {
-        Intent intent = new Intent(this, Welcome.class);
+        SharedPreferences prefs = getSharedPreferences("user", 0);
+        
+        Intent intent = new Intent(this, Main.class);
         startActivity(intent);
     }
 

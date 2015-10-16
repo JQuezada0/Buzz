@@ -226,26 +226,32 @@ public class Main extends FragmentActivity {
     }
 
     private void setPostBarInfo(){
-        profileName.setText("What's going on, " + ParseUser.getCurrentUser().getString("fullName") + "?");
-        final String profileImage = ParseUser.getCurrentUser().getString("profileImage");
-        if (profileImage != null){
-            Application.imageLoader.get(profileImage, new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    Bitmap bm = response.getBitmap();
-                    if (bm != null){
-                        Main.this.profileImage.setImageBitmap(bm);
-                    }
-                }
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Main.this.profileImage.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.person_icon_graybg));
-                }
-            }, 100, 100);
+        if (ParseUser.getCurrentUser() == null){
+            profileName.setText("What's going on?");
+            profileImage.setImageResource(R.drawable.person_icon_graybg);
         } else {
-            Main.this.profileImage.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.person_icon_graybg));
+            profileName.setText("What's going on, " + ParseUser.getCurrentUser().getString("fullName") + "?");
+            final String profileImage = ParseUser.getCurrentUser().getString("profileImage");
+            if (profileImage != null){
+                Application.imageLoader.get(profileImage, new ImageLoader.ImageListener() {
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                        Bitmap bm = response.getBitmap();
+                        if (bm != null){
+                            Main.this.profileImage.setImageBitmap(bm);
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Main.this.profileImage.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.person_icon_graybg));
+                    }
+                }, 100, 100);
+            } else {
+                Main.this.profileImage.setImageDrawable(ContextCompat.getDrawable(Main.this, R.drawable.person_icon_graybg));
+            }
         }
+
     }
 
     public void loadFeed(final boolean reset){

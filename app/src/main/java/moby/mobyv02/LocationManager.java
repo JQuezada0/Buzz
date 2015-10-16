@@ -94,7 +94,11 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
         if (user != null){
             return user.getParseGeoPoint("location");
         } else {
-            return null;
+            ParseGeoPoint location = new ParseGeoPoint();
+            SharedPreferences prefs = Application.context.getSharedPreferences("location", 0);
+            location.setLongitude(Double.valueOf(prefs.getString("longitude", "0")));
+            location.setLatitude(Double.valueOf(prefs.getString("latitude", "0")));
+            return location;
         }
 
     }
