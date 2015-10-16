@@ -446,6 +446,11 @@ public class Main extends FragmentActivity {
     private final View.OnClickListener postBarClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (ParseUser.getCurrentUser() == null){
+                SignInDialog dialog = SignInDialog.newInstance();
+                dialog.show(getFragmentManager(), "signin dialog");
+                return;
+            }
             if (!postListOpen){
                 createPostList.setVisibility(View.VISIBLE);
                 YoYo.with(Techniques.FadeInDown)

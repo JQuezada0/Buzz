@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/success_dialog_bg"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textColor="@color/moby_blue"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="Please sign in to continue!"/>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/facebook_button"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:clickable="true"
+        android:background="@color/com_facebook_blue">
+
+        <ImageView
+            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/facebook_letter"
+            android:layout_marginLeft="30dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Sign in with Facebook"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"/>
+
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/google_button"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:clickable="true"
+        android:background="@color/google_plus">
+
+        <ImageView
+            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/google_plus_letter"
+            android:layout_marginLeft="30dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Sign in with Google"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"/>
+
+
+    </TableRow>
+
+
+</LinearLayout>
