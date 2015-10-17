@@ -95,6 +95,7 @@ public class Main extends FragmentActivity {
         private boolean postListOpen = false;
         private CircleImageView profileImage;
         private TextView profileName;
+        private SignInDialog signInDialog;
 
         ////////////////////////////////////////////////////
 
@@ -212,11 +213,15 @@ public class Main extends FragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        System.out.println("Main activity result");
         if (requestCode == POST_CREATED && resultCode == RESULT_OK) {
 
             displayPostOnMap(data.getStringExtra("post"));
 
+        } else if (requestCode == 100 && resultCode == RESULT_OK) {
+            signInDialog.onActivityResult(requestCode, resultCode, data);
+        } else if (requestCode == Application.FACEBOOK_REQUEST_CODE && resultCode == RESULT_OK){
+            signInDialog.onActivityResult(requestCode, resultCode, data);
         }
 
     }
@@ -447,8 +452,8 @@ public class Main extends FragmentActivity {
         @Override
         public void onClick(View view) {
             if (ParseUser.getCurrentUser() == null){
-                SignInDialog dialog = SignInDialog.newInstance();
-                dialog.show(getFragmentManager(), "signin dialog");
+                signInDialog = SignInDialog.newInstance(progressBar);
+                signInDialog.show(getFragmentManager(), "signin dialog");
                 return;
             }
             if (!postListOpen){

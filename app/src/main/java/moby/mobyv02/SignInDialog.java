@@ -23,6 +23,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -43,9 +44,11 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
     private Context context;
     private GoogleApiClient googleApiClient;
     private String[] permissions = new String[]{"public_profile", "email", "user_birthday", "user_location"};
+    private static CircleProgressBar progress;
 
-    static SignInDialog newInstance() {
+    static SignInDialog newInstance(CircleProgressBar progress) {
         SignInDialog f = new SignInDialog();
+        SignInDialog.progress = progress;
         return f;
     }
 
@@ -61,7 +64,6 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
         googleButton.setOnClickListener(googleClickListener);
         builder.setView(v);
         return builder.create();
-
     }
 
     private final View.OnClickListener facebookClickListener = new View.OnClickListener() {
@@ -74,6 +76,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
     private final View.OnClickListener googleClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            progress.setVisibility(View.VISIBLE);
             googleApiClient = new GoogleApiClient.Builder(SignInDialog.this.context)
                     .addConnectionCallbacks(SignInDialog.this)
                     .addOnConnectionFailedListener(SignInDialog.this)
@@ -86,6 +89,8 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
     };
 
     private void facebookLogin(){
+        progress.setVisibility(View.VISIBLE);
+        System.out.println("Start facebook login");
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this.getActivity(), Arrays.asList(permissions), new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
@@ -95,6 +100,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
                     } else {
                         BuzzAnalytics.logLogin(SignInDialog.this.context, "Facebook", false);
                     }
+                    System.out.println("Start with creating user");
                     createUser(parseUser);
                 } else {
                     if (e != null) {
@@ -110,6 +116,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
     }
 
     private void createUser(final ParseUser parseUser){
+        System.out.println("Create Facebook User");
         AccessToken token = AccessToken.getCurrentAccessToken();
         GraphRequest request = new GraphRequest().newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
 
@@ -144,7 +151,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
 
     @Override
     public void onConnected(Bundle bundle) {
-
+        progress.setVisibility(View.VISIBLE);
         final ParseUser user = new ParseUser();
         final Person currentPerson = Plus.PeopleApi.getCurrentPerson(googleApiClient);
         ParseUser.logInInBackground(Plus.AccountApi.getAccountName(googleApiClient), Plus.AccountApi.getAccountName(googleApiClient), new LogInCallback() {
@@ -211,6 +218,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        System.out.println("On Connection failed");
         if (connectionResult.hasResolution()) {
             try {
                 connectionResult.startResolutionForResult(SignInDialog.this.getActivity(), 100);
@@ -222,6 +230,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
 
     @Override
     public void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        System.out.println("On Activity result");
         if (requestCode == 100 && responseCode == Activity.RESULT_OK) {
             googleApiClient.connect();
         }

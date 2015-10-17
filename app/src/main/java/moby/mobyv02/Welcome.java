@@ -213,6 +213,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
     public void onConnectionFailed(ConnectionResult connectionResult) {
         if (connectionResult.hasResolution()) {
             try {
+                System.out.println("Start resolution for result");
                 connectionResult.startResolutionForResult(this, 100);
             } catch (IntentSender.SendIntentException e) {
                 googleApiClient.connect();
@@ -239,6 +240,7 @@ public class Welcome extends LeanplumFragmentActivity implements GoogleApiClient
 
     @Override
     protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        System.out.println("On activity result");
         if (requestCode == 100 && responseCode == RESULT_OK) {
             googleApiClient.connect();
         }

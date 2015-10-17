@@ -702,6 +702,7 @@ public class Network extends IntentService {
         URL url;
         HttpURLConnection connection;
         try {
+            System.out.println(urlString);
             url = new URL(urlString);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

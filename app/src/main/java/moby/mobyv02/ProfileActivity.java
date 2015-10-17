@@ -176,27 +176,29 @@ public class ProfileActivity extends AppCompatActivity {
             loadPosts(postAdapter);
         } else {
             String objectId = bundle.getString("user");
-            if (objectId.equals(ParseUser.getCurrentUser().getObjectId())){
-                friendButton.setVisibility(View.GONE);
-                ProfileActivity.this.user = ParseUser.getCurrentUser();
-                initialize(profileImage);
-                loadPosts(postAdapter);
-                return;
-            }
-            ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
-            userQuery.getInBackground(objectId, new GetCallback<ParseUser>() {
-                @Override
-                public void done(ParseUser parseUser, ParseException e) {
-                    System.out.println("Done");
-                    if (e == null) {
-                        ProfileActivity.this.user = parseUser;
-                        initialize(profileImage);
-                        loadPosts(postAdapter);
-                    } else {
-                        Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+            if (ParseUser.getCurrentUser() != null){
+                if (objectId.equals(ParseUser.getCurrentUser().getObjectId())){
+                    friendButton.setVisibility(View.GONE);
+                    ProfileActivity.this.user = ParseUser.getCurrentUser();
+                    initialize(profileImage);
+                    loadPosts(postAdapter);
+                    return;
                 }
-            });
+                ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
+                userQuery.getInBackground(objectId, new GetCallback<ParseUser>() {
+                    @Override
+                    public void done(ParseUser parseUser, ParseException e) {
+                        System.out.println("Done");
+                        if (e == null) {
+                            ProfileActivity.this.user = parseUser;
+                            initialize(profileImage);
+                            loadPosts(postAdapter);
+                        } else {
+                            Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
         }
 
 

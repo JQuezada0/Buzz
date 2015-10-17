@@ -30,17 +30,9 @@
             <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
-                android:gravity="center_vertical">
-
-
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="?attr/actionBarSize"
                 android:gravity="center_vertical|right"
                 android:paddingRight="10dp"
+                android:visibility="gone"
                 android:layout_gravity="end">
 
                 <TableRow
@@ -176,6 +168,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="10dp"
+                android:visibility="gone"
                 android:background="@drawable/gray_border"
                 android:orientation="vertical">
 
