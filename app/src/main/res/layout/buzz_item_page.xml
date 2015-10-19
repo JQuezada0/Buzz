@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/image"
         android:scaleType="fitXY"
+        android:src="@drawable/event_default"
         android:adjustViewBounds="true"/>
 
     <TextView

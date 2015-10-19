@@ -55,7 +55,11 @@ public class BuzzItemActivity extends AppCompatActivity implements OnMapReadyCal
         name.setText(item.getName());
         time.setText(item.getFormattedTime().toString());
         text.setText(item.getText());
-        image.setImageUrl(item.getImage(), Application.imageLoader);
+        if (item.getImage() != null){
+           image.setImageUrl(item.getImage(), Application.imageLoader);
+        } else if (item.getImage() == null) {
+            image.setDefaultImageResId(R.drawable.event_default);
+        }
         map.getExtendedMapAsync(this);
         profileImage.setImageResource(R.drawable.person_icon_graybg);
         fullEvent = (TextView) findViewById(R.id.full_event);
@@ -90,7 +94,7 @@ public class BuzzItemActivity extends AppCompatActivity implements OnMapReadyCal
                 }
             }, 100, 100);
         } else {
-            
+
         }
 
     }

@@ -720,11 +720,18 @@ public class Network extends IntentService {
             for (int x = 0; x < events.length(); x++){
                 Event event = new Event();
                 JSONObject eventObject = events.getJSONObject(x);
-                event.setName(eventObject.getJSONObject("name").getString("text"));
-                event.setText(eventObject.getJSONObject("description").getString("text"));
+                String name = eventObject.getJSONObject("name").getString("text");
+                String description =eventObject.getJSONObject("description").getString("text");
+                event.setName(name);
+                if (!eventObject.getJSONObject("description").isNull("text")){
+                    event.setText(description);
+                } else {
+                    event.setText("");
+                }
                 event.setUrl(eventObject.getString("url"));
-                if (!eventObject.isNull("logo"))
+                if (!eventObject.isNull("logo")){
                     event.setImage(eventObject.getJSONObject("logo").getString("url"));
+                }
                 JSONObject venue = eventObject.getJSONObject("venue");
                 event.setLocale(venue.getJSONObject("address").getString("city") + ", " + venue.getJSONObject("address").getString("region"));
                 ParseGeoPoint location = new ParseGeoPoint();

@@ -135,7 +135,11 @@ public class Post_View_Fragment extends Fragment {
             distance.setText(item.getFormattedDistance(LocationManager.getLocation()));
             timeStamp.setText(item.getFormattedTime(0));
             buzzItemFrame = (FrameLayout) v.findViewById(R.id.buzz_item_frame);
-            image.setImageUrl(item.getImage(), Application.imageLoader);
+            if (item.getImage() != null){
+                image.setImageUrl(item.getImage(), Application.imageLoader);
+            } else {
+                image.setDefaultImageResId(R.drawable.event_default);
+            }
             text.setText(item.getText());
         }
         buzzItemFrame.setOnClickListener(buzzItemClickListener);
