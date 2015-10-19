@@ -731,6 +731,10 @@ public class Network extends IntentService {
                 location.setLatitude(venue.getJSONObject("address").getDouble("latitude"));
                 location.setLongitude(venue.getJSONObject("address").getDouble("longitude"));
                 event.setLocation(location);
+                JSONObject start = eventObject.getJSONObject("start");
+                String startTime = start.getString("local");
+                System.out.println(DateParser.parse(startTime));
+                event.setTime(DateParser.parse(startTime).getTime());
                 eventsList.add(event);
             }
 
@@ -745,6 +749,8 @@ public class Network extends IntentService {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (java.text.ParseException e) {
             e.printStackTrace();
         }
     }

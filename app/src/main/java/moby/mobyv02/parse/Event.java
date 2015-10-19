@@ -8,6 +8,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import moby.mobyv02.BuzzItem;
@@ -68,12 +69,12 @@ public class Event extends BuzzItem {
 
     @Override
     public long getTime() {
-        return 0;
+        return getLong("time");
     }
 
     @Override
-    public String getFormattedTime() {
-        return null;
+    public Date getFormattedTime() {
+        return new Date(getTime());
     }
 
     @Override
@@ -106,6 +107,10 @@ public class Event extends BuzzItem {
 
     public String getUrl(){
         return getString("Url");
+    }
+
+    public void setTime(long time){
+        put("time", time);
     }
 
     public String getFormattedTime(long time){

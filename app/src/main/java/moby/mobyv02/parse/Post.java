@@ -11,6 +11,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import moby.mobyv02.BuzzItem;
@@ -61,12 +63,12 @@ public class Post extends BuzzItem {
 
     @Override
     public long getTime() {
-        return 0;
+        return getCreatedAt().getTime();
     }
 
     @Override
-    public String getFormattedTime() {
-        return null;
+    public Date getFormattedTime() {
+        return new Date(getTime());
     }
 
     public void setColor(String color){
@@ -197,6 +199,7 @@ public class Post extends BuzzItem {
     }
 
     public String getFormattedTime(long time){
+        time = getTime();
         time = TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - time);
         String timeElapsed;
         if (time > 60){

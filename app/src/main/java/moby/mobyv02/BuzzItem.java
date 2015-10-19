@@ -7,6 +7,8 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.Date;
+
 /**
  * Created by Johnil on 10/6/2015.
  */
@@ -24,7 +26,7 @@ public abstract class BuzzItem extends ParseObject implements ClusterItem, Compa
 
     public abstract long getTime();
 
-    public abstract String getFormattedTime();
+    public abstract Date getFormattedTime();
 
     public abstract String getText();
 
@@ -55,4 +57,5 @@ public abstract class BuzzItem extends ParseObject implements ClusterItem, Compa
     public Marker getMarker(){
         return marker;
     }
+
 }

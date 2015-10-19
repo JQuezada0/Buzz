@@ -110,15 +110,23 @@
 
     </TableRow>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:id="@+id/buzz_item_frame">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:textSize="35sp"
+        android:clickable="true"
         android:id="@+id/post_status_layout_text"
         android:textColor="@android:color/black"
         android:text="sample text"/>
+
+    </FrameLayout>
 
 
 </FrameLayout>

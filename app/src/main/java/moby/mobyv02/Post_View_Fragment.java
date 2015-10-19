@@ -1,6 +1,8 @@
 package moby.mobyv02;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -56,6 +58,7 @@ public class Post_View_Fragment extends Fragment {
     private Activity main;
     private SquareVideoView video;
     private MediaController mediaController;
+    private FrameLayout buzzItemFrame;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup vg, Bundle savedInstanceState){
@@ -76,6 +79,7 @@ public class Post_View_Fragment extends Fragment {
                 profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
                 profileButton.setOnClickListener(profileButtonClickListener);
                 profilePicture.setOnClickListener(profileButtonClickListener);
+                buzzItemFrame = (FrameLayout) v.findViewById(R.id.buzz_item_frame);
                 TextView text = (TextView) v.findViewById(R.id.post_status_layout_text);
                 text.setText(item.getText());
 
@@ -96,6 +100,7 @@ public class Post_View_Fragment extends Fragment {
                 profileButton.setOnClickListener(profileButtonClickListener);
                 profilePicture.setOnClickListener(profileButtonClickListener);
                 frame = (FrameLayout) v.findViewById(R.id.post_photo_layout_frame);
+                buzzItemFrame = (FrameLayout) v.findViewById(R.id.buzz_item_frame);
             } else if (item.getType().equals("video")){
 
                 v = inflater.inflate(R.layout.post_video_layout, null);
@@ -111,6 +116,7 @@ public class Post_View_Fragment extends Fragment {
                 locale = (TextView) v.findViewById(R.id.post_locale);
                 distance = (TextView) v.findViewById(R.id.post_distance);
                 timeStamp = (TextView) v.findViewById(R.id.post_time);
+                buzzItemFrame = (FrameLayout) v.findViewById(R.id.buzz_item_frame);
                 profileButton = (LinearLayout) v.findViewById(R.id.post_profile_button);
                 profileButton.setOnClickListener(profileButtonClickListener);
                 profilePicture.setOnClickListener(profileButtonClickListener);
@@ -127,10 +133,12 @@ public class Post_View_Fragment extends Fragment {
             username.setText(item.getName());
             locale.setText(item.getLocale());
             distance.setText(item.getFormattedDistance(LocationManager.getLocation()));
-            timeStamp.setText(item.getFormattedTime());
+            timeStamp.setText(item.getFormattedTime(0));
+            buzzItemFrame = (FrameLayout) v.findViewById(R.id.buzz_item_frame);
             image.setImageUrl(item.getImage(), Application.imageLoader);
             text.setText(item.getText());
         }
+        buzzItemFrame.setOnClickListener(buzzItemClickListener);
         return v;
     }
 
@@ -139,6 +147,17 @@ public class Post_View_Fragment extends Fragment {
             mediaController.hide();
         }
     }
+
+    private final View.OnClickListener buzzItemClickListener = new View.OnClickListener(){
+
+
+        @Override
+        public void onClick(View v) {
+            BuzzItemActivity.item = item;
+            Intent i = new Intent(main, BuzzItemActivity.class);
+            main.startActivity(i);
+        }
+    };
 
     private void setUserInfo(){
         if (user.getString("profileImage") == null){

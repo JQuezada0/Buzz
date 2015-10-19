@@ -99,6 +99,12 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
+        android:id="@+id/buzz_item_frame">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/post_photo_layout_frame"
         android:background="#000000">
 
@@ -136,6 +142,8 @@
 
 
         </LinearLayout>
+
+    </FrameLayout>
 
     </FrameLayout>
 
