@@ -459,7 +459,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void animateNewMarkerOnPost(final Post post){
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(post.getLatitude(), post.getLongitude()), 10.0f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude()+0.0225, LocationManager.getLocation().getLongitude()), 12.0f));
         successDialog.setVisibility(View.VISIBLE);
         showSuccessDialog();
         darkOverlay.setVisibility(View.VISIBLE);
@@ -469,9 +469,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         String imageUrl = post.getUser().getString("profileImage");
         mapFrameLayout.addView(v);
         Projection p = map.getProjection();
-        Point point = p.toScreenLocation(new LatLng(post.getLatitude(), post.getLongitude()));
-        v.setX(point.x);
-        v.setY(point.y);
+        Point point = p.toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
+        //Set the X and Y coordinates of the marker but offset the height and width because it pins the markers top left corner to the point you set
+        v.setX(point.x - dpToPx(MARKER_WIDTH_DP/2));
+        v.setY(point.y - dpToPx(MARKER_HEIGHT_DP));
         map.getUiSettings().setAllGesturesEnabled(false);
         temporaryMarker = v;
         if (imageUrl == null){
