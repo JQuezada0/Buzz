@@ -65,17 +65,19 @@ dependencies {
     compile files('libs/Parse-1.10.1.jar')
     compile files('libs/bolts-android-1.2.1.jar')
     compile files('libs/ParseFacebookUtilsV4-1.10.1.jar')
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:support-v4:23.1.0'
+    compile 'com.android.support:recyclerview-v7:23.1.0'
+    compile 'com.android.support:support-annotations:23.1.0'
     compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.mcxiaoke.volley:library:1.0.17'
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.google.maps.android:android-maps-utils:0.4'
     compile 'commons-io:commons-io:+'
-    compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:design:23.1.0'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.theartofdev.edmodo:android-image-cropper:1.0.+'
-    compile 'com.android.support:palette-v7:23.0.1'
+    compile 'com.android.support:palette-v7:23.1.0'
     compile 'com.lsjwzh:materialloadingprogressbar:0.5.6-RELEASE'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.facebook.android:facebook-android-sdk:4.0.0'
@@ -92,4 +94,7 @@ dependencies {
     compile 'com.nhaarman.listviewanimations:lib-core-slh:3.1.0@aar'
     compile 'com.github.amlcurran.showcaseview:library:5.0.0'
     compile project(':android-maps-extensions')
+    compile('com.afollestad.material-dialogs:core:0.8.4.2@aar') {
+        transitive = true
+    }
 }

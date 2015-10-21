@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.content.DialogInterface;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -39,6 +40,8 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +99,7 @@ public class Main extends FragmentActivity {
         private CircleImageView profileImage;
         private TextView profileName;
         private SignInDialog signInDialog;
-
+        private Toast mToast;
         ////////////////////////////////////////////////////
 
 
@@ -291,7 +294,7 @@ public class Main extends FragmentActivity {
         new ParseOperation("Network").getEventsFeed(0, new ParseOperation.LoadEventsCallback() {
             @Override
             public void finished(boolean success, ArrayList<Event> events, ParseException e) {
-                if (e == null && events != null){
+                if (e == null && events != null) {
                     progressBar.setVisibility(View.GONE);
                     Main.this.events.addAll(events);
                     mapFragment.setFeed(new ArrayList<BuzzItem>(Main.this.events));
@@ -413,7 +416,7 @@ public class Main extends FragmentActivity {
         new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
-                if (e == null){
+                if (e == null) {
                     feedFragment.loadPosts(posts, true);
                     Main.this.posts.clear();
                     Main.this.posts.addAll(posts);
@@ -427,6 +430,15 @@ public class Main extends FragmentActivity {
 
     public void closeDrawer(){
         drawerLayout.closeDrawers();
+    }
+
+    private void showToast(String message) {
+        if (mToast != null) {
+            mToast.cancel();
+            mToast = null;
+        }
+        mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     ////////////////////////////CLICK LISTENERS/////////////////////////////////////////////
@@ -448,12 +460,16 @@ public class Main extends FragmentActivity {
 
     };
 
+    private void showSigninDialog(){
+        signInDialog = SignInDialog.newInstance(progressBar,this);
+        signInDialog.show(getFragmentManager(), "signin dialog");
+    }
+
     private final View.OnClickListener postBarClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (ParseUser.getCurrentUser() == null){
-                signInDialog = SignInDialog.newInstance(progressBar);
-                signInDialog.show(getFragmentManager(), "signin dialog");
+                showSigninDialog();
                 return;
             }
             if (!postListOpen){

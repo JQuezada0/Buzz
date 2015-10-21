@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.TableRow;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.facebook.AccessToken;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -42,51 +44,61 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
 
 
     private Context context;
+    private Activity refreshActivity;
     private GoogleApiClient googleApiClient;
     private String[] permissions = new String[]{"public_profile", "email", "user_birthday", "user_location"};
     private static CircleProgressBar progress;
 
-    static SignInDialog newInstance(CircleProgressBar progress) {
+    static SignInDialog newInstance(CircleProgressBar progress, Activity activity) {
         SignInDialog f = new SignInDialog();
-        SignInDialog.progress = progress;
+        f.setActivity(activity);
+        f.progress = progress;
         return f;
     }
 
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState){
-        context = getActivity();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View v =LayoutInflater.from(context).inflate(R.layout.signin_dialog, null);
-        TableRow facebookButton = (TableRow) v.findViewById(R.id.facebook_button);
-        TableRow googleButton = (TableRow) v.findViewById(R.id.google_button);
-        facebookButton.setOnClickListener(facebookClickListener);
-        googleButton.setOnClickListener(googleClickListener);
-        builder.setView(v);
-        return builder.create();
+    public void setActivity(Activity activity){
+        this.refreshActivity = activity;
     }
 
-    private final View.OnClickListener facebookClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            facebookLogin();
-        }
-    };
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        this.context = getActivity();
+        MaterialDialog dialog = new MaterialDialog.Builder(this.context)
+                .title(R.string.loginOrSignup)
+                .theme(Theme.LIGHT)
+                .items(R.array.login_options)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        if (which == 0) {
+                            facebookLogin();
+                        } else if (which == 1) {
+                            googleLogin();
+                        } else {
+                            Toast.makeText(context, "Please select a login method", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        return true; // allow selection
+                    }
+                })
+                .positiveText(R.string.loginContinue)
+                .negativeText(R.string.loginCancel)
+                .build();
+        return dialog;
+    }
 
-    private final View.OnClickListener googleClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            progress.setVisibility(View.VISIBLE);
-            googleApiClient = new GoogleApiClient.Builder(SignInDialog.this.context)
-                    .addConnectionCallbacks(SignInDialog.this)
-                    .addOnConnectionFailedListener(SignInDialog.this)
-                    .addApi(Plus.API)
-                    .addScope(Plus.SCOPE_PLUS_LOGIN)
-                    .addScope(Plus.SCOPE_PLUS_PROFILE)
-                    .build();
-            googleApiClient.connect();
-        }
-    };
+    private void googleLogin(){
+        progress.setVisibility(View.VISIBLE);
+        googleApiClient = new GoogleApiClient.Builder(SignInDialog.this.context)
+                .addConnectionCallbacks(SignInDialog.this)
+                .addOnConnectionFailedListener(SignInDialog.this)
+                .addApi(Plus.API)
+                .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addScope(Plus.SCOPE_PLUS_PROFILE)
+                .build();
+        googleApiClient.connect();
+
+    }
 
     private void facebookLogin(){
         progress.setVisibility(View.VISIBLE);
@@ -115,6 +127,10 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
 
     }
 
+    private void refreshAppAfterLogin(){
+        SignInDialog.this.refreshActivity.recreate();
+    }
+
     private void createUser(final ParseUser parseUser){
         System.out.println("Create Facebook User");
         AccessToken token = AccessToken.getCurrentAccessToken();
@@ -131,7 +147,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
                         parseUser.put("email", object.getString("email"));
                         parseUser.put("profileImage", "http://graph.facebook.com/" + object.getString("id") + "/picture?type=large");
                         parseUser.saveEventually();
-                        startActivity(new Intent(SignInDialog.this.context, Main.class));
+                        refreshAppAfterLogin();
                         dismiss();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -159,8 +175,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
             public void done(ParseUser parseUser, ParseException e) {
                 if (e == null) {
                     BuzzAnalytics.logLogin(context, "Google", false);
-                    startActivity(new Intent(context, Main.class));
-                    SignInDialog.this.getActivity().finish();
+                    refreshAppAfterLogin();
                 } else {
                     System.out.println(e.getMessage());
                     user.setUsername(Plus.AccountApi.getAccountName(googleApiClient));
@@ -183,8 +198,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
                             if (e == null) {
                                 BuzzAnalytics.logLogin(context, "Google", true);
                                 LocationManager.updateFromSharedPreferences(context);
-                                startActivity(new Intent(context, Main.class));
-                                SignInDialog.this.getActivity().finish();
+                                refreshAppAfterLogin();
                             } else {
                                 Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -221,7 +235,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
         System.out.println("On Connection failed");
         if (connectionResult.hasResolution()) {
             try {
-                connectionResult.startResolutionForResult(SignInDialog.this.getActivity(), 100);
+                connectionResult.startResolutionForResult(SignInDialog.this.refreshActivity, 100);
             } catch (IntentSender.SendIntentException e) {
                 googleApiClient.connect();
             }
