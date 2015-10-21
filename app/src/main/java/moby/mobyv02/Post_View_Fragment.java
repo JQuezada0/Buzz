@@ -82,7 +82,7 @@ public class Post_View_Fragment extends Fragment {
                 buzzItemFrame = (FrameLayout) v.findViewById(R.id.buzz_item_frame);
                 TextView text = (TextView) v.findViewById(R.id.post_status_layout_text);
                 text.setText(item.getText());
-
+                text.setOnClickListener(buzzItemClickListener);
             } else if (item.getType().equals("photo")){
 
                 v = inflater.inflate(R.layout.post_photo_layout, null);
