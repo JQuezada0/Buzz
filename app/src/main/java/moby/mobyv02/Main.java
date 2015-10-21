@@ -216,6 +216,7 @@ public class Main extends FragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         System.out.println("Main activity result");
         if (requestCode == POST_CREATED && resultCode == RESULT_OK) {
 
@@ -264,6 +265,9 @@ public class Main extends FragmentActivity {
 
     public void loadFeed(final boolean reset){
         progressBar.setVisibility(View.VISIBLE);
+        if (reset){
+            pageNumber = 0;
+        }
         new ParseOperation("Network").getFeed(pageNumber, new ParseOperation.LoadFeedCallback() {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
@@ -398,9 +402,11 @@ public class Main extends FragmentActivity {
     private void displayPostOnMap(String objectId){
 
         ParseQuery<Post> postQuery = Post.getQuery();
+        postQuery.include("user");
         postQuery.getInBackground(objectId, new GetCallback<Post>() {
             @Override
             public void done(Post post, ParseException e) {
+                System.out.println(post.getProfileImage());
                 mapFragment.animateNewMarkerOnPost(post);
                 progressBar.setVisibility(View.GONE);
             }

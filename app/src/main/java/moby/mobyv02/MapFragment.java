@@ -499,15 +499,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         darkOverlay.setVisibility(View.GONE);
         map.getUiSettings().setAllGesturesEnabled(true);
         mapFrameLayout.removeView(temporaryMarker);
-        main.loadFeed(true);
     }
 
     private View.OnClickListener continueOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             hideSuccessDialog();
-            returnMapToNormal();
-         //   setFeed(new ArrayList<BuzzItem>(main.posts));
+    //        returnMapToNormal();
+            main.loadFeed(true);
+            //   setFeed(new ArrayList<BuzzItem>(main.posts));
         }
     };
 
