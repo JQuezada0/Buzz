@@ -29,8 +29,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DrawerAdapter extends BaseAdapter {
 
     private Context c;
-    private String[] items = new String[]{"", "Discovery"};
+    private String[] items = new String[]{"Profile", "Discovery", "Log Out"};
     private Main main;
+    private SignInDialog signInDialog;
 
     public DrawerAdapter(Context c, Main m){
         this.c = c;
@@ -71,7 +72,7 @@ public class DrawerAdapter extends BaseAdapter {
                 cv.setImageResource(R.drawable.person_icon_graybg);
                 return view;
             } else {
-                tv.setText(ParseUser.getCurrentUser().getString("fullName"));
+                tv.setText(items[0]);
                 iv.setVisibility(View.GONE);
                 cv.setVisibility(View.VISIBLE);
                 String profileImage = ParseUser.getCurrentUser().getString("profileImage");
@@ -102,7 +103,7 @@ public class DrawerAdapter extends BaseAdapter {
                 iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.nearby_events_icon));
                 break;
             case 2:
-                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.nearby_events_icon));
+                iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.log_out));
                 break;
             case 3:
                 iv.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.moby_people_icon));
@@ -122,29 +123,14 @@ public class DrawerAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View view) {
-            ParseUser.logOut();
-            ParseQuery<ParseSession> query = ParseQuery.getQuery(ParseSession.class);
-            query.whereEqualTo("user", ParseUser.getCurrentUser());
-            query.getFirstInBackground(new GetCallback<ParseSession>() {
-                @Override
-                public void done(ParseSession parseSession, ParseException e) {
-                    if (e==null){
-                        parseSession.deleteInBackground(new DeleteCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null){
-                                    System.exit(0);
-                                } else {
-                                    System.out.println(e.getMessage() + " Error logging out");
-                                }
-                            }
-                        });
-                    } else {
-                        System.out.println(e.getMessage());
-                    }
+            if (ParseUser.getCurrentUser() != null){
+                ParseUser.logOut();
+                main.finish();
+                main.startActivity(main.getIntent());
+            } else {
+                main.closeDrawer();
+            }
 
-                }
-            });
         }
     };
 
@@ -161,13 +147,20 @@ public class DrawerAdapter extends BaseAdapter {
                     break;
                 case 2:
                     main.closeDrawer();
-                    main.toggleEvents();
+                    deleteAccountClickListener.onClick(null);
                     break;
                 case 0:
                     main.closeDrawer();
-                    Intent i = new Intent(DrawerAdapter.this.c, ProfileActivity.class);
-                    i.putExtra("user", "self");
-                    DrawerAdapter.this.c.startActivity(i);
+                    if (ParseUser.getCurrentUser() == null){
+                        signInDialog = SignInDialog.newInstance(main.progressBar);
+                        signInDialog.show(main.getFragmentManager(), "signin dialog");
+                        return;
+                    } else {
+                        Intent i = new Intent(DrawerAdapter.this.c, ProfileActivity.class);
+                        i.putExtra("user", "self");
+                        DrawerAdapter.this.c.startActivity(i);
+                    }
+
                     break;
                 case 1:
                     main.closeDrawer();

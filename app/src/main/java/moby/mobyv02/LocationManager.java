@@ -181,6 +181,7 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
 
     @Override
     public void onLocationChanged(Location location) {
+        System.out.println("location changed");
         while(!googleApiClient.isConnected()){
             try {
                 Thread.sleep(500);

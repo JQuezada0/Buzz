@@ -87,32 +87,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         main = (Main) getActivity();
         currentMapFragment = this;
-        if (MapAdapter.googleMap == null) {
-            View v = inflater.inflate(R.layout.map, null);
-            this.inflater = inflater;
-            mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-            feedFrame = (GestureFrameLayout) v.findViewById(R.id.map_feed_frame);
-            mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
-            viewPager = (ViewPager) v.findViewById(R.id.map_viewpager);
-            mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
-            successDialogContinueButton = (Button) v.findViewById(R.id.success_dialog_continue_button);
-            successDialogContinueButton.setOnClickListener(continueOnClickListener);
-            darkOverlay = (ImageView) v.findViewById(R.id.map_dark_overlay);
-            postsAdapter = new PostsAdapter(getFragmentManager());
-            viewPager.addOnPageChangeListener(pageChangeListener);
-            mapFragment.getExtendedMapAsync(this);
-            iconGenerator = new IconGenerator(main);
-            iconGenerator.setBackground(new ColorDrawable(0x00000000));
-            MapAdapter.googleMap = v;
-            successDialog = v.findViewById(R.id.success_dialog);
-            setGestureDetector();
-            Display display = main.getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            return v;
-        } else {
-            return MapAdapter.googleMap;
-        }
+        View v = inflater.inflate(R.layout.map, null);
+        this.inflater = inflater;
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        feedFrame = (GestureFrameLayout) v.findViewById(R.id.map_feed_frame);
+        mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
+        viewPager = (ViewPager) v.findViewById(R.id.map_viewpager);
+        mapFrameLayout = (FrameLayout) v.findViewById(R.id.map_frame_layout);
+        successDialogContinueButton = (Button) v.findViewById(R.id.success_dialog_continue_button);
+        successDialogContinueButton.setOnClickListener(continueOnClickListener);
+        darkOverlay = (ImageView) v.findViewById(R.id.map_dark_overlay);
+        postsAdapter = new PostsAdapter(getFragmentManager());
+        viewPager.addOnPageChangeListener(pageChangeListener);
+        mapFragment.getExtendedMapAsync(this);
+        iconGenerator = new IconGenerator(main);
+        iconGenerator.setBackground(new ColorDrawable(0x00000000));
+        MapAdapter.googleMap = v;
+        successDialog = v.findViewById(R.id.success_dialog);
+        setGestureDetector();
+        Display display = main.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return v;
     }
 
     private void setGestureDetector(){
@@ -422,12 +418,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
         v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
         String imageUrl = post.getUser().getString("profileImage");
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()), 10.0f));
         mapFrameLayout.addView(v);
         Projection p = map.getProjection();
-        Point point = p.toScreenLocation(new LatLng(post.getLatitude(), post.getLongitude()));
+        Point point = p.toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
         v.setX(point.x);
         v.setY(point.y);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(post.getLatitude(), post.getLongitude()), 10.0f));
         map.getUiSettings().setAllGesturesEnabled(false);
         temporaryMarker = v;
         if (imageUrl == null){

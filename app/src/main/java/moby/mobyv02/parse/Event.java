@@ -8,6 +8,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -127,6 +128,77 @@ public class Event extends BuzzItem {
             timeElapsed = String.valueOf(time) + "m";
         }
         return timeElapsed;
+    }
+
+    @Override
+    public String getFormattedDate() {
+        Date d = getFormattedTime();
+        String s = "";
+        int year = d.getYear();
+        int month = d.getMonth();
+        int day = d.getDay();
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, day);
+        s += getDayOfWeek(c.get(Calendar.DAY_OF_WEEK)) + ", ";
+        s += getMonth(c.get(Calendar.MONTH)) + " ";
+        s += c.get(Calendar.DAY_OF_MONTH) + ", ";
+        s += c.get(Calendar.HOUR_OF_DAY) + ":";
+        s += c.get(Calendar.MINUTE);
+        return s;
+    }
+
+    private String getDayOfWeek(int i){
+
+        switch (i){
+            case 1:
+                return "Sun";
+            case 2:
+                return "Mon";
+            case 3:
+                return "Tues";
+            case 4:
+                return "Wed";
+            case 5:
+                return "Thurs";
+            case 6:
+                return "Fri";
+            case 7:
+                return "Sat";
+            default:
+                return "";
+        }
+
+    }
+
+    private String getMonth(int i) {
+        switch (i) {
+            case 0:
+                return "Jan";
+            case 1:
+                return "Feb";
+            case 2:
+                return "Mar";
+            case 3:
+                return "Apr";
+            case 4:
+                return "May";
+            case 5:
+                return "June";
+            case 6:
+                return "July";
+            case 7:
+                return "August";
+            case 8:
+                return "September";
+            case 9:
+                return "October";
+            case 10:
+                return "November";
+            case 11:
+                return "December";
+            default:
+                return "";
+        }
     }
 
     @Override

@@ -183,8 +183,8 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
                             if (e == null) {
                                 BuzzAnalytics.logLogin(context, "Google", true);
                                 LocationManager.updateFromSharedPreferences(context);
-                                startActivity(new Intent(context, Main.class));
                                 SignInDialog.this.getActivity().finish();
+                                startActivity(new Intent(context, Main.class));
                             } else {
                                 Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }

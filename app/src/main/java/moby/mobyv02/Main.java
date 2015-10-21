@@ -80,7 +80,7 @@ public class Main extends FragmentActivity {
         //////////////////////VIEWS///////////////////////
 
         private ImageView messageButton;
-        private CircleProgressBar progressBar;
+        public CircleProgressBar progressBar;
         private Button followerToggleButton;
         private DrawerLayout drawerLayout;
         private ListView drawerList;
@@ -457,12 +457,6 @@ public class Main extends FragmentActivity {
                 return;
             }
             if (!postListOpen){
-                createPostList.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.FadeInDown)
-                        .duration(250)
-                        .playOn(createPostList);
-                postListOpen = true;
-                viewPager.setCurrentItem(1);
                 Post post = new Post();
                 ParseGeoPoint point = new ParseGeoPoint();
                 point.setLongitude(LocationManager.getLocation().getLongitude());
@@ -470,6 +464,12 @@ public class Main extends FragmentActivity {
                 post.setLocation(point);
                 post.setUser(ParseUser.getCurrentUser());
                 mapFragment.animateNewMarker(post);
+                createPostList.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.FadeInDown)
+                        .duration(250)
+                        .playOn(createPostList);
+                postListOpen = true;
+                viewPager.setCurrentItem(1);
                 map = true;
                 peopleToggle.setSelected(false);
                 peopleToggle.setTextColor(getResources().getColor(R.color.moby_blue));

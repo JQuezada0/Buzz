@@ -48,6 +48,8 @@ public abstract class BuzzItem extends ParseObject implements ClusterItem, Compa
 
     public abstract String getFormattedTime(long time);
 
+    public abstract String getFormattedDate();
+
     public abstract String getVideo();
 
     public void setMarker(Marker marker){
