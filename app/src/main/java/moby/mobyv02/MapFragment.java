@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -409,6 +410,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             feedFrame.setVisibility(View.GONE);
     }
 
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        return (int)((dp * displayMetrics.density) + 0.5);
+    }
+
     public void animateNewMarker(final Post post){
         View v = inflater.inflate(R.layout.map_marker_icon, null);
         if (inflater == null){
@@ -418,12 +424,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
         v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
         String imageUrl = post.getUser().getString("profileImage");
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()), 10.0f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude()+0.012, LocationManager.getLocation().getLongitude()), 12.0f));
         mapFrameLayout.addView(v);
         Projection p = map.getProjection();
         Point point = p.toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
-        v.setX(point.x);
-        v.setY(point.y);
+        System.out.println(point.x + " x  " + point.y);
+        System.out.println(v.getWidth() + " x  " + v.getHeight());
+        System.out.println(dpToPx(78/2) + " x  " + dpToPx(90));
+        v.setX(point.x - dpToPx(78/2));
+        v.setY(point.y - dpToPx(90));
         map.getUiSettings().setAllGesturesEnabled(false);
         temporaryMarker = v;
         if (imageUrl == null){
