@@ -143,6 +143,8 @@
         android:textStyle="normal"
         android:textSize="15sp"
         android:padding="10dp"
+        android:maxLines="4"
+        android:ellipsize="end"
         android:layout_weight="1"
         android:id="@+id/post_photo_layout_text"/>
 
