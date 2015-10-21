@@ -139,9 +139,10 @@
         android:layout_height="match_parent"
         android:textColor="@android:color/white"
         android:text="This is a test text overlay. "
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="20sp"
+        android:gravity="bottom"
+        android:textStyle="normal"
+        android:textSize="15sp"
+        android:padding="10dp"
         android:layout_weight="1"
         android:id="@+id/post_photo_layout_text"/>
 
