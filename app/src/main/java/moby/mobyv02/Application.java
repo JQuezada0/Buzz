@@ -23,6 +23,7 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import io.fabric.sdk.android.Fabric;
@@ -148,6 +149,11 @@ public class Application extends android.app.Application {
         } else {
             image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_icon_graybg));
         }
+    }
+
+    public void updateUserPostCount(ParseUser user){
+        ParseQuery<Post> query = Post.getQuery();
+
     }
 
     public static String getLocale(Context context, ParseGeoPoint location){

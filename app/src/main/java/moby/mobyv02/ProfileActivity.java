@@ -142,7 +142,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             profileImage.setImageResource(R.drawable.person_icon_graybg);
         }
-
+        loadPosts(postAdapter);
 
     }
 
@@ -159,7 +159,6 @@ public class ProfileActivity extends AppCompatActivity {
                         if (e == null){
                             ProfileActivity.this.user = user;
                             initialize(profileImage);
-                            loadPosts(postAdapter);
                         } else {
                             Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         }
@@ -309,6 +308,11 @@ public class ProfileActivity extends AppCompatActivity {
                 if (e != null) {
                     Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
+                    if (list.size() < 100){
+                        user.put("posts", list.size());
+                        user.saveInBackground();
+                        posts.setText(String.valueOf(list.size()));
+                    }
                     postAdapter.setFeed(list);
                     progress.setVisibility(View.GONE);
                     profileFrame.setVisibility(View.VISIBLE);
