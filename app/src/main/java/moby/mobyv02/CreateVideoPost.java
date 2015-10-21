@@ -63,6 +63,7 @@ public class CreateVideoPost extends FragmentActivity {
         postButton.setOnClickListener(postClickListener);
         takeVideoButton.setOnClickListener(videoClickListener);
         file = Application.getVideoCacheFile(this);
+        cancelButton.setOnClickListener(cancelPostClickListener);
     }
 
     private void captureVideo(){
@@ -146,6 +147,13 @@ public class CreateVideoPost extends FragmentActivity {
                     e.printStackTrace();
                 }
             }
+        }
+    };
+
+    final View.OnClickListener cancelPostClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            CreateVideoPost.this.finish();
         }
     };
 

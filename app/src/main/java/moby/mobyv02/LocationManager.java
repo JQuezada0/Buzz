@@ -145,7 +145,7 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
                 user.put("location", location);
                 user.put("locale", Application.getLocale(c, location));
                 System.out.println("Updated location is " + location.getLatitude() + "; " + location.getLongitude());
-                user.saveEventually();
+                user.saveInBackground();
             }
         };
             LocationManager locationManager = new LocationManager(c, locationReceivedListener);

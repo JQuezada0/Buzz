@@ -31,6 +31,7 @@ import com.parse.ParseUser;
 import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -69,7 +70,6 @@ public class Post_View_Fragment extends Fragment {
         if (item.getType() != null){
             user = item.getUser();
             if (item.getType().equals("status")){
-
                 v = inflater.inflate(R.layout.post_status_layout, null);
                 profilePicture = (CircleImageView) v.findViewById(R.id.post_profile_image);
                 username = (TextView) v.findViewById(R.id.post_name);
@@ -82,7 +82,7 @@ public class Post_View_Fragment extends Fragment {
                 buzzItemFrame = (FrameLayout) v.findViewById(R.id.buzz_item_frame);
                 TextView text = (TextView) v.findViewById(R.id.post_status_layout_text);
                 text.setText(item.getText());
-
+                text.setOnClickListener(buzzItemClickListener);
             } else if (item.getType().equals("photo")){
 
                 v = inflater.inflate(R.layout.post_photo_layout, null);
@@ -141,6 +141,12 @@ public class Post_View_Fragment extends Fragment {
                 image.setDefaultImageResId(R.drawable.event_default);
             }
             text.setText(item.getText());
+        }
+        if (item.getCreatedAt() == null){
+            Date d = (Date) item.get("createdDate");
+            timeStamp.setText(item.getFormattedTime(d.getTime()));
+        } else {
+            timeStamp.setText(item.getFormattedTime(item.getCreatedAt().getTime()));
         }
         buzzItemFrame.setOnClickListener(buzzItemClickListener);
         return v;

@@ -92,7 +92,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private int MARKER_WIDTH_DP = 78;
     private int MARKER_HEIGHT_DP = 90;
     private static double TENSION = 50;
-    private static double DAMPER = 4; //friction
+    private static double DAMPER = 3; //friction
 
     private View mImageToAnimate;
     private SpringSystem mSpringSystem;
@@ -265,6 +265,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void updateMap(){
         if (map!= null){
             map.clear();
+            System.out.println(currentPosts.size() + " Is the amount of posts");
             for (final BuzzItem bi : currentPosts){
                 final View v = inflater.inflate(R.layout.map_marker_icon, null);
                 final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
@@ -486,13 +487,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         SpringConfig config = new SpringConfig(TENSION, DAMPER);
         mSpring.setSpringConfig(config);
-        mSpring.setCurrentValue(.3f);
+        mSpring.setCurrentValue(-0.3f);
         mSpring.setEndValue(0f);
     }
 
-    public void animateNewMarkerOnPost(final Post post){
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude()+0.0225, LocationManager.getLocation().getLongitude()), 12.0f));
-        successDialog.setVisibility(View.VISIBLE);
+    public void animateNewMarkerOnPost(final Post post) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude()+0.012, LocationManager.getLocation().getLongitude()), 12.0f));
         showSuccessDialog();
         darkOverlay.setVisibility(View.VISIBLE);
         View v = inflater.inflate(R.layout.map_marker_icon, null);
@@ -502,7 +502,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapFrameLayout.addView(v);
         Projection p = map.getProjection();
         Point point = p.toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
-        //Set the X and Y coordinates of the marker but offset the height and width because it pins the markers top left corner to the point you set
+         //Set the X and Y coordinates of the marker but offset the height and width because it pins the markers top left corner to the point you set
         v.setX(point.x - dpToPx(MARKER_WIDTH_DP/2));
         v.setY(point.y - dpToPx(MARKER_HEIGHT_DP));
         map.getUiSettings().setAllGesturesEnabled(false);
@@ -544,7 +544,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         SpringConfig config = new SpringConfig(TENSION, DAMPER);
         mSpring.setSpringConfig(config);
-        mSpring.setCurrentValue(.3f);
+        mSpring.setCurrentValue(-0.3f);
         mSpring.setEndValue(0f);
     }
 
@@ -559,7 +559,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         public void onClick(View view) {
             hideSuccessDialog();
             returnMapToNormal();
-            setFeed(new ArrayList<BuzzItem>(main.posts));
+            main.loadFeed(true);
+            //   setFeed(new ArrayList<BuzzItem>(main.posts));
         }
     };
 
