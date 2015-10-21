@@ -24,6 +24,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -36,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.parse.Post;
 
 /**
@@ -44,13 +47,15 @@ import moby.mobyv02.parse.Post;
 public class CreateStatusPost extends FragmentActivity {
 
     Toolbar toolbar;
-    Button cancelButton;
     TextView characterLimitText;
     Button postButton;
     EditText statusText;
+    TextView locale;
     TextView usernameText;
     int characterLimit = 200;
     CircleProgressBar progressBar;
+
+    private CircleImageView profileImage;
     Typeface roboto;
     private File file;
     private static final int[] colors = new int[]{R.color.turquois, R.color.emerald, R.color.peterriver, R.color.amethyst, R.color.sunflower, R.color.sunflower, R.color.carrot, R.color.alizarin};
@@ -65,13 +70,22 @@ public class CreateStatusPost extends FragmentActivity {
         postButton = (Button) findViewById(R.id.create_post_status_button);
         statusText = (EditText) findViewById(R.id.create_post_status_text);
         usernameText = (TextView) findViewById(R.id.create_status_post_fullname);
-        cancelButton = (Button) findViewById(R.id.create_post_status_cancel);
         usernameText.setText(ParseUser.getCurrentUser().getString("fullName"));
         progressBar = (CircleProgressBar) findViewById(R.id.post_progressbar);
         progressBar.setColorSchemeResources(android.R.color.holo_blue_bright);
+        profileImage = (CircleImageView) findViewById(R.id.profile_image);
+        locale = (TextView) findViewById(R.id.post_locale);
         setStatusTextWatcher();
         postButton.setOnClickListener(createPostClickListener);
-        cancelButton.setOnClickListener(cancelPostClickListener);
+        try {
+            ParseGeoPoint location = LocationManager.getLocation();
+            Geocoder geocoder = new Geocoder(CreateStatusPost.this);
+            Address address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0);
+            locale.setText(address.getLocality());
+        } catch (IOException e) {
+            locale.setText("Locating...");
+        }
+        setProfileImageHeader();
     }
 
     @Override
@@ -112,6 +126,31 @@ public class CreateStatusPost extends FragmentActivity {
         });
     }
 
+    private void setProfileImageHeader(){
+        if (ParseUser.getCurrentUser() == null){
+            profileImage.setImageResource(R.drawable.person_icon_graybg);
+        } else {
+            final String profileImage = ParseUser.getCurrentUser().getString("profileImage");
+            if (profileImage != null){
+                Application.imageLoader.get(profileImage, new ImageLoader.ImageListener() {
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                        Bitmap bm = response.getBitmap();
+                        if (bm != null){
+                            CreateStatusPost.this.profileImage.setImageBitmap(bm);
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        CreateStatusPost.this.profileImage.setImageDrawable(ContextCompat.getDrawable(CreateStatusPost.this, R.drawable.person_icon_graybg));
+                    }
+                }, 100, 100);
+            } else {
+                CreateStatusPost.this.profileImage.setImageDrawable(ContextCompat.getDrawable(CreateStatusPost.this, R.drawable.person_icon_graybg));
+            }
+        }
+    }
     final View.OnClickListener createPostClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {

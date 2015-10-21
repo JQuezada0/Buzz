@@ -2,6 +2,7 @@ package moby.mobyv02;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -606,7 +607,15 @@ public class Main extends FragmentActivity {
             }
             switch (position){
                 case 0:
+                    /*
+                    boolean wrapInScrollView = false;
+                    new MaterialDialog.Builder(Main.this)
+                            .customView(R.layout.post_status, wrapInScrollView)
+                            .backgroundColorRes(R.color.moby_blue)
+                            .show();
+                                */
                     startActivityForResult(new Intent(Main.this, CreateStatusPost.class), POST_CREATED);
+
                     break;
                 case 1:
                     startActivityForResult(new Intent(Main.this, CreatePhotoPost.class), POST_CREATED);
