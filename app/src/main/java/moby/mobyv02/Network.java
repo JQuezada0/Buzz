@@ -636,6 +636,11 @@ public class Network extends IntentService {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("location", LocationManager.getLocation());
         params.put("pageNumber", pageNumber);
+        if (ParseUser.getCurrentUser() != null){
+            params.put("user", ParseUser.getCurrentUser().getObjectId());
+        } else {
+            params.put("user", 0);
+        }
         ParseCloud.callFunctionInBackground("getFeed", params, new FunctionCallback<String>() {
             @Override
             public void done(String s, final ParseException e) {
@@ -661,9 +666,10 @@ public class Network extends IntentService {
                         System.out.println("Objectid's length is " + objectIds.size());
                         ParseQuery<Post> query = Post.getQuery();
                         query.whereContainedIn("objectId", objectIds);
+                        query.setLimit(500);
                         query.include("user");
                         final ArrayList<Post> postsList = new ArrayList<Post>(query.find());
-                        System.out.println(postsList.size());
+                        System.out.println(postsList.size() + " is size after retrieving by ids");
                         Collections.sort(postsList);
                         parseOperation.context.runOnUiThread(new Runnable() {
                             @Override

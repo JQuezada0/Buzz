@@ -227,8 +227,8 @@ public class Post extends BuzzItem {
         s += getDayOfWeek(c.get(Calendar.DAY_OF_WEEK)) + ", ";
         s += getMonth(c.get(Calendar.MONTH)) + " ";
         s += c.get(Calendar.DAY_OF_MONTH) + ", ";
-        s += c.get(Calendar.HOUR_OF_DAY) + ":";
-        s += c.get(Calendar.MINUTE);
+        s += d.getHours() + ":";
+        s += d.getMinutes();
         return s;
     }
 

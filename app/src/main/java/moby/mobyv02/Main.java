@@ -268,6 +268,10 @@ public class Main extends FragmentActivity {
             @Override
             public void finished(boolean success, ArrayList<Post> posts, ParseException e) {
                 if (e == null && posts != null) {
+                    if (reset){
+                        Main.this.posts.clear();
+                    }
+                    System.out.println("Main received " + posts.size() + " posts");
                     Main.this.posts.addAll(posts);
                     progressBar.setVisibility(View.GONE);
                     pageNumber++;
@@ -393,13 +397,6 @@ public class Main extends FragmentActivity {
 
     private void displayPostOnMap(String objectId){
 
-        progressBar.setVisibility(View.VISIBLE);
-        map = true;
-        peopleToggle.setSelected(false);
-        peopleToggle.setTextColor(getResources().getColor(R.color.moby_blue));
-        eventsToggle.setSelected(true);
-        eventsToggle.setTextColor(getResources().getColor(android.R.color.white));
-        viewPager.setCurrentItem(1, true);
         ParseQuery<Post> postQuery = Post.getQuery();
         postQuery.getInBackground(objectId, new GetCallback<Post>() {
             @Override
@@ -484,12 +481,6 @@ public class Main extends FragmentActivity {
                         .duration(250)
                         .playOn(createPostList);
                 postListOpen = true;
-                viewPager.setCurrentItem(1);
-                map = true;
-                peopleToggle.setSelected(false);
-                peopleToggle.setTextColor(getResources().getColor(R.color.moby_blue));
-                eventsToggle.setSelected(true);
-                eventsToggle.setTextColor(getResources().getColor(android.R.color.white));
             } else {
                 YoYo.with(Techniques.FadeOutUp)
                         .duration(250).withListener(new Animator.AnimatorListener() {
