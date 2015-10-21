@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.util.Date;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import moby.mobyv02.parse.Event;
 
@@ -53,7 +55,7 @@ public class BuzzItemActivity extends AppCompatActivity implements OnMapReadyCal
         profileImage = (CircleImageView) findViewById(R.id.profile_image);
         map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         name.setText(item.getName());
-        time.setText(item.getFormattedTime().toString());
+        time.setText(item.getFormattedDate());
         text.setText(item.getText());
         if (item.getImage() != null){
            image.setImageUrl(item.getImage(), Application.imageLoader);

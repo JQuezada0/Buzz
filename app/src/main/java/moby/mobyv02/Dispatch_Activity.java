@@ -28,7 +28,8 @@ public class Dispatch_Activity extends FragmentActivity implements LocationRecei
     protected void onResume(){
         super.onResume();
         ParseGeoPoint location = LocationManager.getLocation();
-        if (location == null){
+        SharedPreferences prefs = getSharedPreferences("location", 0);
+        if (!prefs.contains("latitude")){
             LocationManager.loadLocation(this, this);
         } else {
             if (ParseUser.getCurrentUser() != null){
