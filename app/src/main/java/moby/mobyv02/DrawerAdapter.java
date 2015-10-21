@@ -152,7 +152,7 @@ public class DrawerAdapter extends BaseAdapter {
                 case 0:
                     main.closeDrawer();
                     if (ParseUser.getCurrentUser() == null){
-                        signInDialog = SignInDialog.newInstance(main.progressBar);
+                        signInDialog = SignInDialog.newInstance(main.progressBar,main);
                         signInDialog.show(main.getFragmentManager(), "signin dialog");
                         return;
                     } else {

@@ -147,9 +147,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="13dp"
-        android:paddingTop="10dp"
-        android:paddingRight="13dp"
         android:id="@+id/about_me"
         android:textColor="@android:color/black"/>
 
@@ -157,7 +154,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="5dp">
 
         <TableRow
             android:layout_width="match_parent"
@@ -284,7 +281,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:background="@drawable/gray_border"
                 android:orientation="vertical">
 
@@ -303,7 +300,7 @@
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:textColor="@android:color/black"
-                        android:textSize="25sp"/>
+                        android:textSize="15sp"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -311,7 +308,7 @@
                         android:text="Posts"
                         android:gravity="center"
                         android:textColor="@android:color/black"
-                        android:textSize="20sp"/>
+                        android:textSize="15sp"/>
 
                 </LinearLayout>
 
@@ -321,7 +318,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:background="@drawable/gray_border"
                 android:orientation="vertical">
 
@@ -339,7 +336,7 @@
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:textColor="@android:color/black"
-                        android:textSize="25sp"/>
+                        android:textSize="15sp"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -347,7 +344,7 @@
                         android:text="Comments"
                         android:gravity="center"
                         android:textColor="@android:color/black"
-                        android:textSize="20sp"/>
+                        android:textSize="15sp"/>
 
                 </LinearLayout>
 
@@ -357,7 +354,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:background="@drawable/gray_border"
                 android:orientation="vertical">
 
@@ -375,7 +372,7 @@
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:textColor="@android:color/black"
-                        android:textSize="25sp"/>
+                        android:textSize="15sp"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -383,7 +380,7 @@
                         android:text="Hearts"
                         android:gravity="center"
                         android:textColor="@android:color/black"
-                        android:textSize="20sp"/>
+                        android:textSize="15sp"/>
 
                 </LinearLayout>
 
@@ -408,16 +405,17 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Posts:"
+        android:text="Recent Posts:"
         android:textColor="@android:color/black"
         android:gravity="left"
         android:padding="15dp"
-        android:textSize="15sp"/>
+        android:textSize="10sp"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/moby_light_gray"
         android:id="@+id/post_list"/>
 
 </LinearLayout>
