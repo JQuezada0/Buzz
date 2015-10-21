@@ -48,6 +48,12 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
 import com.nineoldandroids.animation.Animator;
 
+import com.facebook.rebound.SpringConfig;
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringListener;
+import com.facebook.rebound.SpringUtil;
+import com.facebook.rebound.SimpleSpringListener;
+import com.facebook.rebound.SpringSystem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -85,7 +91,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<Marker> displayedMarkers = new ArrayList<Marker>();
     private int MARKER_WIDTH_DP = 78;
     private int MARKER_HEIGHT_DP = 90;
+    private static double TENSION = 50;
+    private static double DAMPER = 3; //friction
 
+    private View mImageToAnimate;
+    private SpringSystem mSpringSystem;
+    private Spring mSpring;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         main = (Main) getActivity();
@@ -435,6 +446,63 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Projection p = map.getProjection();
         Point point = p.toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
         //Set the X and Y coordinates of the marker but offset the height and width because it pins the markers top left corner to the point you set
+        v.setX(point.x - dpToPx(MARKER_WIDTH_DP / 2));
+        v.setY(point.y - dpToPx(MARKER_HEIGHT_DP));
+        map.getUiSettings().setAllGesturesEnabled(false);
+        temporaryMarker = v;
+        if (imageUrl == null){
+            profileImage.setImageResource(R.drawable.person_icon_graybg);
+        } else {
+            Application.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    Bitmap bm = response.getBitmap();
+                    if (bm != null){
+                        profileImage.setImageBitmap(bm);
+                    }
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    profileImage.setImageResource(R.drawable.person_icon_graybg);
+                }
+            }, 100, 100);
+        }
+        mImageToAnimate = v;
+
+        mSpringSystem = SpringSystem.create();
+
+        mSpring = mSpringSystem.createSpring();
+        mSpring.addListener(new SimpleSpringListener() {
+
+            @Override
+            public void onSpringUpdate(Spring spring) {
+                // You can observe the updates in the spring
+                // state by asking its current value in onSpringUpdate.
+                float mappedValue = (float) SpringUtil.mapValueFromRangeToRange(spring.getCurrentValue(), 0, 1, 1, 0.5);
+                mImageToAnimate.setScaleX(mappedValue);
+                mImageToAnimate.setScaleY(mappedValue);
+            }
+        });
+
+        SpringConfig config = new SpringConfig(TENSION, DAMPER);
+        mSpring.setSpringConfig(config);
+        mSpring.setCurrentValue(-0.3f);
+        mSpring.setEndValue(0f);
+    }
+
+    public void animateNewMarkerOnPost(final Post post) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude()+0.012, LocationManager.getLocation().getLongitude()), 12.0f));
+        showSuccessDialog();
+        darkOverlay.setVisibility(View.VISIBLE);
+        View v = inflater.inflate(R.layout.map_marker_icon, null);
+        final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
+        v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
+        String imageUrl = post.getUser().getString("profileImage");
+        mapFrameLayout.addView(v);
+        Projection p = map.getProjection();
+        Point point = p.toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
+         //Set the X and Y coordinates of the marker but offset the height and width because it pins the markers top left corner to the point you set
         v.setX(point.x - dpToPx(MARKER_WIDTH_DP/2));
         v.setY(point.y - dpToPx(MARKER_HEIGHT_DP));
         map.getUiSettings().setAllGesturesEnabled(false);
@@ -457,42 +525,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }, 100, 100);
         }
-    }
+        mImageToAnimate = v;
 
-    public void animateNewMarkerOnPost(final Post post) {
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(post.getLatitude(), post.getLongitude()), 15.0f));
-///        showSuccessDialog();
-        //     darkOverlay.setVisibility(View.VISIBLE);
-        //     View v = inflater.inflate(R.layout.map_marker_icon, null);
-        //     final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
-        //     v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
-//        String imageUrl = post.getUser().getString("profileImage");
-//        mapFrameLayout.addView(v);
-//        Projection p = map.getProjection();
-//        Point point = p.toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
-        //Set the X and Y coordinates of the marker but offset the height and width because it pins the markers top left corner to the point you set
-//        v.setX(point.x - dpToPx(MARKER_WIDTH_DP/2));
-//        v.setY(point.y - dpToPx(MARKER_HEIGHT_DP));
-        //       map.getUiSettings().setAllGesturesEnabled(false);
-//        temporaryMarker = v;
-        /*if (imageUrl == null){
-            profileImage.setImageResource(R.drawable.person_icon_graybg);
-        } else {
-            Application.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    Bitmap bm = response.getBitmap();
-                    if (bm != null){
-                        profileImage.setImageBitmap(bm);
-                    }
-                }
+        mSpringSystem = SpringSystem.create();
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    profileImage.setImageResource(R.drawable.person_icon_graybg);
-                }
-            }, 100, 100);*/
-          continueOnClickListener.onClick(null);
+        mSpring = mSpringSystem.createSpring();
+        mSpring.addListener(new SimpleSpringListener() {
+
+            @Override
+            public void onSpringUpdate(Spring spring) {
+                // You can observe the updates in the spring
+                // state by asking its current value in onSpringUpdate.
+                float mappedValue = (float) SpringUtil.mapValueFromRangeToRange(spring.getCurrentValue(), 0, 1, 1, 0.5);
+                mImageToAnimate.setScaleX(mappedValue);
+                mImageToAnimate.setScaleY(mappedValue);
+            }
+        });
+
+        SpringConfig config = new SpringConfig(TENSION, DAMPER);
+        mSpring.setSpringConfig(config);
+        mSpring.setCurrentValue(-0.3f);
+        mSpring.setEndValue(0f);
     }
 
     public void returnMapToNormal(){
@@ -505,7 +558,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         @Override
         public void onClick(View view) {
             hideSuccessDialog();
-    //        returnMapToNormal();
+            returnMapToNormal();
             main.loadFeed(true);
             //   setFeed(new ArrayList<BuzzItem>(main.posts));
         }

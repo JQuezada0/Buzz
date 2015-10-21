@@ -11,14 +11,6 @@
         android:layout_gravity="center"
         android:src="@drawable/success_icon"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="50sp"
-        android:textColor="@color/moby_blue"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="Nice Post!"/>
 
     <TableRow
         android:layout_width="match_parent"
