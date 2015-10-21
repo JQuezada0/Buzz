@@ -83,6 +83,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private boolean eventMode = false;
     private IconGenerator iconGenerator;
     private ArrayList<Marker> displayedMarkers = new ArrayList<Marker>();
+    private int MARKER_WIDTH_DP = 78;
+    private int MARKER_HEIGHT_DP = 90;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -416,6 +418,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void animateNewMarker(final Post post){
+        String imageUrl = null;
         View v = inflater.inflate(R.layout.map_marker_icon, null);
         if (inflater == null){
             inflater = LayoutInflater.from(main);
@@ -423,16 +426,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         darkOverlay.setVisibility(View.VISIBLE);
         final CircleImageView profileImage = (CircleImageView) v.findViewById(R.id.map_marker_image);
         v.findViewById(R.id.map_marker_icon_count).setVisibility(View.GONE);
-        String imageUrl = post.getUser().getString("profileImage");
+        if(post.getUser() != null) {
+            imageUrl = post.getUser().getString("profileImage");
+        }
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LocationManager.getLocation().getLatitude()+0.012, LocationManager.getLocation().getLongitude()), 12.0f));
         mapFrameLayout.addView(v);
         Projection p = map.getProjection();
         Point point = p.toScreenLocation(new LatLng(LocationManager.getLocation().getLatitude(), LocationManager.getLocation().getLongitude()));
-        System.out.println(point.x + " x  " + point.y);
-        System.out.println(v.getWidth() + " x  " + v.getHeight());
-        System.out.println(dpToPx(78/2) + " x  " + dpToPx(90));
-        v.setX(point.x - dpToPx(78/2));
-        v.setY(point.y - dpToPx(90));
+        //Set the X and Y coordinates of the marker but offset the height and width because it pins the markers top left corner to the point you set
+        v.setX(point.x - dpToPx(MARKER_WIDTH_DP/2));
+        v.setY(point.y - dpToPx(MARKER_HEIGHT_DP));
         map.getUiSettings().setAllGesturesEnabled(false);
         temporaryMarker = v;
         if (imageUrl == null){

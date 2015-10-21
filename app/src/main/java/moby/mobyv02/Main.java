@@ -468,17 +468,16 @@ public class Main extends FragmentActivity {
     private final View.OnClickListener postBarClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (ParseUser.getCurrentUser() == null){
-                showSigninDialog();
-                return;
-            }
+
             if (!postListOpen){
                 Post post = new Post();
                 ParseGeoPoint point = new ParseGeoPoint();
                 point.setLongitude(LocationManager.getLocation().getLongitude());
                 point.setLatitude(LocationManager.getLocation().getLatitude());
                 post.setLocation(point);
-                post.setUser(ParseUser.getCurrentUser());
+                if (ParseUser.getCurrentUser() != null) {
+                    post.setUser(ParseUser.getCurrentUser());
+                }
                 mapFragment.animateNewMarker(post);
                 createPostList.setVisibility(View.VISIBLE);
                 YoYo.with(Techniques.FadeInDown)
@@ -601,6 +600,10 @@ public class Main extends FragmentActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             mapFragment.returnMapToNormal();
+            if (ParseUser.getCurrentUser() == null){
+                showSigninDialog();
+                return;
+            }
             switch (position){
                 case 0:
                     startActivityForResult(new Intent(Main.this, CreateStatusPost.class), POST_CREATED);

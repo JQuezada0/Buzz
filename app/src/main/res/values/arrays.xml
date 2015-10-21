@@ -2,6 +2,6 @@
 <resources>
     <string-array name="login_options">
         <item>Facebook</item>
-        <item>Google</item>
+        <item>Google+</item>
     </string-array>
 </resources>

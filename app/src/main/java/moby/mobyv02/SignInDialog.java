@@ -65,9 +65,10 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
         this.context = getActivity();
         MaterialDialog dialog = new MaterialDialog.Builder(this.context)
                 .title(R.string.loginOrSignup)
+                .content(R.string.loginOrSignupContent)
                 .theme(Theme.LIGHT)
                 .items(R.array.login_options)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         if (which == 0) {
