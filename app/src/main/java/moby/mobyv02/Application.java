@@ -88,6 +88,23 @@ public class Application extends android.app.Application {
 
     }
 
+    public static void reloadImageCache(Context c){
+        imageLoader = new ImageLoader(Volley.newRequestQueue(c), new ImageLoader.ImageCache() {
+
+            private final android.support.v4.util.LruCache<String, Bitmap> cache = new android.support.v4.util.LruCache<String, Bitmap>(20);
+
+            @Override
+            public Bitmap getBitmap(String url) {
+                return cache.get(url);
+            }
+
+            @Override
+            public void putBitmap(String url, Bitmap bitmap) {
+                cache.put(url, bitmap);
+            }
+        });
+    }
+
     /**
      * @desc getter for the global locationManager
      * @return LocationManager

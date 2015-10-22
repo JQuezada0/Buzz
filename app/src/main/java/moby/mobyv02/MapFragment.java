@@ -71,7 +71,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap map;
     SupportMapFragment mapFragment;
-    public static MapFragment currentMapFragment;
+    public MapFragment currentMapFragment;
     private ViewPager viewPager;
     private Main main;
     private PostsAdapter postsAdapter;
@@ -590,5 +590,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        System.out.println("OnDestroyFragment");
+        map.clear();
+        currentPosts.clear();
+        currentEvents.clear();
+    }
+    
 }

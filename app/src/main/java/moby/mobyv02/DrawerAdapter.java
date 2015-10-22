@@ -126,7 +126,9 @@ public class DrawerAdapter extends BaseAdapter {
             if (ParseUser.getCurrentUser() != null){
                 ParseUser.logOut();
                 main.finish();
-                main.startActivity(main.getIntent());
+                Intent i = main.getIntent();
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                main.startActivity(i);
             } else {
                 main.closeDrawer();
             }

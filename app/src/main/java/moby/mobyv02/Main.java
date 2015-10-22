@@ -66,7 +66,6 @@ public class Main extends FragmentActivity {
     private boolean eventMode = false;
 
     //////////////////////////INITIALIZATIONS//////////////////////////////////
-    private int currentToggle = WORLD_TOGGLED;
     public List<Post> posts = new ArrayList<Post>();
     public ArrayList<Event> events = new ArrayList<Event>();
     private boolean firstTime = false;
@@ -121,6 +120,7 @@ public class Main extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("onCreate");
         setContentView(R.layout.main);
         Application.initParseInstallation(getIntent());
         initialize();
@@ -614,5 +614,11 @@ public class Main extends FragmentActivity {
             }
         }
     };
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Application.reloadImageCache(this);
+    }
 
 }

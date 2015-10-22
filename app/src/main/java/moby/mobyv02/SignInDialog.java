@@ -129,7 +129,10 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
     }
 
     private void refreshAppAfterLogin(){
-        SignInDialog.this.refreshActivity.recreate();
+        refreshActivity.finish();
+        Intent i = refreshActivity.getIntent();
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        refreshActivity.startActivity(refreshActivity.getIntent());
     }
 
     private void createUser(final ParseUser parseUser){
