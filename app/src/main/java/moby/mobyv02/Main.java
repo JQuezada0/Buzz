@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.content.DialogInterface;
 
+import com.afollestad.materialdialogs.Theme;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.daimajia.androidanimations.library.Techniques;
@@ -601,7 +602,12 @@ public class Main extends FragmentActivity {
                 showSigninDialog();
                 return;
             }
-            switch (position){
+            new MaterialDialog.Builder(Main.this)
+                    .title("Posting disabled")
+                    .content("We apologize, Buzz posting has been disabled indefinitely")
+                    .positiveText("Continue")
+                    .show();
+       /*     switch (position){
                 case 0:
                     startActivityForResult(new Intent(Main.this, CreateStatusPost.class), POST_CREATED);
                     break;
@@ -611,7 +617,7 @@ public class Main extends FragmentActivity {
                 case 2:
                     startActivityForResult(new Intent(Main.this, CreateVideoPost.class), POST_CREATED);
                     break;
-            }
+            } */
         }
     };
 

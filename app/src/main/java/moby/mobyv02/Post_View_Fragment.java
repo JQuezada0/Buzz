@@ -144,7 +144,11 @@ public class Post_View_Fragment extends Fragment {
         }
         if (item.getCreatedAt() == null){
             Date d = (Date) item.get("createdDate");
-            timeStamp.setText(item.getFormattedTime(d.getTime()));
+            if (d != null){
+                timeStamp.setText(item.getFormattedTime(d.getTime()));
+            } else{
+                timeStamp.setText("");
+            }
         } else {
             timeStamp.setText(item.getFormattedTime(item.getCreatedAt().getTime()));
         }

@@ -1,5 +1,7 @@
 package moby.mobyv02;
 
+import android.*;
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,7 +9,10 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TableRow;
@@ -53,6 +58,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
         SignInDialog f = new SignInDialog();
         f.setActivity(activity);
         f.progress = progress;
+        BuzzAnalytics.logLoginPrompt(activity);
         return f;
     }
 
@@ -72,8 +78,10 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         if (which == 0) {
+                            BuzzAnalytics.logFacebookContinue(context);
                             facebookLogin();
                         } else if (which == 1) {
+                            BuzzAnalytics.logGoogleContinue(context);
                             googleLogin();
                         } else {
                             Toast.makeText(context, "Please select a login method", Toast.LENGTH_SHORT).show();
@@ -169,8 +177,7 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
 
     }
 
-    @Override
-    public void onConnected(Bundle bundle) {
+    private void finished(){
         progress.setVisibility(View.VISIBLE);
         final ParseUser user = new ParseUser();
         final Person currentPerson = Plus.PeopleApi.getCurrentPerson(googleApiClient);
@@ -211,6 +218,43 @@ public class SignInDialog extends DialogFragment implements GoogleApiClient.Conn
                 }
             }
         });
+    }
+
+    private void loadPermissions(String perm,int requestCode) {
+        if (ContextCompat.checkSelfPermission(refreshActivity, perm) != PackageManager.PERMISSION_GRANTED) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(refreshActivity, perm)) {
+                ActivityCompat.requestPermissions(refreshActivity, new String[]{perm}, requestCode);
+            } else {
+                finished();
+            }
+        } else {
+            finished();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        System.out.println("onRequestPermissionResult");
+        switch (requestCode) {
+            case 0: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    finished();
+                }
+                else{
+                    System.out.println("Not granted");
+                    loadPermissions(Manifest.permission.GET_ACCOUNTS, 0);
+                }
+                return;
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        loadPermissions(Manifest.permission.GET_ACCOUNTS, 0);
 
     }
 

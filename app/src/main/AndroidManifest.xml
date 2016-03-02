@@ -24,7 +24,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <!--
  The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but are recommended.
@@ -35,7 +34,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <permission android:protectionLevel="signature"
-        android:name="permission.C2D_MESSAGE" />
+        android:name="moby.mobyv02.permission.C2D_MESSAGE" />
     <uses-permission android:name="moby.mobyv02.permission.C2D_MESSAGE" />
 
     <application

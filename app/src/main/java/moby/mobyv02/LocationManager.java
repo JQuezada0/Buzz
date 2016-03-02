@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,6 +46,9 @@ public class LocationManager implements GoogleApiClient.OnConnectionFailedListen
         this.context = context;
         this.locationReceivedListener = locationReceivedListener;
     }
+
+
+
 
     public static ParseGeoPoint getLocation(){
 

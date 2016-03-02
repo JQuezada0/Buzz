@@ -52,11 +52,22 @@ public class BuzzAnalytics {
         Analytics.with(context).track("userLogin", properties);
     }
 
+    public static void logLoginPrompt(Context context){
+        Analytics.with(context).track("log in prompt shown");
+    }
+
     public static void logScreen(Context context, String category, String screen){
         Properties properties = new Properties();
         properties.put("screen", screen);
         Analytics.with(context).screen(category, screen, properties);
+    }
 
+    public static void logGoogleContinue(Context context){
+        Analytics.with(context).track("Log in with google continue button selected");
+    }
+
+    public static void logFacebookContinue(Context context){
+        Analytics.with(context).track("Log in with facebook continue button selected");
     }
 
     public static void logAppOpened(Context context){

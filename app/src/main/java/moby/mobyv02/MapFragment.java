@@ -29,6 +29,7 @@ import com.androidmapsextensions.ClusterOptions;
 import com.androidmapsextensions.ClusterOptionsProvider;
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.MarkerOptions;
+import com.facebook.rebound.SpringSystem;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.PointTarget;
 import com.github.amlcurran.showcaseview.targets.Target;
@@ -53,7 +54,6 @@ import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringListener;
 import com.facebook.rebound.SpringUtil;
 import com.facebook.rebound.SimpleSpringListener;
-import com.facebook.rebound.SpringSystem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -598,5 +598,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         currentPosts.clear();
         currentEvents.clear();
     }
-    
+
 }
